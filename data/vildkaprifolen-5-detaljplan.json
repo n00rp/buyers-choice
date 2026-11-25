@@ -1,0 +1,351 @@
+{
+  "adress": "Vildkaprifolen 5, Torslanda, Göteborg",
+  "hamtad": "2026-11-25",
+  "adresspunkt_epsg3007": [
+    136289.687,
+    6400235.178
+  ],
+  "gallande_planer": [
+    {
+      "aktbeteckning": "1480K-II-3540",
+      "typ": "Stadsplan",
+      "namn": "Ändring och utvidgning av stadsplanen för del av Torslanda (småhus m m i Torslanda Bur, västra delen)",
+      "upprattad": "1979-08 (reviderad 1980-01-01)",
+      "antagen_kf": "1980-03-27",
+      "faststalld_lansstyrelsen": "1980-10-02",
+      "pdf": "https://geodata-external.sbk.goteborg.se/dokument/planer/1480K-II-3540.pdf",
+      "beteckning_villakvarter": "BFI 4,5",
+      "bestammelser_F_omrade": {
+        "anvandning": "B, endast bostäder",
+        "byggnadssatt": "fristående huvudbyggnader",
+        "minsta_tomt_m2": 700,
+        "max_bebyggd_andel": "1/4 av tomten",
+        "antal_byggnader": "1 huvudbyggnad + 1 garage efter prövning",
+        "vaningar": "I (en våning), fler om befintlig byggnad redan har det",
+        "byggnadshojd_m": 4.5,
+        "lagenheter": "enfamiljshus",
+        "overgangsbestammelse_X": "befintliga hus på prickmark med X får byggas om för bostad efter prövning"
+      },
+      "genomforandetid": "Ingen löpande (plan från före PBL 1987)",
+      "osakert": "Om tomten har prickmark eller X är inte säkert avläst i den skannade plankartan"
+    },
+    {
+      "aktbeteckning": "1480K-III-7933",
+      "typ": "Tomtindelning",
+      "namn": "138-PILVINGEN I TORSLANDA",
+      "pdf": "https://geodata-external.sbk.goteborg.se/dokument/planer-III/1480K-III-7933.pdf"
+    }
+  ],
+  "kallor": {
+    "planer_wfs": "https://geodata-external.sbk.goteborg.se/services/planer-v3/wfs (planer-v3:planer)",
+    "adresser_wfs": "https://opengeodata.goteborg.se/services/adresser/wfs/v1 (adresser-v1:adresser)",
+    "fastighetsgrans_wms": "https://geodata-external.sbk.goteborg.se/services/sbf-extern-fastighetsgrans-v1/wms"
+  },
+  "oversiktsplan": {
+    "kategori": "Blandad stadsbebyggelse – Ytterstadens större samhällen",
+    "status": "Antagen",
+    "utdrag": "Här finns potential för komplettering och förtätning. Nybyggnation ska i första hand ske på redan ianspråktagen mark.",
+    "kalla": "https://services.sbk.goteborg.se/oversiktsplan-v4/wms (op_ytterstadens_storre_samhallen_befintlig)"
+  },
+  "radon": {
+    "klass": "Normalriskområde, berg och jord",
+    "kalla": "ÖP-lager op_radon"
+  },
+  "planering_i_narheten": [
+    {
+      "namn": "Detaljplan för bostäder och verksamheter vid Hangarvägen m.fl.",
+      "innehall": "1000–1200 bostäder och verksamheter; uppdraget utvidgat till del av Kongahällavägen (Röd 2:46)",
+      "skede": "Analysfas, inriktningsbeslut SBN 2023-06-20",
+      "diarienummer": "SBF-2023-00763",
+      "kalla": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/403E4EDF3418D1B1C12589CF003C3BB3/$File/TU%20inriktning%20DP%20Hangarvagen.pdf"
+    },
+    {
+      "namn": "Tvärförbindelse i Torslanda",
+      "innehall": "Ny väg Kongahällavägen–Torslandavägen, 234 Mkr, trafikstart tidigast 2028",
+      "skede": "Granskning 2024-08-21–2024-09-17; antagande ej bekräftat",
+      "diarienummer": "SBF-2023-00690",
+      "kalla": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/42FD2D8FED4E436EC1258BB30024E229/$File/10_EXN241021.pdf"
+    },
+    {
+      "namn": "Bostäder och handel vid Torslanda torg",
+      "innehall": "250–300 bostäder och handel, upp till 8 våningar",
+      "skede": "Kompletterande samråd efter samråd 2024",
+      "diarienummer": "SBF-2023-01013"
+    },
+    {
+      "namn": "Program för Torslanda centrum",
+      "innehall": "Ram för Hangarvägen och torget, nytt resecentrum i Amhult",
+      "skede": "Godkänt BN 2019-06-18"
+    }
+  ],
+  "fastighet": {
+    "beteckning": "RÖD 138:3",
+    "verifierad": true,
+    "metod": "Adresspunkten från stadens adress-WFS ligger i fastighetsytan för RÖD 138:3 i stadens fastighetskarta. Fastighetens area 1 464,7 m² stämmer med annonsens tomtarea 1 464,6 m².",
+    "fastighetsnyckel": "140063870"
+  },
+  "adresspunkt_wgs84": [
+    57.72102616,
+    11.76993022
+  ],
+  "narservice": {
+    "not": "Avstånd fågelvägen från adresspunkten, inte gångväg.",
+    "skolor": [
+      {
+        "namn": "Noleredsskolan F-6",
+        "adress": "Gamla Hjuviksvägen 5",
+        "avstand_m": 663,
+        "arskurser": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "skolenhetskod": "52601922"
+      },
+      {
+        "namn": "Torslandaskolan 7-9",
+        "adress": "Hembygdsgatan 2",
+        "avstand_m": 675,
+        "arskurser": [
+          "7",
+          "8",
+          "9"
+        ],
+        "skolenhetskod": "89487045"
+      },
+      {
+        "namn": "Torslandaskolan F-6",
+        "adress": "Runskriftsgatan 8",
+        "avstand_m": 901,
+        "arskurser": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "skolenhetskod": "82589201"
+      },
+      {
+        "namn": "Nordlyckeskolan 7-9",
+        "adress": "Skyttepaviljongens Gata 25",
+        "avstand_m": 903,
+        "arskurser": [
+          "7",
+          "8",
+          "9"
+        ],
+        "skolenhetskod": "93002896"
+      },
+      {
+        "namn": "Skutehagsskolan F-6",
+        "adress": "Skutehagsvägen 100",
+        "avstand_m": 1618,
+        "arskurser": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "skolenhetskod": "78863858"
+      },
+      {
+        "namn": "Lillebyskolan F-6",
+        "adress": "Lilleby Bäckedalsväg 11",
+        "avstand_m": 2195,
+        "arskurser": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "skolenhetskod": "29670879"
+      }
+    ],
+    "hallplatser": [
+      {
+        "namn": "Torslanda Torg",
+        "hallplatsnummer": "4970",
+        "avstand_m": 220,
+        "linjer": [
+          "GUL (Torslanda–Nordstan–Partille)",
+          "SVART (Amhult–City–Vallhamra)",
+          "23 (Amhult Resecentrum–Sillvik)",
+          "121 (Torslanda–Lindholmen–Partille C)"
+        ]
+      },
+      {
+        "namn": "Nordhagsvägen",
+        "hallplatsnummer": "5010",
+        "avstand_m": 317,
+        "linjer": [
+          "GUL (Torslanda–Nordstan–Partille)",
+          "SVART (Amhult–City–Vallhamra)",
+          "23 (Amhult Resecentrum–Sillvik)",
+          "121 (Torslanda–Lindholmen–Partille C)"
+        ]
+      },
+      {
+        "namn": "Hembygdsgatan",
+        "hallplatsnummer": "3130",
+        "avstand_m": 695
+      },
+      {
+        "namn": "Vårbäcksvägen",
+        "hallplatsnummer": "7530",
+        "avstand_m": 988
+      }
+    ],
+    "ej_hamtat": [
+      "Bad: Göteborgs badplats-API på data.goteborg.se kräver gratis app-nyckel; OpenStreetMap nås inte från molnmiljön."
+    ],
+    "kallor": {
+      "skolor": "https://api.skolverket.se/skolenhetsregistret/v2",
+      "hallplatser": "https://open.geodata.tkgbg.se/wfs (vt:hallplatsomraden, vt:alla_linjer)",
+      "forskolor": "goteborg.se \"Hitta förskolor\" (509 förskolor, koordinater i sidornas schema.org-data)",
+      "matbutiker": "Göteborgs Stad, miljöförvaltningens register över livsmedelsobjekt (WFS livs:livs_livsmedelsobjekt)"
+    },
+    "forskolor": [
+      {
+        "namn": "Låkebergsgatan 10 förskola",
+        "adress": "Låkebergsgatan 10",
+        "avstand_m": 357,
+        "lat": 57.72070343976276,
+        "lon": 11.77590369397641,
+        "url": "https://goteborg.se/wps/portal/start/forskola-och-utbildning/forskola-och-pedagogisk-omsorg/hitta-forskolor?id=1441"
+      },
+      {
+        "namn": "Kålhagen 3–7 förskola",
+        "adress": "Kålhagen 3",
+        "avstand_m": 367,
+        "lat": 57.71833403122955,
+        "lon": 11.77350022590204,
+        "url": "https://goteborg.se/wps/portal/start/forskola-och-utbildning/forskola-och-pedagogisk-omsorg/hitta-forskolor?id=2169"
+      },
+      {
+        "namn": "Torslanda Torg 8 förskola",
+        "adress": "Torslanda Torg 8",
+        "avstand_m": 408,
+        "lat": 57.72413654782271,
+        "lon": 11.766279324315638,
+        "url": "https://goteborg.se/wps/portal/start/forskola-och-utbildning/forskola-och-pedagogisk-omsorg/hitta-forskolor?id=7303"
+      },
+      {
+        "namn": "Kålhagen 2, Specialförskolan Nallen",
+        "adress": "Kålhagen 2A",
+        "avstand_m": 431,
+        "lat": 57.71799805108838,
+        "lon": 11.774469657075606,
+        "url": "https://goteborg.se/wps/portal/start/forskola-och-utbildning/forskola-och-pedagogisk-omsorg/hitta-forskolor?id=1466"
+      },
+      {
+        "namn": "Rödluvans förskola",
+        "adress": "Torslanda Idrottsväg 21",
+        "avstand_m": 592,
+        "lat": 57.71871470488608,
+        "lon": 11.760951444614909,
+        "url": "https://goteborg.se/wps/portal/start/forskola-och-utbildning/forskola-och-pedagogisk-omsorg/hitta-forskolor?id=359"
+      },
+      {
+        "namn": "Gamla Tumlehedsvägen 100–104 förskola",
+        "adress": "Gamla Tumlehedsvägen 100",
+        "avstand_m": 938,
+        "lat": 57.725634894178405,
+        "lon": 11.756697655023235,
+        "url": "https://goteborg.se/wps/portal/start/forskola-och-utbildning/forskola-och-pedagogisk-omsorg/hitta-forskolor?id=2171"
+      }
+    ],
+    "matbutiker": [
+      {
+        "namn": "Merkado",
+        "adress": "Torslanda Torg 3",
+        "avstand_m": 313
+      },
+      {
+        "namn": "Hemköp Torslanda Torg",
+        "adress": "Torslanda Torg 4",
+        "avstand_m": 347
+      },
+      {
+        "namn": "Willys Hemma Torslanda",
+        "adress": "Runskriftsgatan 1",
+        "avstand_m": 1094
+      },
+      {
+        "namn": "ICA Maxi Torslanda",
+        "adress": "Gamla Flygplatsvägen 60",
+        "avstand_m": 1241
+      }
+    ],
+    "apotek": [
+      {
+        "namn": "Apoteket Hjärtat ICA Maxi Torslanda",
+        "adress": "Gamla Flygplatsvägen 60",
+        "avstand_m": 1243
+      },
+      {
+        "namn": "Kronans Apotek Torslanda",
+        "adress": "Gamla Flygplatsvägen 40",
+        "avstand_m": 1263
+      }
+    ]
+  },
+  "miljo_och_risk": {
+    "not": "Uppgifter avlästa ur myndigheternas kartdata vid fastigheten RÖD 138:3. Beräknade värden, inte mätningar.",
+    "trafikbuller": {
+      "ekvivalent_dBA_2023": {
+        "vid_gatan": "55–60",
+        "tomtens_mitt": "50–55"
+      },
+      "maxniva_dBA_2021": {
+        "vid_gatan": "70–75 (delvis över 75)",
+        "tomtens_mitt": "65–70"
+      },
+      "fasad_dBA_2023": {
+        "gatusida": "59–64",
+        "baksida": "43–48"
+      },
+      "jamforelse": "Riktvärde för nya bostäder enligt förordning 2015:216: 60 dBA ekvivalent vid fasad för småhus, 50 dBA ekvivalent och 70 dBA max vid uteplats.",
+      "kalla": "Göteborgs Stad, miljöförvaltningen, trafikbullerberäkningar 2021 och 2023 (WMS/WFS miljoovervakning_buller_v1)"
+    },
+    "flygbuller": {
+      "varde": "Inom 2 km finns varken område med tillstånd för civilt flyg eller försvarets påverkansområde för buller",
+      "kalla": "Översiktsplanen, lager op_omrade_med_tillstand_for_flyg_hansyn och op_ri_gbg_fm_paverkansomrade_for_buller_eller_annan_risk"
+    },
+    "luftkvalitet": {
+      "NO2_arsmedel_ug_m3_2023": 8,
+      "NO2_98_percentil_dygn_ug_m3_2023": 19,
+      "PM10_arsmedel_ug_m3_2023": 10.6,
+      "jamforelse": "Miljökvalitetsnormer: NO2 årsmedel 40, NO2 dygn 60, PM10 årsmedel 40 µg/m³.",
+      "kalla": "Göteborgs Stad, miljöförvaltningen, Ren stadsluft-beräkningar 2023 (WMS miljoovervakning_luft_v1)"
+    },
+    "skyfall": {
+      "varde": "Tomten ligger inte i en skyfallsled. Närmaste skyfallsled ca 50 m från tomten.",
+      "kalla": "Översiktsplanen, lager op_skyfall_hansyn"
+    },
+    "oversvamning_hoga_vattenstand": {
+      "varde": "Närmaste riskområde för översvämning och höga vattenstånd ca 1 km bort",
+      "kalla": "Översiktsplanen, lager op_risk_oversvamning_hoga_vattenstand_hansyn"
+    },
+    "skred_och_mark": {
+      "varde": "Planbeskrivningen för stadsplan II-3540 (1979) anger att säkerheten mot jordskred är betryggande inom planområdet. Befintliga villor längs Kongahällavägen är grundlagda på lera, med 3–11 m lerdjup enligt sonderingar på motsatta sidan av vägen. Området ingår inte i SGI:s skredriskkartering längs Göta älv.",
+      "kalla": "Planbeskrivning 1480K-II-3540; SGI skredriskkarteringar (geografisk avgränsning, ej uppslagen per punkt)"
+    },
+    "fororenad_mark": {
+      "varde": "Närmaste riskområde för förorenade områden enligt översiktsplanens tematiska tillägg ca 310 m bort",
+      "kalla": "Översiktsplanen, lager ttop_riskomraden_fororenade_omraden"
+    },
+    "radon": {
+      "varde": "Normalriskområde, berg och jord",
+      "kalla": "Översiktsplanen, lager op_radon"
+    }
+  }
+}
