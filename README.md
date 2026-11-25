@@ -6,6 +6,70 @@ Portalen visar neutral information med källa. Den betygsätter inte bostäder e
 
 Pilotkommun är **Göteborg**, och portalen täcker både villor och bostadsrätter.
 
+## Så ser det ut
+
+Skärmbilderna visar exempeladressen **Vildkaprifolen 5, Torslanda**, som har en fullständig rapport med annonskort. Övriga adresser i Göteborg får en grundrapport (se längst ned).
+
+### Startsida och adressökning
+Användaren söker på valfri adress i Göteborg eller klistrar in en annonslänk.
+
+![Startsida med adressökning](docs/screenshots/01-start.png)
+
+### Översikt
+Annonskort, tre korta sammanfattningar (gällande plan, planerat i närheten, närmaste plan) och service i närheten.
+
+![Översikt](docs/screenshots/02-oversikt.png)
+
+### Karta över planerna
+Bostaden, planer i området, kollektivtrafik, skolor och butiker. Listan till höger flyger kartan till vald plan.
+
+![Karta över planerna](docs/screenshots/03-karta.png)
+
+### Bostaden: Fastighet och detaljplan
+Gällande plan med användning, byggrätt, höjd och genomförandetid, kontroll av fastighet och tomtarea, samt planbestämmelser.
+
+![Fastighet och detaljplan](docs/screenshots/04-fastighet-och-detaljplan.png)
+
+### Bostaden: Miljö och risk
+Trafikbuller, flygbuller, luftkvalitet, skyfall, översvämning, radon, och förorenad mark, med riktvärden som jämförelse.
+
+![Miljö och risk](docs/screenshots/05-miljo-och-risk.png)
+
+### Området: Planer i området
+Tidslinje över planer och projekt inom cirka 1,5 km, och vad varje plan innebär.
+
+![Planer i området](docs/screenshots/06-planer-i-omradet.png)
+
+### Området: Närservice
+Avstånd till hållplatser, grundskolor, förskolor och butiker.
+
+![Närservice](docs/screenshots/07-narservice.png)
+
+### Inför köpet: Frågor till visningen
+En checklista att ta med till visningen, utifrån planerna och huset.
+
+![Frågor till visningen](docs/screenshots/08-fragor-till-visningen.png)
+
+### Inför köpet: Källor
+Varje uppgift med källa och datum.
+
+![Källor](docs/screenshots/09-kallor.png)
+
+### Grundrapport för andra adresser
+Alla andra adresser i Göteborg får en grundrapport ur den förberäknade datan, här Kungsportsavenyen 10. Annonslänk kan kopplas i rutan överst.
+
+![Grundrapport för Kungsportsavenyen 10](docs/screenshots/10-grundrapport.png)
+
+### Mobil
+På mobil ersätts sidomenyn av en meny i sidhuvudet.
+
+<p>
+  <img src="docs/screenshots/11-mobil.png" alt="Översikt på mobil" width="300">
+  <img src="docs/screenshots/12-mobil-meny.png" alt="Menyn på mobil" width="300">
+</p>
+
+Skärmbilderna tas med `node scripts/screenshots.js` medan portalen körs lokalt (se nedan).
+
 ## Kom igång
 
 Prototypen är en statisk webbsida utan byggsteg. Den läser JSON-filer med relativa sökvägar, så den behöver serveras över HTTP (inte öppnas direkt som fil):
@@ -30,7 +94,8 @@ Samma mapp kan publiceras direkt med GitHub Pages eller valfri statisk webbhotel
 | `portal/r/*.json` | Vägnät i rutor om 2,5 × 2,5 km, för kartritning. Beskrivs i `portal/roads-meta.json`. |
 | `portal/service.json` | Hållplatser, skolor, förskolor, livsmedelsbutiker m.m. med koordinater. |
 | `data/vildkaprifolen-5-detaljplan.json` | Manuellt tolkade planbestämmelser för exempeladressen Vildkaprifolen 5, Torslanda. |
-| `scripts/` | Python-skripten som bygger JSON-filerna ovan ur stadens rådata. |
+| `scripts/` | Python-skripten som bygger JSON-filerna ovan ur stadens rådata, och `screenshots.js` som tar skärmbilderna. |
+| `docs/screenshots/` | Skärmbilder av portalens olika delar. |
 | `docs/datakallor.md` | Kartläggningen av datakällor: vad som finns, villkor, kostnad och juridik. |
 | `arkiv/vildkaprifolen-5.html` | Den första prototypen, en sida för en enda adress. |
 
