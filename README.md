@@ -31,7 +31,7 @@ Gällande plan med användning, byggrätt, höjd och genomförandetid, kontroll 
 ![Fastighet och detaljplan](docs/screenshots/04-fastighet-och-detaljplan.png)
 
 ### Bostaden: Miljö och risk
-Trafikbuller, flygbuller, luftkvalitet, skyfall, översvämning, radon, förorenad mark och farligt gods, med riktvärden som jämförelse.
+Trafikbuller, flygbuller, luftkvalitet, skyfall, översvämning, radon, och förorenad mark, med riktvärden som jämförelse.
 
 ![Miljö och risk](docs/screenshots/05-miljo-och-risk.png)
 
