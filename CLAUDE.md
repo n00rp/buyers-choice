@@ -19,7 +19,7 @@ En portal som samlar det en bostadsköpare behöver veta om platsen inför visni
 
 ## Design
 
-- Ljust, modernt tema (ljust som standard).
+- Tema "Varm redaktionell" (godkänt 2026-11-26): benvit bakgrund #FCFBF8, sandytor #F3EFE7, text #1C1A17, accent mörkgrön #2F5D50. Rubriker i Fraunces (serif), brödtext i Inter. Rundade kort (20 px) i bento-rutnät, ett mörkt kort för gällande plan, rundade knappar. Bara ljust tema.
 - Vänstermeny med grupperade rubriker (t.ex. Bostaden, Området, Inför köpet). På mobil ersätts den av en meny i sidhuvudet.
 - Genomarbetat, funktionellt, lätt att förstå och professionellt. Inte plottrigt.
 
