@@ -14,6 +14,8 @@ En portal som samlar det en bostadsköpare behöver veta om platsen inför visni
 - **Annonsbilder visas inte.** Annonskortet har en platshållare och en länk till annonsen.
 - **Neutral information med källa.** Inga betyg, inget bra/dåligt och inga trafikljus.
 - **Pilotkommun: Göteborg.** Både villor och bostadsrätter, eftersom planändringar påverkar båda.
+- **Fler kommuner (2026-11-27):** Partille är tillagd. Mölndal och Kungälv har ingen öppen datatjänst (bara webbkartor), så de väntar. Hämta bara från tjänster som är öppna för datauttag, inte genom att köra kommunernas webbkartor.
+- **Ingen Claude-attribution** i commits eller PR:er. Commits görs som Martin (`n00rp`).
 - **Slutprodukten är en visuell webbportal**, inte en PDF-rapport.
 - Användaren (Martin) skriver på svenska. Skriv texter i portalen, commits och svar på svenska.
 
@@ -29,6 +31,7 @@ En portal som samlar det en bostadsköpare behöver veta om platsen inför visni
 - All data hämtades från öppna tjänster utan nyckel den 25 november 2026 och räknades fram i förväg per adress. Portalen anropar inga externa tjänster när den körs.
 - Koordinater är SWEREF 99 12 00 (EPSG:3007).
 - `scripts/` innehåller Python-skripten som byggde JSON-filerna (beroenden: `numpy`, `shapely`, `pyproj`, `tifffile`). De förväntar sig rådata som GeoJSON under `/tmp/geo/`. Nedladdningen gjordes för hand och saknar skript.
+- Övriga kommuner ligger i `portal/k/<kommun>/` med samma filformat. `KOM` i `index.html` listar kommunerna och vad de har data för (`har`). Göteborg ligger först så att adresslänkarna `#a<nummer>` inte ändras. `scripts/kommun_partille.py` hämtar och bygger Partille.
 - `scripts/screenshots.js` tar skärmbilderna i `docs/screenshots/` medan portalen körs.
 - Exempeladressen **Vildkaprifolen 5, Torslanda** har en fullständig rapport med manuellt tolkade planbestämmelser (`data/vildkaprifolen-5-detaljplan.json`). Andra adresser får en grundrapport.
 - **Jämför adresser** (`#jamfor-<nr>-<nr>`): två eller tre adresser sida vid sida, byggt på samma förberäknade data som grundrapporten. Inga markeringar av bästa värde, bara ett reglage som döljer lika rader.
@@ -43,6 +46,10 @@ python3 -m http.server 8000
 ```
 
 Sidan måste serveras över HTTP, inte öppnas direkt som fil.
+
+### Publicering
+
+GitHub Pages via `.github/workflows/pages.yml`, som lägger ut `portal/` vid push till `main`. Adress: https://n00rp.github.io/buyers-choice/
 
 ## Datakällor
 
