@@ -61,7 +61,8 @@ Externa länkar från tidigare arbete:
 
 ## Vad som återstår
 
-- **Pågående detaljplaner** (samråd, granskning) finns inte som öppen datatjänst för hela staden, bara som webbsidor och PDF:er. Kräver insamling och troligen en liten backend.
+- **Pågående detaljplaner** hämtas sedan 2026-11-27 dagligen ur stadens projektdatabas (planobygg.nsf) av `scripts/bevakning/hamta.py` och visas under Bevakning. Se `docs/bevakning.md`. Planbesked och startplan i nämndhandlingar ingår inte.
+- **Bevakning med mejl:** GitHub Actions skickar via SMTP till bevakningar i hemligheten `BEVAKNINGAR`. Självanmälan i portalen saknas (kräver backend). Bygglov saknas som öppen källa.
 - **Skred och kvicklera** saknar öppen, frågbar källa per adress för hela staden (SGI:s kartering gäller främst längs Göta älv). Kräver också backend eller manuell tolkning av planbeskrivningar.
 - **Badplatser** är pausade av Martin. De kräver en gratis app-nyckel från data.goteborg.se.
 - **Taxeringsvärde** är inte öppna data. Användaren fyller i det själv för att räkna fram fastighetsavgiften.

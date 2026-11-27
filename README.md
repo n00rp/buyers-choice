@@ -62,6 +62,11 @@ Varje uppgift med källa och datum.
 
 ![Källor](docs/screenshots/09-kallor.png)
 
+### Inför köpet: Bevakning
+Pågående planarbete runt adressen, med skede (samråd, granskning, antagande …), och händelser det senaste året. Köparen kan bevaka adressen och få mejl när något nytt händer. Läget hämtas varje morgon av GitHub Actions. Finns för Göteborg. Se [docs/bevakning.md](docs/bevakning.md).
+
+![Bevakning](docs/screenshots/14-bevakning.png)
+
 ### Grundrapport för andra adresser
 Alla andra adresser i Göteborg får en grundrapport ur den förberäknade datan, här Kungsportsavenyen 10. Annonslänk kan kopplas i rutan överst.
 
@@ -117,6 +122,9 @@ Arbetsflödet `.github/workflows/pages.yml` lägger ut mappen `portal/` varje g�
 | `portal/r/*.json` | Vägnät i rutor om 2,5 × 2,5 km, för kartritning. Beskrivs i `portal/roads-meta.json`. |
 | `portal/service.json` | Hållplatser, skolor, förskolor, livsmedelsbutiker m.m. med koordinater. |
 | `portal/k/<kommun>/` | Samma filer för övriga kommuner (nu `partille`). Vilka kommuner som finns och vilka uppgifter de har står i `KOM` i `index.html`. |
+| `portal/bevakning.js` | Bevakningsvyn och knappen Bevaka adressen. |
+| `portal/bevakning/*.json` | Planarbete och händelser i Göteborg, uppdateras varje morgon av `scripts/bevakning/`. |
+| `bevakning/` | Senaste läget och vad som mejlats, för att se vad som är nytt. |
 | `data/vildkaprifolen-5-detaljplan.json` | Manuellt tolkade planbestämmelser för exempeladressen Vildkaprifolen 5, Torslanda. |
 | `scripts/` | Python-skripten som bygger JSON-filerna ovan ur stadens rådata, och `screenshots.js` som tar skärmbilderna. |
 | `docs/screenshots/` | Skärmbilder av portalens olika delar. |
@@ -149,6 +157,7 @@ Allt kommer från öppna tjänster utan nyckel. Fullständig kartläggning med v
 | Hållplatser | Trafikkontoret, `open.geodata.tkgbg.se/wfs` |
 | Skolor | Skolverkets skolenhetsregister (`api.skolverket.se/skolenhetsregistret/v2`) |
 | Förskolor | Göteborgs Stad, Hitta förskolor |
+| Planarbete (skede, läge, synpunkter) | Göteborgs Stad, databasen för plan- och byggprojekt (`www5.goteborg.se/.../planobygg.nsf`), hämtas dagligen |
 
 ## Fler kommuner
 
@@ -188,4 +197,4 @@ Ett naturligt nästa steg är ett hämtningsskript som laddar ned rådata från 
 
 ## Status
 
-Detta är en prototyp. Planbestämmelser är bara tolkade manuellt för exempeladressen. Pågående planarbete, bygglov och bostadsrättsföreningars årsredovisningar finns inte maskinläsbart och ingår inte ännu.
+Detta är en prototyp. Planbestämmelser är bara tolkade manuellt för exempeladressen. Pågående planarbete i Göteborg hämtas dagligen (se Bevakning). Bygglov och bostadsrättsföreningars årsredovisningar finns inte maskinläsbart och ingår inte ännu.
