@@ -60,10 +60,11 @@ Externa länkar från tidigare arbete:
 
 ## Vad som återstår
 
-- **Pågående detaljplaner** (samråd, granskning) finns inte som öppen datatjänst för hela staden, bara som webbsidor och PDF:er. Kräver insamling och troligen en liten backend.
-- **Skred och kvicklera** saknar öppen, frågbar källa per adress för hela staden (SGI:s kartering gäller främst längs Göta älv). Kräver också backend eller manuell tolkning av planbeskrivningar.
+- **Pågående planarbeten** visas för alla Göteborgsadresser (inom 1,5 km) från stadens projektdatabas planobygg.nsf, via `scripts/build_planarbete.py` → `portal/planarbete.json`. Portalen läser bevakningens dagliga fil `portal/bevakning/planarbete.json` i första hand om den finns. Planprogram och nämndbeslut som bara finns som PDF ingår inte.
+- **Skred, jordart och jorddjup** finns hos SGU (maps3.sgu.se) och SGI (mapsext.sgi.se), men bara som WMS för visning (WFS avstängd). Att fråga dem per adress för 100 000 adresser är inte ett godkänt datauttag. Nästa steg är SGU:s nedladdningsbara öppna data (jordarter 1:25 000–1:100 000, jorddjupsmodell, förutsättningar för skred), som räknas mot adresserna lokalt.
 - **Badplatser** är pausade av Martin. De kräver en gratis app-nyckel från data.goteborg.se.
 - **Taxeringsvärde** är inte öppna data. Användaren fyller i det själv för att räkna fram fastighetsavgiften.
 - Planbestämmelser är bara tolkade för exempeladressen.
+- Linjer per hållplats räknas fram ur linjesträckningar (`scripts/build_linjer.py`, inom 45 m), inte tidtabeller, så en linje som kör förbi utan att stanna kan komma med.
 - Ett hämtningsskript som laddar ned rådata, så att hela datakedjan kan köras om med ett kommando.
 - Bygglov och bostadsrättsföreningars årsredovisningar ingår inte ännu.
