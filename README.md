@@ -35,6 +35,13 @@ Trafikbuller, flygbuller, luftkvalitet, skyfall, översvämning, radon, och för
 
 ![Miljö och risk](docs/screenshots/05-miljo-och-risk.png)
 
+### Bostaden: Föreningens ekonomi
+Gäller bostadsrätter. Föreningens årsredovisning är inte öppna data, så användaren fyller i nyckeltalen från flerårsöversikten (de som ska redovisas enligt BFNAR 2023:1), avgiftsändringar och underhåll. Portalen visar utvecklingen, räknar ut lägenhetens del av föreningens lån och vad en ränteändring betyder för månadsavgiften, och föreslår frågor till föreningen. Inga betyg. Uppgifterna sparas bara i webbläsaren. Bilderna visar påhittade exempelvärden.
+
+![Föreningens ekonomi](docs/screenshots/13-foreningens-ekonomi.png)
+
+![Föreningens ekonomi, avgift och lägenhet](docs/screenshots/14-foreningens-ekonomi-lagenhet.png)
+
 ### Området: Planer i området
 Tidslinje över planer och projekt inom cirka 1,5 km, och vad varje plan innebär.
 
@@ -63,9 +70,9 @@ Alla andra adresser i Göteborg får en grundrapport ur den förberäknade datan
 ### Jämför adresser
 Två eller tre adresser sida vid sida: planer, miljö och risk, vad översiktsplanen pekar ut och närservice, rad för rad med källa. Reglaget "Visa bara det som skiljer" döljer rader där adresserna har samma värde. Jämförelsen nås från startsidan, vänstermenyn och knappen "Jämför med andra adresser" i varje rapport. Adresserna står i länken (`#jamfor-<nr>-<nr>`) så att en jämförelse kan delas, och sparas i webbläsaren.
 
-![Jämför adresser](docs/screenshots/14-jamfor.png)
+![Jämför adresser](docs/screenshots/20-jamfor.png)
 
-<img src="docs/screenshots/15-jamfor-mobil.png" alt="Jämförelsen på mobil" width="300">
+<img src="docs/screenshots/21-jamfor-mobil.png" alt="Jämförelsen på mobil" width="300">
 
 ### Mobil
 På mobil ersätts sidomenyn av en meny i sidhuvudet.
