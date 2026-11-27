@@ -5,6 +5,7 @@
    Bygger på index.html: D, curA, mode, loadData, go, esc, fmtD, $ och $$ finns där. */
 (()=>{
 const BV_KEY="bc-bevakning";
+const UK='<span class="bv-uk">Under konstruktion</span>';
 const RADIER=[500,1000,2000];
 const AKTIVA=new Set(["tidigt","samrad","granskning","antagande","overklagad","bygge"]);
 const TYP={nytt_planarbete:"Nytt planarbete",nytt_skede:"Nytt skede",synpunkter:"Öppet för synpunkter",ny_plan:"Ny gällande plan",notis:"Uppdatering från staden"};
@@ -41,6 +42,7 @@ function near(B,a,r){
 /* ---- stil ---- */
 const css=`
 #bv-basic,#bv-full{display:grid;gap:40px;min-width:0}
+.bv-uk{display:inline-flex;vertical-align:middle;margin-left:10px;font-family:var(--f-body);font-size:.8rem;font-weight:600;letter-spacing:0;color:#8A5A12;background:#F7ECD7;border-radius:999px;padding:3px 12px}
 .bv-card{background:var(--card,#fff);border:1px solid var(--line);border-radius:var(--r-card,20px);padding:26px 28px;display:grid;gap:18px;box-shadow:var(--shadow-card,none)}
 .bv-top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between}
 .bv-state{display:grid;gap:4px}
@@ -111,9 +113,9 @@ let showAll=false;
 function render(rOverride){const k=curIdx();if(k<0)return;
   const host=mode==="basic"?$("#bv-basic"):$("#bv-full");if(!host)return;
   const a=D.A[k],b=findA(a),r=rOverride||(b?b.r:1000);
-  if(!inGbg(a)){host.innerHTML=`<div class="block"><h2>Bevakning</h2><p class="lead">Bevakning av planarbete finns än så länge bara för adresser i Göteborg. Där hämtas stadens plan- och byggprojekt varje morgon.</p></div>
+  if(!inGbg(a)){host.innerHTML=`<div class="block"><h2>Bevakning ${UK}</h2><p class="lead">Bevakning av planarbete finns än så länge bara för adresser i Göteborg. Där hämtas stadens plan- och byggprojekt varje morgon.</p></div>
     <div class="notice">${esc(kNamn(a))} publicerar inte sina pågående planarbeten som data som går att hämta varje dag. Se kommunens egen lista${typeof KOM!=="undefined"&&KOM[kmOf(a)].plansida?`: <a href="${esc(KOM[kmOf(a)].plansida)}" target="_blank" rel="noopener">pågående detaljplanering hos ${esc(kNamn(a))}</a>`:"."}</div>`;return;}
-  host.innerHTML=`<div class="block"><h2>Bevakning</h2><p class="lead">Följ vad som händer runt ${esc(a.l)}: nya planarbeten, samråd och granskning, beslut om antagande och laga kraft, och nya gällande planer.</p></div><p class="muted">Laddar …</p>`;
+  host.innerHTML=`<div class="block"><h2>Bevakning ${UK}</h2><p class="lead">Följ vad som händer runt ${esc(a.l)}: nya planarbeten, samråd och granskning, beslut om antagande och laga kraft, och nya gällande planer.</p></div><p class="muted">Laddar …</p>`;
   data().then(B=>{if(curIdx()!==k)return;
     const N=near(B,a,r),seen=b&&b.sett?new Set(b.sett):null;
     const isNew=x=>seen&&!seen.has(x.id),nNew=N.h.filter(isNew).length;
@@ -121,14 +123,14 @@ function render(rOverride){const k=curIdx();if(k<0)return;
     const ev=N.h.slice().sort((x,y)=>(isNew(y)-isNew(x))||y.datum.localeCompare(x.datum));
     const pr=showAll?N.p:N.p.slice(0,10);
     host.innerHTML=`
-    <div class="block"><h2>Bevakning</h2><p class="lead">Följ vad som händer runt ${esc(a.l)}: nya planarbeten, samråd och granskning, beslut om antagande och laga kraft, och nya gällande planer.</p></div>
+    <div class="block"><h2>Bevakning ${UK}</h2><p class="lead">Följ vad som händer runt ${esc(a.l)}: nya planarbeten, samråd och granskning, beslut om antagande och laga kraft, och nya gällande planer.</p></div>
     <div class="bv-card">
       <div class="bv-top">
         <div class="bv-state">${b?`<b>Du bevakar adressen</b><span class="muted small">Sedan ${dText(b.sparad)}. ${nNew?`${nNew===1?"En ny händelse":nNew+" nya händelser"} sedan du senast tittade.`:"Inget nytt sedan du senast tittade."}</span>`:`<b>Bevaka adressen</b><span class="muted small">Spara adressen så markeras nya händelser i närheten när du kommer tillbaka.</span>`}</div>
         <div class="prop-actions" style="margin:0">${b?`${nNew?'<button class="btn" type="button" data-bv="read">Markera som läst</button>':""}<button class="linkbtn" type="button" data-bv="toggle">Sluta bevaka</button>`:`<button class="btn primary" type="button" data-bv="toggle">${bell} Bevaka adressen</button>`}</div>
       </div>
       <div class="bv-radius" role="group" aria-label="Avstånd"><span>Inom</span>${RADIER.map(x=>`<button class="chip" type="button" data-bv-r="${x}" aria-pressed="${x===r}">${fmtR(x)}</button>`).join("")}</div>
-      <div class="bv-mail"><b>Mejl om nyheter.</b> Under piloten skickas mejl till bevakningar som Buyers Choice lagt in. Mejlet kommer samma morgon som staden har uppdaterat sina uppgifter. Bevakningen här sparas bara i den här webbläsaren.</div>
+      <div class="bv-mail"><b>Under konstruktion.</b> Bevakningen byggs fortfarande. Mejl om nyheter skickas inte än. Det du sparar här finns bara i den här webbläsaren, och uppgifterna om planarbete kan ändras när tjänsten blir klar.</div>
     </div>
     <div class="block"><div class="block-head"><h3>${b?"Händelser i närheten":"Senaste händelserna i närheten"}</h3><span class="src">Inom ${fmtR(r)}, senaste året</span></div>
       ${ev.length?`<ul class="plist">${ev.map(x=>evLi(x,isNew(x))).join("")}</ul>`:`<p class="bv-empty">Inga registrerade händelser inom ${fmtR(r)} det senaste året. Nya händelser samlas in varje dag från och med ${dText(B.upd)}.</p>`}
@@ -138,7 +140,7 @@ function render(rOverride){const k=curIdx();if(k<0)return;
     </div>
     ${others.length?`<div class="block"><h3>Andra adresser du bevakar</h3><ul class="plist">${others.map(o=>{const n=newFor(o,B).length;return `<li><span class="nm"><a href="${hashOf(o.k)}" style="color:inherit">${esc(o.l)}</a>${n?`<span class="bv-new">${n} ${n===1?"ny":"nya"}</span>`:""}</span><span class="meta">Inom ${fmtR(o.r)} · sedan ${dText(o.sparad)}</span></li>`;}).join("")}</ul></div>`:""}
     <p class="src">Källor: Göteborgs Stads lista över plan- och byggprojekt (samma uppgifter som projektsidorna på goteborg.se) och stadsbyggnadskontorets register över gällande planer. Uppdaterad ${dText(B.upd)}. Avstånd fågelvägen till den punkt staden angett för projektet. Där staden saknar punkt används gatan i projektets namn, märkt "cirka". Bygglov ingår inte än, eftersom staden inte publicerar dem som öppna data.</p>`;
-  }).catch(()=>{host.innerHTML=`<div class="block"><h2>Bevakning</h2></div><div class="notice">Uppgifterna om planarbete kunde inte laddas. Ladda om sidan och försök igen.</div>`;});}
+  }).catch(()=>{host.innerHTML=`<div class="block"><h2>Bevakning ${UK}</h2></div><div class="notice">Uppgifterna om planarbete kunde inte laddas. Ladda om sidan och försök igen.</div>`;});}
 
 /* ---- startsidan: lista över bevakningar ---- */
 function renderStart(){const host=$("#bv-start");if(!host)return;const L=list();
