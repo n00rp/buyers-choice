@@ -43,6 +43,10 @@ python3 -m http.server 8000
 
 Sidan måste serveras över HTTP, inte öppnas direkt som fil.
 
+### Publicering
+
+GitHub Pages via `.github/workflows/pages.yml`, som lägger ut `portal/` vid push till `main`. Adress: https://n00rp.github.io/buyers-choice/
+
 ## Datakällor
 
 Se tabellen i `README.md` och hela kartläggningen i `docs/datakallor.md`. I korthet: Göteborgs Stads adress-WFS, Stadsbyggnadskontorets plan- och fastighetstjänster, översiktsplanen, Miljöförvaltningens geoserver (buller, luft, livsmedelsobjekt), Trafikkontorets hållplatser, Skolverkets skolenhetsregister och stadens förskolelista.
