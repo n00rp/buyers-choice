@@ -221,6 +221,15 @@ Värdena är beräknade eller avlästa ur myndigheternas kartdata för RÖD 138:
 
 Allt utom skred hämtas från öppna kartjänster utan nyckel: `services.sbk.goteborg.se/oversiktsplan-v4/wms` och `geoserverextern.miljoforvaltningen.goteborg.se/geoserver/ows`. Den senare har också PFAS-provtagning och stadens register över livsmedelsobjekt, som ger matbutiker och apotek. För skred finns ingen frågbar tjänst för Torslanda, så portalen får läsa planens geotekniska avsnitt eller använda SGU:s jordartskarta (A).
 
+## Grannkommuner (kartlagt 2026-11-27)
+
+| Kommun | Öppen datatjänst | Vad som finns |
+| --- | --- | --- |
+| Partille | ArcGIS REST, `https://geodata.partille.se/arcgis/rest/services` (EPSG:3007, ingen nyckel) | Adresser, gällande detaljplaner med länk till plankarta och planbeskrivning, fastighetsgränser, förskolor, skolor, geotekniska utredningar, samhällsbyggnadsprojekt, kommungräns. Inte buller, luft, skyfall, radon, översiktsplan eller pågående detaljplaner. |
+| Mölndal | Ingen. Webbkartan `karta.molndal.se` (Spatial Suite) har lager för adresser, gällande och pågående detaljplaner, skyfall, hållplatser och skolor, men inga öppna WMS-frågor, WFS eller nedladdningar. Skyfallskarteringen 2023 finns på dataportal.se. | Kräver att kommunen öppnar en tjänst eller lämnar ut data. |
+| Kungälv | Ingen hittad. Webbkartan `kartor.kungalv.se` är också Spatial Suite. | Samma som Mölndal. |
+| Hela landet | Lantmäteriets öppna data (adresser, fastighetsindelning, byggnader) via `api.lantmateriet.se` kräver ett gratis konto och nyckel. Västtrafiks hållplatser via Trafiklab kräver gratis nyckel. | Skulle ge adresser, fastigheter och hållplatser för alla kommuner på samma sätt. |
+
 ## Öppna frågor
 
 - [ ] Ska portalen börja med en eller några pilotkommuner? Svar: Göteborg.
