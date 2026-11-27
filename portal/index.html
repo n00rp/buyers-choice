@@ -641,6 +641,62 @@ th{border-bottom:1px solid var(--fg)}
 
 footer{border-top:1px solid var(--line)}
 @media (max-width:600px){h1{font-size:2.5rem}h2{font-size:1.6rem}.hero h1{font-size:2.6rem}.stats b{font-size:1.35rem}}
+
+/* föreningens ekonomi (bostadsrätt) */
+.brf{display:grid;gap:56px}
+.brf .intro{display:grid;gap:14px}
+.brf .acts{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.brf .fee{grid-template-columns:repeat(3,minmax(0,1fr));max-width:none}
+.brf .fee label.wide{grid-column:span 2}
+@media (max-width:700px){.brf .fee{grid-template-columns:1fr}.brf .fee label.wide{grid-column:auto}}
+.brf .figs .muted b{font:inherit;font-weight:600;color:var(--fg)}
+.brf .figs .empty{color:var(--faint)}
+.nyck{min-width:640px}
+.nyck th:first-child,.nyck td:first-child{width:42%}
+.nyck td{padding:8px 10px 8px 0;vertical-align:middle}
+.nyck td:first-child{padding-right:18px}
+.nyck td:first-child small{display:block;color:var(--muted);font-weight:400;font-size:.8rem;line-height:1.35;margin-top:3px}
+.nyck input{width:100%;min-width:0;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:inherit;font-size:.92rem;text-align:right;background:var(--card);font-variant-numeric:tabular-nums}
+.nyck th input{height:32px;font-weight:600;text-align:right;text-transform:none;letter-spacing:0;color:var(--fg)}
+.nyck input:focus,.brf .rowform input:focus,.brf .rowform select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.nyck .u{color:var(--muted);font-size:.8rem;font-weight:400}
+.brf-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.brf-grid{grid-template-columns:1fr}}
+.brf .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:22px;display:grid;gap:14px;align-content:start;min-width:0;position:relative}
+.brf .card.sand{background:var(--subtle);border-color:transparent}
+.brf .card.dark{background:var(--fg);border-color:var(--fg);color:#fff}
+.brf .card.dark .muted,.brf .card.dark .src{color:rgb(255 255 255 / .68)}
+.brf .card.dark input{background:rgb(255 255 255 / .08);border-color:rgb(255 255 255 / .2);color:#fff}
+.brf .card.dark .fee label{color:rgb(255 255 255 / .72)}
+.brf .card h3{margin:0}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart .bar{fill:var(--accent);transition:opacity .15s}
+.chart .bar:hover,.chart .hit:hover+.bar{opacity:.8}
+.chart .ax{stroke:var(--line)}
+.chart text{font-size:12px;fill:var(--muted);font-family:inherit}
+.chart text.v{fill:var(--fg);font-weight:600}
+.ctip{position:absolute;pointer-events:none;background:var(--fg);color:#fff;font-size:.8rem;padding:6px 10px;border-radius:10px;transform:translate(-50%,calc(-100% - 8px));white-space:nowrap;opacity:0;transition:opacity .12s}
+.ctip.show{opacity:1}
+.rowform{display:grid;gap:8px}
+.rowform .r{display:grid;grid-template-columns:90px 110px minmax(0,1fr) auto;gap:8px;align-items:center}
+.rowform.um .r{grid-template-columns:minmax(0,1.3fr) 130px 90px minmax(0,1.3fr)}
+.rowform .hd{font-size:.8rem;color:var(--muted)}
+.rowform input,.rowform select{height:38px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:inherit;font-size:.9rem;background:var(--card);min-width:0;width:100%;box-sizing:border-box;color:var(--fg)}
+.rowform .nm{font-weight:500;font-size:.93rem}
+.rowform .x{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-content:center;border-radius:999px;color:var(--muted)}
+.rowform .x:hover{background:var(--subtle);color:var(--fg)}
+@media (max-width:640px){.rowform.um .r{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.rowform.um .r .nm{grid-column:1/-1}.rowform.um .r input[data-k$=".t"]{grid-column:1/-1}.rowform.um .hd{display:none}
+  .rowform .r{grid-template-columns:80px 90px minmax(0,1fr) auto}}
+.calc-out{display:grid;gap:0}
+.calc-out div{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:12px 0;border-top:1px solid rgb(255 255 255 / .16)}
+.calc-out b{font-family:var(--f-display);font-weight:500;font-size:1.35rem;white-space:nowrap}
+.calc-out span{font-size:.9rem}
+.legend-s{display:flex;gap:16px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
+.legend-s i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#brf-tl{overflow-x:auto}#brf-tl svg{min-width:620px}
+.tline text{font-size:12px;fill:var(--muted)}
+.tline text.lb{fill:var(--fg);font-weight:500}
+.ex-tag{background:#F7EBD3!important;color:#8A5A12!important;border-color:transparent!important}
 </style>
 
 <header id="top">
@@ -692,7 +748,7 @@ footer{border-top:1px solid var(--line)}
       <a class="nav-top" href="#oversikt" data-tab="oversikt"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.5" y="2.5" width="5.5" height="5.5" rx="1.5"/><rect x="10" y="2.5" width="5.5" height="5.5" rx="1.5"/><rect x="2.5" y="10" width="5.5" height="5.5" rx="1.5"/><rect x="10" y="10" width="5.5" height="5.5" rx="1.5"/></svg></span>Översikt</a>
       <div class="grp" data-grp="bostaden">
         <button class="grp-h" type="button" aria-expanded="false" aria-controls="g-bostaden"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 15.5V8l6-4.5L15 8v7.5Z"/><path d="M7.2 15.5v-4.2h3.6v4.2"/></svg></span><span class="lbl">Bostaden</span><svg class="chev" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div class="grp-b" id="g-bostaden"><div><ul><li><a href="#fastighet" data-tab="fastighet">Fastighet och detaljplan</a></li><li><a href="#miljo" data-tab="miljo">Miljö och risk</a></li></ul></div></div>
+        <div class="grp-b" id="g-bostaden"><div><ul><li><a href="#fastighet" data-tab="fastighet">Fastighet och detaljplan</a></li><li><a href="#miljo" data-tab="miljo">Miljö och risk</a></li><li><a href="#forening" data-tab="forening">Föreningens ekonomi</a></li></ul></div></div>
       </div>
       <div class="grp" data-grp="omradet">
         <button class="grp-h" type="button" aria-expanded="false" aria-controls="g-omradet"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2.5 4.5 6.5 3l5 1.5 4-1.5v10.5l-4 1.5-5-1.5-4 1.5Z"/><path d="M6.5 3v10.5M11.5 4.5V15"/></svg></span><span class="lbl">Området</span><svg class="chev" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -945,6 +1001,8 @@ footer{border-top:1px solid var(--line)}
   </div>
 </section>
 
+<section data-view="forening" hidden><div id="f-full"></div></section>
+
 <!-- INFÖR VISNINGEN -->
 <section data-view="visning" hidden>
   <div class="block">
@@ -1003,6 +1061,7 @@ footer{border-top:1px solid var(--line)}
         <tr><td>Göteborgs Stad, översiktsplanens kartlager</td><td>Inriktning för området, radon, skyfall, översvämning, förorenade områden, flygbuller</td><td class="num">2026-11-25</td></tr>
         <tr><td>Göteborgs Stad, miljöförvaltningen, trafikbuller- och luftberäkningar</td><td>Vägbuller 2021 och 2023, kvävedioxid och partiklar 2023</td><td class="num">2026-11-25</td></tr>
         <tr><td>Statens geotekniska institut (SGI), skredriskkarteringar</td><td>Om området ingår i en skredriskkartering</td><td class="num">2026-11-25</td></tr>
+        <tr><td>Bostadsrättsföreningens årsredovisning, ifylld av dig</td><td>Föreningens ekonomi: nyckeltal, avgifter och underhåll</td><td class="num">Din inmatning</td></tr>
         <tr><td>Göteborgs Stad, register över livsmedelsverksamheter</td><td>Matbutiker i närheten</td><td class="num">2026-11-25</td></tr>
       </tbody>
     </table></div>
@@ -1065,6 +1124,7 @@ footer{border-top:1px solid var(--line)}
       <tr><td>Skyfall, översvämning, radon, förorenad mark, farligt gods, flyg</td><td>Göteborgs Stad, översiktsplanen (oversiktsplan-v4)</td><td class="num">2026-11-25</td></tr>
       <tr><td>Planerat i området</td><td>Göteborgs Stad, översiktsplanen: framtida vägar, spår och förändrad markanvändning</td><td class="num">2026-11-25</td></tr>
       <tr><td>Livsmedelsbutiker och apotek</td><td>Miljöförvaltningens register över livsmedelsverksamheter</td><td class="num">2026-11-25</td></tr>
+<tr><td>Föreningens ekonomi</td><td>Uppgifter som du själv fyller i från bostadsrättsföreningens årsredovisning. Nyckeltalen följer Bokföringsnämndens allmänna råd BFNAR 2023:1</td><td class="num">Din inmatning</td></tr>
       <tr><td>Fastighetsavgift</td><td>Skatteverket, belopp och procent för inkomståret 2026</td><td class="num">2026-11-25</td></tr>
     </tbody></table></div>
     <p class="src">Allt är förberäknat och följer med sidan. Sidan hämtar inte data i realtid, så nya planbeslut syns först när underlaget uppdateras.</p>
@@ -1092,6 +1152,7 @@ footer{border-top:1px solid var(--line)}
   </div>
   <div id="b-q"></div>
 </section>
+<section data-bview="forening" hidden><div id="f-basic"></div></section>
 <section data-bview="na" hidden>
   <div class="na" id="b-na"></div>
 </section>
@@ -1402,6 +1463,7 @@ function go(view,opts={}){
   if(!basic&&view==="omradet"&&changed)playTimeline();
   if(!basic&&view==="oversikt")requestAnimationFrame(()=>setVB(cam));
   if(basic&&view==="oversikt")requestAnimationFrame(renderMap);
+  if(view==="forening"&&changed){if(basic){const a=D.A[curA];renderBRF($("#f-basic"),a.km?a.l+", "+KOM[a.km].namn:a.l,false);}else renderBRF($("#f-full"),FULL_LABEL,true);}
   if(opts.plan&&!basic){const el=$("#plan-"+opts.plan);setTimeout(()=>el&&el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"}),60);}
   else if(changed&&!opts.instant){scrollTo({top:0,behavior:"auto"});}
 }
@@ -1879,6 +1941,177 @@ function loadBasicExtras(k,pl){
   Promise.all([envFor(k),getJ(K.dir+"framtid.json").catch(()=>({f:[],src:""}))]).then(([e,fut])=>{if(seq!==envSeq)return;
     renderEnvBlocks(e.m,e.r,K);renderProperty(e.r,a,pl);const fl=renderFuture(e.r,fut,K);renderQuestions(a,pl,e.m,e.r,fl);
   }).catch(()=>{if(seq!==envSeq)return;$("#b-env").innerHTML='<div class="notice">Miljödata kunde inte laddas. Ladda om sidan och försök igen.</div>';});
+}
+
+/* ===== Föreningens ekonomi (bostadsrätt) =====
+   Föreningarnas årsredovisningar är inte öppna data. Användaren fyller i uppgifterna själv,
+   och portalen räknar fram jämförbara tal. Allt sparas bara i webbläsaren, per adress. */
+const BRF_N=[
+  ["avg","Årsavgift per kvm upplåten med bostadsrätt","kr","Årsavgifterna delat med bostadsrätternas sammanlagda yta."],
+  ["skuld","Skuldsättning per kvm","kr","Föreningens räntebärande skulder delat med all yta, både bostadsrätter och hyresrätter och lokaler."],
+  ["skuldbr","Skuldsättning per kvm upplåten med bostadsrätt","kr","Samma skulder delat med bara bostadsrätternas yta."],
+  ["spar","Sparande per kvm","kr","Vad föreningen får över till underhåll och amortering under året, per kvm."],
+  ["ranta","Räntekänslighet","%","Hur många procent årsavgifterna behöver höjas om räntan på alla lån ökar med en procentenhet."],
+  ["energi","Energikostnad per kvm","kr","Kostnad för el, värme och vatten per kvm."],
+  ["andel","Årsavgifternas andel av rörelseintäkterna","%","Hur stor del av föreningens intäkter som kommer från medlemmarnas avgifter."]
+];
+const BRF_U=[["stam","Stambyte, vatten och avlopp"],["tak","Tak"],["fasad","Fasad"],["fonster","Fönster"],["el","El och stigarledningar"],["vent","Ventilation och OVK"],["hiss","Hiss"],["balk","Balkonger"],["grund","Grund och dränering"]];
+const BRF_STATUS={"":"Inte angivet",gjort:"Gjort",pagar:"Pågår",plan:"Planerat",ej:"Finns inte"};
+const BRF_EX={ex:true,namn:"Brf Exempelgården",org:"",ar:"2025",lgh:"48",mark:"tomtratt",avgald:"412 000",uplan:"ja",uplanar:"2024",
+  y:["2022","2023","2024","2025"],
+  n:{avg:["760","790","850","905"],skuld:["6 200","6 100","6 450","6 300"],skuldbr:["6 900","6 800","7 150","7 000"],spar:["210","190","170","230"],ranta:["9,1","8,6","8,4","7,7"],energi:["205","240","215","200"],andel:["88","87","89","90"]},
+  h:[["2023","4","Höjda räntekostnader"],["2024","8","Stambyte, nya lån"],["2025","6",""]],
+  u:{stam:["gjort","2024","Badrum och kök i alla lägenheter"],tak:["gjort","2015","Nytt tak och tilläggsisolering"],fasad:["plan","2029","Puts och fönsterbleck, enligt underhållsplanen"],fonster:["gjort","2008",""],el:["gjort","2024","I samband med stambytet"],vent:["gjort","2023","OVK godkänd"],hiss:["ej","",""],balk:["plan","2031",""],grund:["","",""]},
+  kvm:"68",man:"4 300"};
+const brfKey=l=>"bc-brf:"+l;
+function brfLoad(l){let o=null;try{o=JSON.parse(localStorage.getItem(brfKey(l))||"null");}catch(e){}return brfNorm(o||{});}
+function brfNorm(o){o.y=o.y||["","","",""];o.n=o.n||{};BRF_N.forEach(([k])=>{o.n[k]=o.n[k]||["","","",""];});o.h=o.h||[["","",""]];o.u=o.u||{};BRF_U.forEach(([k])=>{o.u[k]=o.u[k]||["","",""];});return o;}
+function brfSave(l,o){try{localStorage.setItem(brfKey(l),JSON.stringify(o));}catch(e){}}
+const num=v=>{const t=String(v==null?"":v).replace(/[\s ]/g,"").replace(",",".").replace(/[^0-9.\-]/g,"");if(!t||t==="-"||t===".")return null;const n=parseFloat(t);return isFinite(n)?n:null;};
+const fmtK=(n,d=0)=>{if(n==null)return "–";const s=Math.abs(n).toFixed(d).split(".");return (n<0?"−":"")+fmtN(s[0]).replace(/ /g,"\u00a0")+(s[1]?","+s[1]:"");};
+const fmtP=n=>(n>0?"+":n<0?"−":"")+String(Math.abs(Math.round(n*10)/10)).replace(".",",")+"\u00a0%";
+let brfCur=null;
+function renderBRF(host,label,villa){
+  const st=brfLoad(label);brfCur={host,label,st};
+  const v=(k,ph,cls,attr)=>`<input data-k="${k}" value="${esc(brfGet(st,k)||"")}"${ph?` placeholder="${esc(ph)}"`:""}${cls?` class="${cls}"`:""} ${attr||'inputmode="decimal"'}>`;
+  const sel=(k,opts)=>`<select data-k="${k}">${Object.entries(opts).map(([a,b])=>`<option value="${a}"${(brfGet(st,k)||"")===a?" selected":""}>${b}</option>`).join("")}</select>`;
+  host.innerHTML=`<div class="brf">
+  <div class="block intro">
+    <div class="block-head"><div><div class="eyebrow">Bostadsrätt</div><h2 style="margin-top:6px">Föreningens ekonomi</h2></div><span class="tag ex-tag" id="brf-extag"${st.ex?"":" hidden"}>Påhittade exempelvärden</span></div>
+    ${villa?`<div class="notice"><b>${esc(label)} är en villa</b> och ingår inte i någon bostadsrättsförening. Delen gäller bostadsrätter och fungerar likadant för alla adresser. Fyll i exempelvärden för att se hur den ser ut.</div>`:""}
+    <p class="lead">När du köper en bostadsrätt blir du medlem i föreningen och delar på dess lån, avgifter och underhåll. Uppgifterna står i föreningens årsredovisning, som inte finns som öppna data. Fyll i det du hittar, så räknar portalen fram vad det betyder för lägenheten du tittar på.</p>
+    <div class="acts"><button class="btn sm" type="button" data-brf="ex">Fyll i exempelvärden</button><button class="linkbtn" type="button" data-brf="clear">Töm uppgifterna</button>
+      <span class="src">Årsredovisningen får du från mäklaren eller föreningen. Den kan också beställas från <a href="https://bolagsverket.se/" target="_blank" rel="noopener">Bolagsverket</a>. Det du fyller i sparas bara i din webbläsare.</span></div>
+  </div>
+  <div class="block"><div class="block-head"><h3>I korthet</h3><span class="src" id="brf-kyear"></span></div><div class="figs" id="brf-sum"></div></div>
+  <div class="block"><h3>Föreningen</h3>
+    <form class="fee" autocomplete="off" onsubmit="return false">
+      <label class="wide"><span>Föreningens namn</span>${v("namn","t.ex. Brf Linnégården",null,'type="text"')}</label>
+      <label><span>Organisationsnummer</span>${v("org","769600-0000",null,'type="text" inputmode="numeric"')}</label>
+      <label><span>Årsredovisning för år</span>${v("ar","t.ex. 2025",null,'inputmode="numeric" maxlength="4"')}</label>
+      <label><span>Antal lägenheter</span>${v("lgh","t.ex. 48")}</label>
+      <label><span>Marken</span>${sel("mark",{"":"Inte angivet",ager:"Föreningen äger marken",tomtratt:"Tomträtt, staden äger marken"})}</label>
+      <label id="brf-avgald"${st.mark==="tomtratt"?"":" hidden"}><span>Tomträttsavgäld, kr per år</span>${v("avgald","t.ex. 400 000")}</label>
+      <label><span>Underhållsplan</span>${sel("uplan",{"":"Inte angivet",ja:"Finns",nej:"Finns inte"})}</label>
+      <label><span>Underhållsplanen uppdaterad år</span>${v("uplanar","t.ex. 2024",null,'inputmode="numeric" maxlength="4"')}</label>
+    </form></div>
+  <div class="block"><div class="block-head"><h3>Nyckeltal ur flerårsöversikten</h3><span class="src">Skriv åren överst i kolumnerna, äldst till vänster</span></div>
+    <p class="muted" style="margin:0;max-width:72ch">Sedan räkenskapsår som börjar 2023 ska varje bostadsrättsförening redovisa samma nyckeltal i förvaltningsberättelsen. Tabellen följer den ordning de brukar stå i.</p>
+    <div class="tbl"><table class="nyck"><thead><tr><th>Nyckeltal</th>${[0,1,2,3].map(i=>`<th>${v("y."+i,"År",null,'inputmode="numeric" maxlength="4" aria-label="År, kolumn '+(i+1)+'"')}</th>`).join("")}</tr></thead><tbody>
+      ${BRF_N.map(([k,n,u,d])=>`<tr><td>${n} <span class="u">${u==="%"?"%":"kr/kvm"}</span><small>${d}</small></td>${[0,1,2,3].map(i=>`<td>${v("n."+k+"."+i,"",null,'inputmode="decimal" aria-label="'+n+', kolumn '+(i+1)+'"')}</td>`).join("")}</tr>`).join("")}
+    </tbody></table></div>
+    <p class="src">Källa: föreningens årsredovisning. Nyckeltalen och hur de räknas fram anges i Bokföringsnämndens allmänna råd BFNAR 2023:1. Portalen värderar inte nivåerna, eftersom de beror på bland annat husets ålder, läge och vad som nyss renoverats.</p>
+  </div>
+  <div class="brf-grid">
+    <div class="card"><div class="block-head"><h3>Årsavgift per kvm</h3><span class="src">kr per kvm och år</span></div><div id="brf-chart"></div><div class="ctip" id="brf-ctip"></div><p class="src" id="brf-chartsrc" style="margin:0"></p></div>
+    <div class="card dark" id="brf-apt"><h3>Din lägenhet</h3>
+      <form class="fee" autocomplete="off" onsubmit="return false" style="grid-template-columns:1fr 1fr">
+        <label><span>Boarea, kvm</span>${v("kvm","t.ex. 68")}</label><label><span>Månadsavgift, kr</span>${v("man","t.ex. 4 300")}</label></form>
+      <div class="calc-out" id="brf-calc"></div>
+      <p class="src" style="margin:0">Uppskattning utifrån boarean. Föreningen fördelar egentligen lån och avgifter efter andelstal, som kan skilja sig något från boarean.</p></div>
+  </div>
+  <div class="block"><div class="block-head"><h3>Avgiftshistorik</h3><span class="src">Står ofta i förvaltningsberättelsen eller kan fås av föreningen</span></div>
+    <div class="rowform" id="brf-h"></div>
+    <div class="acts"><button class="btn sm" type="button" data-brf="addh">Lägg till en ändring</button><span class="small muted" id="brf-hsum"></span></div>
+  </div>
+  <div class="block"><div class="block-head"><h3>Underhåll och stambyten</h3><span class="src">Ur förvaltningsberättelsen och underhållsplanen</span></div>
+    <div class="card" style="padding:18px 22px"><div id="brf-tl"></div><div class="legend-s"><span><i style="background:var(--fg)"></i>Gjort</span><span><i style="background:var(--card);box-shadow:inset 0 0 0 2px var(--accent)"></i>Planerat eller pågår</span><span><i style="background:var(--faint);width:2px;border-radius:0"></i>I dag</span></div></div>
+    <div class="rowform um"><div class="r hd"><span>Del av huset</span><span>Status</span><span>År</span><span>Kommentar</span></div>
+      ${BRF_U.map(([k,n])=>`<div class="r"><span class="nm">${n}</span>${sel("u."+k+".s",BRF_STATUS)}${v("u."+k+".y","År",null,'inputmode="numeric" maxlength="4" aria-label="'+n+', år"')}${v("u."+k+".t","Kommentar",null,'type="text" aria-label="'+n+', kommentar"')}</div>`).join("")}
+    </div>
+  </div>
+  <div class="block"><div class="block-head"><h3>Frågor till föreningen och mäklaren</h3><span class="small muted" id="brf-qc"></span></div><ul class="q" id="brf-q"></ul></div>
+  </div>`;
+  brfRenderH();brfUpdate();
+  host.oninput=host.onchange=e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;brfSet(brfCur.st,k,e.target.value);brfSave(label,brfCur.st);
+    if(k==="mark")$("#brf-avgald").hidden=e.target.value!=="tomtratt";brfUpdate();};
+  host.onclick=e=>{const b=e.target.closest("[data-brf]");if(!b)return;const a=b.dataset.brf;
+    if(a==="ex"){brfSave(label,JSON.parse(JSON.stringify(BRF_EX)));renderBRF(host,label,villa);}
+    else if(a==="clear"){try{localStorage.removeItem(brfKey(label));}catch(e){}renderBRF(host,label,villa);}
+    else if(a==="addh"){brfCur.st.h.push(["","",""]);brfSave(label,brfCur.st);brfRenderH();const ins=$$("#brf-h input");ins[ins.length-3]&&ins[ins.length-3].focus();}
+    else if(a==="rmh"){brfCur.st.h.splice(+b.dataset.i,1);if(!brfCur.st.h.length)brfCur.st.h.push(["","",""]);brfSave(label,brfCur.st);brfRenderH();brfUpdate();}};
+}
+function brfGet(o,k){const p=k.split(".");let x=o;
+  if(p[0]==="u"){const u=o.u[p[1]];return u?u[{s:0,y:1,t:2}[p[2]]]:"";}
+  for(const q of p){if(x==null)return "";x=x[q];}return x;}
+function brfSet(o,k,val){const p=k.split(".");o.ex=o.ex;
+  if(p[0]==="u"){o.u[p[1]][{s:0,y:1,t:2}[p[2]]]=val;return;}
+  let x=o;for(let i=0;i<p.length-1;i++)x=x[p[i]];x[p[p.length-1]]=val;}
+function brfRenderH(){const st=brfCur.st;
+  $("#brf-h").innerHTML=`<div class="r hd"><span>År</span><span>Ändring, %</span><span>Kommentar</span><span></span></div>`+st.h.map((r,i)=>`<div class="r">
+    <input data-k="h.${i}.0" value="${esc(r[0])}" placeholder="År" inputmode="numeric" maxlength="4" aria-label="År för ändring ${i+1}">
+    <input data-k="h.${i}.1" value="${esc(r[1])}" placeholder="t.ex. 5 eller −2" inputmode="decimal" aria-label="Ändring i procent, rad ${i+1}">
+    <input data-k="h.${i}.2" value="${esc(r[2])}" placeholder="Kommentar, valfri" type="text" aria-label="Kommentar, rad ${i+1}">
+    <button class="x" type="button" data-brf="rmh" data-i="${i}" aria-label="Ta bort rad ${i+1}"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>`).join("");}
+function brfSeries(st,k){return st.y.map((y,i)=>({y:num(y),v:num(st.n[k][i]),i})).filter(p=>p.v!=null);}
+function brfLatest(st,k){const s=brfSeries(st,k);return s.length?s[s.length-1]:null;}
+function brfUpdate(){
+  const st=brfCur.st,yl=i=>st.y[i]&&num(st.y[i])!=null?st.y[i]:"kolumn "+(i+1);
+  $("#brf-extag").hidden=!st.ex;
+  // i korthet
+  const fig=(k,lbl,unit)=>{const s=brfSeries(st,k),L=s[s.length-1],F=s[0];
+    const val=L?(unit==="%"?fmtK(L.v,1).replace(/,0$/,"")+" %":fmtK(L.v)+" kr"):null;
+    const sub=!L?"Fyll i nedan":s.length>1?`<span>${esc(yl(L.i))}. År ${esc(yl(F.i))}: <b>${unit==="%"?fmtK(F.v,1).replace(/,0$/,"")+" %":fmtK(F.v)+" kr"}</b></span>`:esc(yl(L.i));
+    return `<div><span class="eyebrow">${lbl}</span><b class="${val?"":"empty"}">${val||"–"}</b><span class="muted">${sub}</span></div>`;};
+  $("#brf-sum").innerHTML=fig("skuldbr","Skuld per kvm bostadsrätt")+fig("avg","Årsavgift per kvm")+fig("spar","Sparande per kvm")+fig("ranta","Räntekänslighet","%");
+  const yrs=st.y.filter(y=>num(y)!=null);$("#brf-kyear").textContent=yrs.length?"Senaste året i tabellen, jämfört med det äldsta":"";
+  // diagram
+  const s=brfSeries(st,"avg"),ch=$("#brf-chart");
+  if(!s.length){ch.innerHTML=`<div class="notice" style="max-width:none">Fyll i årsavgift per kvm i tabellen ovan, så visas utvecklingen här.</div>`;$("#brf-chartsrc").textContent="";}
+  else{const W=520,H=210,pl=8,pb=26,pt=26,max=Math.max(...s.map(p=>p.v))*1.12||1,bw=Math.min(72,(W-pl*2)/s.length*0.56),step=(W-pl*2)/s.length;
+    ch.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Årsavgift per kvm per år">${s.map((p,j)=>{const h=Math.max(2,(H-pb-pt)*p.v/max),x=pl+step*j+(step-bw)/2,y=H-pb-h,r=Math.min(4,h/2);
+        const lab=j===0||j===s.length-1;
+        return `<g data-tip="${esc(yl(p.i))}: ${fmtK(p.v)} kr per kvm"><rect class="hit" x="${pl+step*j}" y="${pt-20}" width="${step}" height="${H-pt}" fill="transparent"/><path class="bar" d="M${x},${H-pb} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${H-pb} Z"/>${lab?`<text class="v" x="${x+bw/2}" y="${y-8}" text-anchor="middle">${fmtK(p.v)}</text>`:""}<text x="${x+bw/2}" y="${H-8}" text-anchor="middle">${esc(yl(p.i))}</text></g>`;}).join("")}<line class="ax" x1="0" x2="${W}" y1="${H-pb}" y2="${H-pb}"/></svg>`;
+    const F=s[0],L=s[s.length-1];
+    $("#brf-chartsrc").textContent=s.length>1?`Från ${yl(F.i)} till ${yl(L.i)}: ${fmtP((L.v/F.v-1)*100)}. Håll pekaren över en stapel för värdet.`:"Ett år ifyllt.";
+    const tip=$("#brf-ctip"),card=ch.parentElement;
+    ch.querySelectorAll("g[data-tip]").forEach(g=>{g.addEventListener("pointerenter",()=>{const b=g.querySelector(".bar").getBoundingClientRect(),c=card.getBoundingClientRect();tip.textContent=g.dataset.tip;tip.style.left=(b.left-c.left+b.width/2)+"px";tip.style.top=(b.top-c.top)+"px";tip.classList.add("show");});
+      g.addEventListener("pointerleave",()=>tip.classList.remove("show"));});}
+  // din lägenhet
+  const kvm=num(st.kvm),man=num(st.man),sk=brfLatest(st,"skuldbr")||brfLatest(st,"skuld"),rk=brfLatest(st,"ranta"),av=brfLatest(st,"avg");
+  const rows=[];
+  if(kvm&&sk)rows.push([`${fmtK(Math.round(kvm*sk.v/1000)*1000)} kr`,`Lägenhetens del av föreningens lån, ${fmtK(sk.v)} kr per kvm gånger ${fmtK(kvm)} kvm`]);
+  if(kvm&&man)rows.push([`${fmtK(man*12/kvm)} kr`,`Din avgift per kvm och år${av?`. Föreningens snitt för bostadsrätterna är ${fmtK(av.v)} kr`:""}`]);
+  if(man&&rk){rows.push([`+${fmtK(Math.round(man*rk.v/100))} kr`,`I månaden om räntan på föreningens lån blir 1 procentenhet högre (räntekänslighet ${fmtK(rk.v,1).replace(/,0$/,"")}\u00a0%)`]);
+    rows.push([`+${fmtK(Math.round(man*rk.v*2/100))} kr`,"I månaden vid 2 procentenheter högre ränta"]);}
+  if(man)rows.push([`${fmtK(man*12)} kr`,"Avgift per år"]);
+  $("#brf-calc").innerHTML=rows.length?rows.map(([b,t])=>`<div><span>${esc(t)}</span><b>${b}</b></div>`).join("")+(rk&&man?`<p class="src" style="margin:12px 0 0">Räntekänsligheten förutsätter att hela höjningen läggs på avgiften och att alla lån får den nya räntan samtidigt. Lån med bunden ränta påverkas först när bindningstiden går ut.</p>`:""):
+    `<p class="muted" style="margin:0">Fyll i boarea och månadsavgift, och nyckeltalen ovan, så räknas lägenhetens del av lånen och effekten av en ränteändring fram.</p>`;
+  // avgiftshistorik
+  const hs=st.h.map(r=>({y:num(r[0]),p:num(r[1])})).filter(r=>r.p!=null).sort((a,b)=>(a.y||0)-(b.y||0));
+  if(hs.length){const tot=(hs.reduce((f,r)=>f*(1+r.p/100),1)-1)*100,ys=hs.filter(r=>r.y).map(r=>r.y);
+    $("#brf-hsum").textContent=`${hs.length===1?"En ändring":hs.length+" ändringar"}${ys.length?` ${Math.min(...ys)===Math.max(...ys)?Math.min(...ys):Math.min(...ys)+"–"+Math.max(...ys)}`:""}, sammanlagt ${fmtP(tot)}`;}
+  else $("#brf-hsum").textContent="";
+  // underhåll, tidslinje
+  const ev=BRF_U.map(([k,n])=>({n,s:st.u[k][0],y:num(st.u[k][1])})).filter(e=>e.y&&e.y>1850&&e.y<2100&&["gjort","pagar","plan"].includes(e.s)).sort((a,b)=>a.y-b.y);
+  const now=2026,tl=$("#brf-tl");
+  if(!ev.length)tl.innerHTML=`<p class="muted" style="margin:0 0 10px">Ange status och år nedan, så visas åtgärderna på en tidslinje.</p>`;
+  else{const y0=Math.min(now-10,...ev.map(e=>e.y))-1,y1=Math.max(now+5,...ev.map(e=>e.y))+1,W=760,H=170,px=y=>24+(W-48)*(y-y0)/(y1-y0),mid=78;
+    const ticks=[];for(let y=Math.ceil(y0/5)*5;y<=y1;y+=5)ticks.push(y);
+    tl.innerHTML=`<svg class="chart tline" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tidslinje över underhåll">
+      <line x1="24" x2="${W-24}" y1="${mid}" y2="${mid}" stroke="var(--line)" stroke-width="2"/>
+      ${ticks.map(y=>`<text x="${px(y)}" y="${H-6}" text-anchor="middle">${y}</text><line x1="${px(y)}" x2="${px(y)}" y1="${mid-4}" y2="${mid+4}" stroke="var(--line)"/>`).join("")}
+      <line x1="${px(now)}" x2="${px(now)}" y1="18" y2="${H-24}" stroke="var(--faint)" stroke-dasharray="3 3"/><text x="${px(now)}" y="12" text-anchor="middle">I dag</text>
+      ${(()=>{const lv=[-1e9,-1e9,-1e9,-1e9],LY=[mid-20,mid+30,mid-38,mid+48];return ev.map(e=>{const x=px(e.y),done=e.s==="gjort",t=e.n.split(",")[0]+" "+e.y,w=t.length*6.6+12;
+        let L=lv.findIndex(r=>r<x-w/2);if(L<0)L=lv.indexOf(Math.min(...lv));lv[L]=x+w/2;const ly=LY[L],up=L%2===0;
+        return `<g><title>${esc(e.n)}: ${BRF_STATUS[e.s].toLowerCase()} ${e.y}</title><line x1="${x}" x2="${x}" y1="${mid}" y2="${up?ly+4:ly-12}" stroke="var(--line)"/><circle cx="${x}" cy="${mid}" r="6.5" fill="${done?"var(--fg)":"var(--card)"}" stroke="${done?"var(--card)":"var(--accent)"}" stroke-width="${done?2:2.5}"/><text class="lb" x="${Math.max(w/2,Math.min(W-w/2,x))}" y="${ly}" text-anchor="middle">${esc(t)}</text></g>`;}).join("");})()}}).join("")}</svg>`;}
+  // frågor
+  const Q=[],U=k=>st.u[k];
+  Q.push(["hojn","Planerar föreningen att höja avgiften de närmaste åren?",""]);
+  Q.push(["bind","Hur är föreningens lån bundna, och när ska de läggas om?",rk?`Räntekänslighet ${fmtK(rk.v,1).replace(/,0$/,"")} % enligt årsredovisningen.`:"Bindningstiderna står i noterna till årsredovisningen."]);
+  if(!U("stam")[0]||!U("stam")[1])Q.push(["stam","När gjordes stambytet, eller när planeras det?","Uppgiften står ofta i förvaltningsberättelsen."]);
+  BRF_U.forEach(([k,n])=>{const u=U(k);if((u[0]==="plan"||u[0]==="pagar")&&k!=="hiss")Q.push(["plan-"+k,`Hur ska ${n.split(",")[0].toLowerCase()}${u[1]?" "+u[1]:""} finansieras, och påverkar det avgiften?`,u[2]||""]);});
+  if(st.uplan!=="ja")Q.push(["uplan","Finns en underhållsplan, och när uppdaterades den senast?",""]);
+  if(st.mark==="tomtratt")Q.push(["tomt","När omförhandlas tomträttsavgälden nästa gång?",num(st.avgald)?`Avgälden är ${fmtK(num(st.avgald))} kr per år enligt det du fyllt i.`:"Avgälden betalas till staden och kan höjas vid omförhandling."]);
+  if(!st.mark)Q.push(["mark","Äger föreningen marken, eller är det tomträtt?",""]);
+  Q.push(["lokal","Har föreningen lokaler eller hyresrätter, och vilka hyresavtal löper ut snart?","Påverkar hur stor del av intäkterna som kommer från avgifterna."]);
+  Q.push(["over","Ingår något särskilt i avgiften, till exempel bredband, el eller värme?",""]);
+  Q.push(["tvist","Pågår några tvister, försäkringsskador eller större reparationer?",""]);
+  const qk=id=>"bc-brfq:"+brfCur.label+":"+id;
+  $("#brf-q").innerHTML=Q.map(([id,q,sm])=>{let on=false;try{on=localStorage.getItem(qk(id))==="1";}catch(e){}
+    return `<li><label><input type="checkbox" data-q="${id}"${on?" checked":""}><span class="qt">${esc(q)}${sm?`<small>${esc(sm)}</small>`:""}</span></label></li>`;}).join("");
+  const upd=()=>{const c=$$("#brf-q input");$("#brf-qc").textContent=`${c.filter(x=>x.checked).length} av ${c.length} besvarade`;};
+  $$("#brf-q input").forEach(cb=>cb.addEventListener("change",e=>{e.stopPropagation();try{localStorage.setItem(qk(cb.dataset.q),cb.checked?"1":"0");}catch(er){}upd();}));upd();
 }
 
 let mode="full";

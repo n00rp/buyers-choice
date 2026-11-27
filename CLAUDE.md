@@ -66,4 +66,5 @@ Externa länkar från tidigare arbete:
 - **Taxeringsvärde** är inte öppna data. Användaren fyller i det själv för att räkna fram fastighetsavgiften.
 - Planbestämmelser är bara tolkade för exempeladressen.
 - Ett hämtningsskript som laddar ned rådata, så att hela datakedjan kan köras om med ett kommando.
-- Bygglov och bostadsrättsföreningars årsredovisningar ingår inte ännu.
+- Bygglov ingår inte ännu.
+- **Föreningens ekonomi** (vyn `#forening`, under Bostaden) bygger på att användaren själv fyller i uppgifter ur årsredovisningen, eftersom den inte är öppna data. Inmatningen sparas i localStorage per adress (`bc-brf:<adress>`). Knappen "Fyll i exempelvärden" ger påhittade värden som märks som exempel. Att läsa in årsredovisningen automatiskt (t.ex. uppladdad PDF eller Bolagsverkets API för digitalt inlämnade årsredovisningar) återstår och kräver troligen backend.
