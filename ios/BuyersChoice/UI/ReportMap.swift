@@ -23,17 +23,19 @@ struct MapLayers {
     var shapes: [Shape] = []
 
     @MainActor
-    init(model: ReportModel, store: DataStore) {
+    init(model: ReportModel, store: DataStore, compact: Bool = false) {
+        // Den lilla kartan i rapporten visar bara det närmaste, så att den inte blir plottrig.
+        let lim = compact ? 6 : 40, r = compact ? 650 : 1100
         let a = model.address
         let K = store.kommun(a)
         let S = store.service(a)
         func add(_ list: [Nearby], _ sub: (Place) -> String) {
             points += list.map { Point(id: $0.place.id, name: $0.place.name, sub: sub($0.place), m: $0.m, kind: $0.place.kind, coordinate: $0.place.coordinate) }
         }
-        add(store.nearby(S.shops, to: a, limit: 12, within: 1100)) { _ in "Livsmedelsbutik" }
-        add(store.nearby(S.preschools, to: a, limit: 40, within: 1100)) { _ in "Förskola" }
-        add(store.nearby(S.schools, to: a, limit: 40, within: 1100) { $0.level == "gr" }) { "Grundskola" + ($0.grades.isEmpty ? "" : " " + $0.grades) }
-        if K.has(.stops) { add(store.nearby(S.stops, to: a, limit: 40, within: 1100)) { _ in "Hållplats" } }
+        add(store.nearby(S.shops, to: a, limit: compact ? 4 : 12, within: r)) { _ in "Livsmedelsbutik" }
+        add(store.nearby(S.preschools, to: a, limit: lim, within: r)) { _ in "Förskola" }
+        add(store.nearby(S.schools, to: a, limit: lim, within: r) { $0.level == "gr" }) { "Grundskola" + ($0.grades.isEmpty ? "" : " " + $0.grades) }
+        if K.has(.stops) { add(store.nearby(S.stops, to: a, limit: lim, within: r)) { _ in "Hållplats" } }
 
         guard let row = model.row, let fut = model.future else { return }
         let conv: ([Double]) -> CLLocationCoordinate2D = { Sweref.toWGS84(e: $0.first ?? 0, n: $0.count > 1 ? $0[1] : 0) }
@@ -122,7 +124,7 @@ struct ReportMapView: View {
             MapScaleView()
         }
         .task(id: "\(model.address.id)-\(model.loading)") {
-            layers = MapLayers(model: model, store: store)
+            layers = MapLayers(model: model, store: store, compact: !interactive)
         }
     }
 }

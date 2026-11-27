@@ -16,11 +16,10 @@ final class ReportModel {
     func load(_ store: DataStore) async {
         loading = true
         failed = false
-        async let env = try? store.env(for: address)
-        async let fut = try? store.future(for: address)
-        let K = store.kommun(address)
-        let pw: PlanWorkData? = K.has(.planarbete) ? await store.planWork() : nil
-        let (e, f) = await (env, fut)
+        // Hämtas i tur och ordning. async let med try? kraschade i Swift-körtiden (swift_task_dealloc).
+        let e = try? await store.env(for: address)
+        let f = try? await store.future(for: address)
+        let pw: PlanWorkData? = store.kommun(address).has(.planarbete) ? await store.planWork() : nil
         meta = e?.0
         row = e?.1
         future = f
