@@ -83,7 +83,7 @@ jobs:
           TOKEN: ${{ github.token }}
         run: |
           git init -q -b ios-skarmbilder
-          git add *.png
+          git add .
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit -q -m "Skärmbilder från ${GITHUB_SHA::7}"
           git push -q -f "https://x-access-token:$TOKEN@github.com/$GITHUB_REPOSITORY.git" ios-skarmbilder

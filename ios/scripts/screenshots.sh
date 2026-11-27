@@ -14,8 +14,12 @@ xcrun simctl privacy "$SIM" grant location "$BUNDLE" || true
 shot() { # namn, väntetid, launch-argument …
   local name="$1" wait="$2"; shift 2
   xcrun simctl terminate "$SIM" "$BUNDLE" 2>/dev/null || true
-  xcrun simctl launch "$SIM" "$BUNDLE" "$@" >/dev/null
+  xcrun simctl launch --stdout="$OUT/$name.log" --stderr="$OUT/$name.log" "$SIM" "$BUNDLE" "$@" >/dev/null
   sleep "$wait"
+  # Har appen kraschat sparas kraschrapporten bredvid skärmbilden.
+  for f in "$HOME"/Library/Logs/DiagnosticReports/BuyersChoice*.ips; do
+    [ -e "$f" ] && mv "$f" "$OUT/$name-krasch.ips" && echo "Krasch: $name"
+  done
   xcrun simctl io "$SIM" screenshot "$OUT/$name.png" >/dev/null
   echo "Skärmbild: $name"
 }
