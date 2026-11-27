@@ -1463,7 +1463,7 @@ function go(view,opts={}){
   if(!basic&&view==="omradet"&&changed)playTimeline();
   if(!basic&&view==="oversikt")requestAnimationFrame(()=>setVB(cam));
   if(basic&&view==="oversikt")requestAnimationFrame(renderMap);
-  if(view==="forening"&&changed){if(basic)renderBRF($("#f-basic"),D.A[curA].l,false);else renderBRF($("#f-full"),FULL_LABEL,true);}
+  if(view==="forening"&&changed){if(basic){const a=D.A[curA];renderBRF($("#f-basic"),a.km?a.l+", "+KOM[a.km].namn:a.l,false);}else renderBRF($("#f-full"),FULL_LABEL,true);}
   if(opts.plan&&!basic){const el=$("#plan-"+opts.plan);setTimeout(()=>el&&el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"}),60);}
   else if(changed&&!opts.instant){scrollTo({top:0,behavior:"auto"});}
 }
