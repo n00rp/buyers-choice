@@ -142,7 +142,8 @@ struct FitText: View {
     }
 
     var body: some View {
-        let longest = text.split(whereSeparator: { $0 == " " || $0 == "\n" }).max { $0.count < $1.count }.map(String.init) ?? text
+        let words: [String] = text.components(separatedBy: .whitespacesAndNewlines)
+        let longest: String = words.max(by: { $0.count < $1.count }) ?? text
         ViewThatFits(in: .horizontal) {
             ForEach(sizes, id: \.self) { size in
                 ZStack(alignment: .topLeading) {
