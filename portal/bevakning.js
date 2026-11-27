@@ -18,7 +18,11 @@ const today=()=>new Date().toISOString().slice(0,10);
 let mem=null;
 function list(){if(mem)return mem;try{mem=JSON.parse(localStorage.getItem(BV_KEY)||"[]");}catch(e){mem=[];}if(!Array.isArray(mem))mem=[];return mem;}
 function save(){try{localStorage.setItem(BV_KEY,JSON.stringify(mem));}catch(e){}}
-const find=l=>list().find(b=>b.l===l);
+const kmOf=a=>a&&a.km||0;
+const same=(b,a)=>b.l===a.l&&(b.km||0)===kmOf(a);
+const findA=a=>list().find(b=>same(b,a));
+const inGbg=a=>kmOf(a)===0;
+const kNamn=a=>typeof KOM!=="undefined"&&KOM[kmOf(a)]?KOM[kmOf(a)].namn:"";
 
 /* ---- data ---- */
 let Hp=null;
@@ -69,26 +73,27 @@ const bell='<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="
 function curIdx(){if(!D)return -1;return mode==="basic"?curA:mode==="full"?D.full:-1;}
 const hashOf=k=>k===D.full?"#bevakning":"#a"+k+"-bevakning";
 
-function toggle(k,r){const a=D.A[k],L=list(),i=L.findIndex(b=>b.l===a.l);
+function toggle(k,r){const a=D.A[k],L=list(),i=L.findIndex(b=>same(b,a));
   if(i>=0){L.splice(i,1);save();refresh();return;}
   r=r||1000;
-  data().then(B=>{L.push({l:a.l,k,r,sparad:today(),sett:near(B,a,r).h.map(x=>x.id)});save();refresh();})
-    .catch(()=>{L.push({l:a.l,k,r,sparad:today(),sett:null});save();refresh();});}
-function setRadius(k,r){const b=find(D.A[k].l);if(b){b.r=r;save();}render(r);}
-function markRead(k){const b=find(D.A[k].l);if(!b)return;data().then(B=>{b.sett=near(B,D.A[k],b.r).h.map(x=>x.id);save();refresh();});}
-function newFor(b,B){const a=D.A[b.k];if(!a||a.l!==b.l)return [];const seen=new Set(b.sett||[]);return near(B,a,b.r).h.filter(x=>b.sett&&!seen.has(x.id));}
+  data().then(B=>{L.push({l:a.l,km:kmOf(a),k,r,sparad:today(),sett:near(B,a,r).h.map(x=>x.id)});save();refresh();})
+    .catch(()=>{L.push({l:a.l,km:kmOf(a),k,r,sparad:today(),sett:null});save();refresh();});}
+function setRadius(k,r){const b=findA(D.A[k]);if(b){b.r=r;save();}render(r);}
+function markRead(k){const b=findA(D.A[k]);if(!b)return;data().then(B=>{b.sett=near(B,D.A[k],b.r).h.map(x=>x.id);save();refresh();});}
+function newFor(b,B){const a=D.A[b.k];if(!a||!same(b,a))return [];const seen=new Set(b.sett||[]);return near(B,a,b.r).h.filter(x=>b.sett&&!seen.has(x.id));}
 
 /* ---- knappen i rapportens sidhuvud ---- */
 function headBtn(){const k=curIdx();if(k<0)return;
   const host=mode==="basic"?$("#b-head .bhead .row"):$("#full-head .prop-actions");if(!host)return;
   let b=host.querySelector(".bv-head-btn");
+  if(!inGbg(D.A[k])){if(b)b.remove();return;}
   if(!b){b=document.createElement("button");b.type="button";b.className="bv-head-btn";host.appendChild(b);
-    b.addEventListener("click",()=>{const k=curIdx();if(find(D.A[k].l))go("bevakning");else{toggle(k);go("bevakning");}});}
-  const on=!!find(D.A[k].l);b.setAttribute("aria-pressed",on);b.innerHTML=bell+(on?"Bevakas":"Bevaka adressen");}
+    b.addEventListener("click",()=>{const k=curIdx();if(findA(D.A[k]))go("bevakning");else{toggle(k);go("bevakning");}});}
+  const on=!!findA(D.A[k]);b.setAttribute("aria-pressed",on);b.innerHTML=bell+(on?"Bevakas":"Bevaka adressen");}
 
 /* ---- antal nya i menyn ---- */
 function navDot(){const a=$('.sidenav [data-tab="bevakning"]');if(!a)return;let d=a.querySelector(".bv-dot");
-  const k=curIdx(),b=k>=0&&find(D.A[k].l);
+  const k=curIdx(),b=k>=0&&findA(D.A[k]);
   if(!b){if(d)d.remove();return;}
   data().then(B=>{const n=newFor(b,B).length;d=a.querySelector(".bv-dot");
     if(!n){if(d)d.remove();return;}if(!d){d=document.createElement("span");d.className="bv-dot";a.appendChild(d);}d.textContent=n;}).catch(()=>{});}
@@ -105,12 +110,14 @@ function prLi(p,F){return `<li><span class="nm">${esc(p.namn)}</span>
 let showAll=false;
 function render(rOverride){const k=curIdx();if(k<0)return;
   const host=mode==="basic"?$("#bv-basic"):$("#bv-full");if(!host)return;
-  const a=D.A[k],b=find(a.l),r=rOverride||(b?b.r:1000);
+  const a=D.A[k],b=findA(a),r=rOverride||(b?b.r:1000);
+  if(!inGbg(a)){host.innerHTML=`<div class="block"><h2>Bevakning</h2><p class="lead">Bevakning av planarbete finns än så länge bara för adresser i Göteborg. Där hämtas stadens plan- och byggprojekt varje morgon.</p></div>
+    <div class="notice">${esc(kNamn(a))} publicerar inte sina pågående planarbeten som data som går att hämta varje dag. Se kommunens egen lista${typeof KOM!=="undefined"&&KOM[kmOf(a)].plansida?`: <a href="${esc(KOM[kmOf(a)].plansida)}" target="_blank" rel="noopener">pågående detaljplanering hos ${esc(kNamn(a))}</a>`:"."}</div>`;return;}
   host.innerHTML=`<div class="block"><h2>Bevakning</h2><p class="lead">Följ vad som händer runt ${esc(a.l)}: nya planarbeten, samråd och granskning, beslut om antagande och laga kraft, och nya gällande planer.</p></div><p class="muted">Laddar …</p>`;
   data().then(B=>{if(curIdx()!==k)return;
     const N=near(B,a,r),seen=b&&b.sett?new Set(b.sett):null;
     const isNew=x=>seen&&!seen.has(x.id),nNew=N.h.filter(isNew).length;
-    const others=list().filter(o=>o.l!==a.l);
+    const others=list().filter(o=>!same(o,a));
     const ev=N.h.slice().sort((x,y)=>(isNew(y)-isNew(x))||y.datum.localeCompare(x.datum));
     const pr=showAll?N.p:N.p.slice(0,10);
     host.innerHTML=`

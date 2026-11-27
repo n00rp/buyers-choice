@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # för att starta publiceringen av portalen
 
 concurrency:
   group: bevakning
@@ -67,3 +68,7 @@ jobs:
           git -c user.name="Buyers Choice bevakning" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit -m "Bevakning: läget $(date -u +%Y-%m-%d)"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          # Pushar gjorda med GITHUB_TOKEN startar inga andra arbetsflöden, så publiceringen startas här.
+          gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
