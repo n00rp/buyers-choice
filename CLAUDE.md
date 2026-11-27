@@ -34,6 +34,7 @@ En portal som samlar det en bostadsköpare behöver veta om platsen inför visni
 - Övriga kommuner ligger i `portal/k/<kommun>/` med samma filformat. `KOM` i `index.html` listar kommunerna och vad de har data för (`har`). Göteborg ligger först så att adresslänkarna `#a<nummer>` inte ändras. `scripts/kommun_partille.py` hämtar och bygger Partille.
 - `scripts/screenshots.js` tar skärmbilderna i `docs/screenshots/` medan portalen körs.
 - Exempeladressen **Vildkaprifolen 5, Torslanda** har en fullständig rapport med manuellt tolkade planbestämmelser (`data/vildkaprifolen-5-detaljplan.json`). Andra adresser får en grundrapport.
+- **Jämför adresser** (`#jamfor-<nr>-<nr>`): två eller tre adresser sida vid sida, byggt på samma förberäknade data som grundrapporten. Inga markeringar av bästa värde, bara ett reglage som döljer lika rader.
 - `arkiv/vildkaprifolen-5.html` är den första prototypen för en enda adress.
 
 ### Köra lokalt
@@ -60,11 +61,13 @@ Externa länkar från tidigare arbete:
 
 ## Vad som återstår
 
-- **Pågående planarbeten** visas för alla Göteborgsadresser (inom 1,5 km) från stadens projektdatabas planobygg.nsf, via `scripts/build_planarbete.py` → `portal/planarbete.json`. Portalen läser bevakningens dagliga fil `portal/bevakning/planarbete.json` i första hand om den finns. Planprogram och nämndbeslut som bara finns som PDF ingår inte.
-- **Skred, jordart och jorddjup** finns hos SGU (maps3.sgu.se) och SGI (mapsext.sgi.se), men bara som WMS för visning (WFS avstängd). Att fråga dem per adress för 100 000 adresser är inte ett godkänt datauttag. Nästa steg är SGU:s nedladdningsbara öppna data (jordarter 1:25 000–1:100 000, jorddjupsmodell, förutsättningar för skred), som räknas mot adresserna lokalt.
+- **Pågående detaljplaner** hämtas sedan 2026-11-27 dagligen ur stadens projektdatabas (planobygg.nsf) av `scripts/bevakning/hamta.py` och visas under Bevakning och i grundrapporten under Planer i området (inom 1,5 km). Se `docs/bevakning.md`. Planbesked och startplan i nämndhandlingar ingår inte.
+- **Bevakning med mejl:** GitHub Actions skickar via SMTP till bevakningar i hemligheten `BEVAKNINGAR`. Självanmälan i portalen saknas (kräver backend). Bygglov saknas som öppen källa.
+- **Skred, jordart och jorddjup** finns hos SGU (maps3.sgu.se) och SGI (mapsext.sgi.se), men bara som WMS för visning (WFS avstängd). Att fråga dem per adress för 100 000 adresser är inte ett godkänt datauttag. Nästa steg är SGU:s nedladdningsbara öppna data (jordarter, jorddjupsmodell, förutsättningar för skred), som räknas mot adresserna lokalt.
 - **Badplatser** är pausade av Martin. De kräver en gratis app-nyckel från data.goteborg.se.
 - **Taxeringsvärde** är inte öppna data. Användaren fyller i det själv för att räkna fram fastighetsavgiften.
 - Planbestämmelser är bara tolkade för exempeladressen.
 - Linjer per hållplats räknas fram ur linjesträckningar (`scripts/build_linjer.py`, inom 45 m), inte tidtabeller, så en linje som kör förbi utan att stanna kan komma med.
 - Ett hämtningsskript som laddar ned rådata, så att hela datakedjan kan köras om med ett kommando.
-- Bygglov och bostadsrättsföreningars årsredovisningar ingår inte ännu.
+- Bygglov ingår inte ännu.
+- **Föreningens ekonomi** (vyn `#forening`, under Bostaden) bygger på att användaren själv fyller i uppgifter ur årsredovisningen, eftersom den inte är öppna data. Inmatningen sparas i localStorage per adress (`bc-brf:<adress>`). Knappen "Fyll i exempelvärden" ger påhittade värden som märks som exempel. Att läsa in årsredovisningen automatiskt (t.ex. uppladdad PDF eller Bolagsverkets API för digitalt inlämnade årsredovisningar) återstår och kräver troligen backend.

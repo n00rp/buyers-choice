@@ -35,6 +35,13 @@ Trafikbuller, flygbuller, luftkvalitet, skyfall, översvämning, radon, och för
 
 ![Miljö och risk](docs/screenshots/05-miljo-och-risk.png)
 
+### Bostaden: Föreningens ekonomi
+Gäller bostadsrätter. Föreningens årsredovisning är inte öppna data, så användaren fyller i nyckeltalen från flerårsöversikten (de som ska redovisas enligt BFNAR 2023:1), avgiftsändringar och underhåll. Portalen visar utvecklingen, räknar ut lägenhetens del av föreningens lån och vad en ränteändring betyder för månadsavgiften, och föreslår frågor till föreningen. Inga betyg. Uppgifterna sparas bara i webbläsaren. Bilderna visar påhittade exempelvärden.
+
+![Föreningens ekonomi](docs/screenshots/13-foreningens-ekonomi.png)
+
+![Föreningens ekonomi, avgift och lägenhet](docs/screenshots/14-foreningens-ekonomi-lagenhet.png)
+
 ### Området: Planer i området
 Tidslinje över planer och projekt inom cirka 1,5 km, och vad varje plan innebär.
 
@@ -55,10 +62,22 @@ Varje uppgift med källa och datum.
 
 ![Källor](docs/screenshots/09-kallor.png)
 
+### Inför köpet: Bevakning
+Pågående planarbete runt adressen, med skede (samråd, granskning, antagande …), och händelser det senaste året. Köparen kan bevaka adressen och få mejl när något nytt händer. Läget hämtas varje morgon av GitHub Actions. Finns för Göteborg. Se [docs/bevakning.md](docs/bevakning.md).
+
+![Bevakning](docs/screenshots/14-bevakning.png)
+
 ### Grundrapport för andra adresser
 Alla andra adresser i Göteborg får en grundrapport ur den förberäknade datan, här Kungsportsavenyen 10. Annonslänk kan kopplas i rutan överst.
 
 ![Grundrapport för Kungsportsavenyen 10](docs/screenshots/10-grundrapport.png)
+
+### Jämför adresser
+Två eller tre adresser sida vid sida: planer, miljö och risk, vad översiktsplanen pekar ut och närservice, rad för rad med källa. Reglaget "Visa bara det som skiljer" döljer rader där adresserna har samma värde. Jämförelsen nås från startsidan, vänstermenyn och knappen "Jämför med andra adresser" i varje rapport. Adresserna står i länken (`#jamfor-<nr>-<nr>`) så att en jämförelse kan delas, och sparas i webbläsaren.
+
+![Jämför adresser](docs/screenshots/20-jamfor.png)
+
+<img src="docs/screenshots/21-jamfor-mobil.png" alt="Jämförelsen på mobil" width="300">
 
 ### Mobil
 På mobil ersätts sidomenyn av en meny i sidhuvudet.
@@ -102,8 +121,10 @@ Arbetsflödet `.github/workflows/pages.yml` lägger ut mappen `portal/` varje g�
 | `portal/m/*.json` | Miljö- och riskvärden per adress, uppdelat i block om 5 000 adresser. Kolumnerna beskrivs i `portal/miljo-meta.json`. |
 | `portal/r/*.json` | Vägnät i rutor om 2,5 × 2,5 km, för kartritning. Beskrivs i `portal/roads-meta.json`. |
 | `portal/service.json` | Hållplatser med linjer, skolor, förskolor, livsmedelsbutiker m.m. med koordinater. |
-| `portal/planarbete.json` | Stadens pågående planarbeten och byggprojekt med skede och läge. |
 | `portal/k/<kommun>/` | Samma filer för övriga kommuner (nu `partille`). Vilka kommuner som finns och vilka uppgifter de har står i `KOM` i `index.html`. |
+| `portal/bevakning.js` | Bevakningsvyn och knappen Bevaka adressen. |
+| `portal/bevakning/*.json` | Planarbete och händelser i Göteborg, uppdateras varje morgon av `scripts/bevakning/`. |
+| `bevakning/` | Senaste läget och vad som mejlats, för att se vad som är nytt. |
 | `data/vildkaprifolen-5-detaljplan.json` | Manuellt tolkade planbestämmelser för exempeladressen Vildkaprifolen 5, Torslanda. |
 | `scripts/` | Python-skripten som bygger JSON-filerna ovan ur stadens rådata, och `screenshots.js` som tar skärmbilderna. |
 | `docs/screenshots/` | Skärmbilder av portalens olika delar. |
@@ -135,9 +156,9 @@ Allt kommer från öppna tjänster utan nyckel. Fullständig kartläggning med v
 | Vägtrafikbuller, luft (NO₂, PM10) | Miljöförvaltningen, `geoserverextern.miljoforvaltningen.goteborg.se` |
 | Hållplatser | Trafikkontoret, `open.geodata.tkgbg.se/wfs` |
 | Linjer per hållplats | Trafikkontoret, `open.geodata.tkgbg.se/wfs` (vt:alla_linjer), `scripts/build_linjer.py` |
-| Pågående planarbeten | Stadens projektdatabas `www5.goteborg.se/.../planobygg.nsf`, `scripts/build_planarbete.py` |
 | Skolor | Skolverkets skolenhetsregister (`api.skolverket.se/skolenhetsregistret/v2`) |
 | Förskolor | Göteborgs Stad, Hitta förskolor |
+| Planarbete (skede, läge, synpunkter) | Göteborgs Stad, databasen för plan- och byggprojekt (`www5.goteborg.se/.../planobygg.nsf`), hämtas dagligen |
 
 ## Fler kommuner
 
@@ -177,4 +198,4 @@ Ett naturligt nästa steg är ett hämtningsskript som laddar ned rådata från 
 
 ## Status
 
-Detta är en prototyp. Planbestämmelser är bara tolkade manuellt för exempeladressen. Pågående planarbete, bygglov och bostadsrättsföreningars årsredovisningar finns inte maskinläsbart och ingår inte ännu.
+Detta är en prototyp. Planbestämmelser är bara tolkade manuellt för exempeladressen. Pågående planarbete i Göteborg hämtas dagligen (se Bevakning). Bygglov och bostadsrättsföreningars årsredovisningar finns inte maskinläsbart och ingår inte ännu.

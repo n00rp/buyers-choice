@@ -643,6 +643,140 @@ th{border-bottom:1px solid var(--fg)}
 
 footer{border-top:1px solid var(--line)}
 @media (max-width:600px){h1{font-size:2.5rem}h2{font-size:1.6rem}.hero h1{font-size:2.6rem}.stats b{font-size:1.35rem}}
+/* ================= Jämför adresser ================= */
+body.mode-cmp .shell{display:none}
+body.mode-cmp .menu-btn{display:none!important}
+.cmpv{padding-block:28px 96px;display:grid;gap:28px}
+.cmp-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:20px 40px;align-items:end}
+.cmp-top .lead{margin-top:12px}
+.cmp-add{position:relative}
+.cmp-add label{display:block;font-size:.84rem;font-weight:500;color:var(--muted);margin-bottom:8px}
+.cmp-add input{width:100%;height:52px;border:1px solid var(--line);border-radius:999px;background:var(--card);padding:0 18px 0 46px;font:inherit;font-size:.98rem;color:var(--fg);box-shadow:0 14px 32px -24px rgb(28 26 23 / .35);transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.cmp-add input:focus{outline:none;border-color:var(--fg);box-shadow:0 0 0 4px rgb(28 26 23 / .06)}
+.cmp-add input:disabled{background:var(--subtle);box-shadow:none;cursor:not-allowed}
+.cmp-add svg{position:absolute;left:18px;bottom:17px;color:var(--faint)}
+.cmp-add .full-note{font-size:.88rem;color:var(--muted);background:var(--subtle);border-radius:16px;padding:14px 16px}
+.cmp-bar{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.cmp-bar .src{max-width:72ch}
+.switch{display:inline-flex;align-items:center;gap:10px;font-size:.9rem;font-weight:500;cursor:pointer;user-select:none}
+.switch input{appearance:none;-webkit-appearance:none;margin:0;width:38px;height:22px;border-radius:999px;background:var(--subtle-2);position:relative;cursor:pointer;transition:background .2s var(--ease)}
+.switch input::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(28 26 23 / .25);transition:transform .2s var(--ease)}
+.switch input:checked{background:var(--fg)}
+.switch input:checked::after{transform:translateX(16px)}
+.switch input:disabled{opacity:.5;cursor:not-allowed}
+.switch:has(input:disabled){color:var(--faint);cursor:not-allowed}
+.cmp{--n:2;display:grid;gap:16px}
+.cmp-row{display:grid;grid-template-columns:240px repeat(var(--n),minmax(0,1fr));gap:0 20px;align-items:start}
+.cmp-head{position:sticky;top:var(--hdr,65px);z-index:5;background:var(--bg);padding-block:8px}
+.cmp-head .cmp-l{align-self:center;font-size:.84rem;color:var(--muted)}
+.cmp-card{display:grid;gap:6px;align-content:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:16px 18px;box-shadow:var(--shadow-card);min-width:0;position:relative}
+.cmp-card:nth-child(odd){background:var(--subtle);border-color:transparent}
+.cmp-card .no{font-size:.8rem;color:var(--muted);display:flex;gap:8px;align-items:center}
+.cmp-card .no .tag{padding:2px 9px;font-size:.74rem}
+.cmp-card h3{font-size:1.3rem;line-height:1.2;overflow-wrap:break-word;hyphens:auto;padding-right:28px}
+.cmp-card h3 a{color:inherit}
+.cmp-card .acts{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.86rem;margin-top:2px}
+.cmp-card .acts a{color:var(--fg);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.cmp-card .acts a:hover{text-decoration-color:var(--fg)}
+.cmp-rm{all:unset;position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;display:grid;place-content:center;color:var(--muted);cursor:pointer;transition:background .2s var(--ease),color .2s var(--ease)}
+.cmp-rm:hover{background:var(--card);color:var(--fg)}
+.cmp-rm:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.cmp-sec{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:8px 24px 18px;box-shadow:var(--shadow-card)}
+.cmp-sec h2{font-size:1.5rem;padding:16px 0 10px}
+.cmp-sec .cmp-row{padding:14px 0;border-top:1px solid var(--line)}
+.cmp-sec .src{padding-top:12px;border-top:1px solid var(--line)}
+.cmp-l{font-weight:500;font-size:.95rem;min-width:0}
+.cmp-l small{display:block;font-weight:400;font-size:.82rem;color:var(--muted);margin-top:2px;line-height:1.4}
+.cmp-c{min-width:0;display:grid;gap:3px;align-content:start}
+.cmp-c .v{font-size:.98rem;font-weight:500;color:var(--fg);overflow-wrap:anywhere}
+.cmp-c .v.big{font-family:var(--f-display);font-size:1.35rem;font-weight:500;letter-spacing:-.01em;line-height:1.2}
+.cmp-c .s{font-size:.85rem;color:var(--muted);line-height:1.45;overflow-wrap:anywhere}
+.cmp-c .s a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.cmp-c .meter{height:6px;border-radius:999px;background:var(--subtle-2);overflow:hidden;margin-top:6px;max-width:220px}
+.cmp-c .meter i{display:block;height:100%;background:var(--fg);opacity:.55;border-radius:999px}
+.cmp-c ul{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:3px;font-size:.85rem;color:var(--muted)}
+.cmp.diff .same{display:none}
+.cmp-empty{display:grid;gap:16px;justify-items:start;background:var(--subtle);border-radius:var(--r-card);padding:32px}
+.cmp-empty h2{font-size:1.6rem}
+.cmp-empty p{color:var(--muted);max-width:60ch}
+.cmp-one{font-size:.92rem;color:var(--muted);background:var(--subtle);border-radius:16px;padding:14px 18px}
+.cmp-entry{display:inline-flex;align-items:center;gap:8px;font-size:.92rem;color:var(--fg);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.cmp-entry:hover{text-decoration-color:var(--fg)}
+.nav-top .cnt{margin-left:auto;font-size:.75rem;font-weight:600;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--subtle);color:var(--fg);display:inline-grid;place-content:center}
+.nav-top .cnt:empty{display:none}
+@media (max-width:900px){.cmp-top{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .cmp-row{grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:8px 12px}
+  .cmp-row>.cmp-l{grid-column:1/-1}
+  .cmp-head .cmp-l{display:none}
+  .cmp-head{padding-block:6px}
+  .cmp-card{padding:10px 26px 10px 12px;border-radius:14px;align-self:stretch}
+  .cmp-card h3{font-family:var(--f-body);font-size:.84rem;font-weight:600;letter-spacing:0;line-height:1.3;padding-right:0}
+  .cmp-card .no,.cmp-card .acts{display:none}
+  .cmp-rm{top:4px;right:2px;width:24px;height:24px}
+  .cmp-sec{padding:4px 16px 14px}
+  .cmp-sec h2{font-size:1.3rem}
+  .cmp-c .v.big{font-size:1.1rem}
+  .cmp-c .v{font-size:.92rem}
+  .cmp-c .s,.cmp-c ul{font-size:.8rem}
+  .cmp-empty{padding:22px}
+}
+
+/* föreningens ekonomi (bostadsrätt) */
+.brf{display:grid;gap:56px}
+.brf .intro{display:grid;gap:14px}
+.brf .acts{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.brf .fee{grid-template-columns:repeat(3,minmax(0,1fr));max-width:none}
+.brf .fee label.wide{grid-column:span 2}
+@media (max-width:700px){.brf .fee{grid-template-columns:1fr}.brf .fee label.wide{grid-column:auto}}
+.brf .figs .muted b{font:inherit;font-weight:600;color:var(--fg)}
+.brf .figs .empty{color:var(--faint)}
+.nyck{min-width:640px}
+.nyck th:first-child,.nyck td:first-child{width:42%}
+.nyck td{padding:8px 10px 8px 0;vertical-align:middle}
+.nyck td:first-child{padding-right:18px}
+.nyck td:first-child small{display:block;color:var(--muted);font-weight:400;font-size:.8rem;line-height:1.35;margin-top:3px}
+.nyck input{width:100%;min-width:0;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:inherit;font-size:.92rem;text-align:right;background:var(--card);font-variant-numeric:tabular-nums}
+.nyck th input{height:32px;font-weight:600;text-align:right;text-transform:none;letter-spacing:0;color:var(--fg)}
+.nyck input:focus,.brf .rowform input:focus,.brf .rowform select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.nyck .u{color:var(--muted);font-size:.8rem;font-weight:400}
+.brf-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.brf-grid{grid-template-columns:1fr}}
+.brf .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:22px;display:grid;gap:14px;align-content:start;min-width:0;position:relative}
+.brf .card.sand{background:var(--subtle);border-color:transparent}
+.brf .card.dark{background:var(--fg);border-color:var(--fg);color:#fff}
+.brf .card.dark .muted,.brf .card.dark .src{color:rgb(255 255 255 / .68)}
+.brf .card.dark input{background:rgb(255 255 255 / .08);border-color:rgb(255 255 255 / .2);color:#fff}
+.brf .card.dark .fee label{color:rgb(255 255 255 / .72)}
+.brf .card h3{margin:0}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart .bar{fill:var(--accent);transition:opacity .15s}
+.chart .bar:hover,.chart .hit:hover+.bar{opacity:.8}
+.chart .ax{stroke:var(--line)}
+.chart text{font-size:12px;fill:var(--muted);font-family:inherit}
+.chart text.v{fill:var(--fg);font-weight:600}
+.ctip{position:absolute;pointer-events:none;background:var(--fg);color:#fff;font-size:.8rem;padding:6px 10px;border-radius:10px;transform:translate(-50%,calc(-100% - 8px));white-space:nowrap;opacity:0;transition:opacity .12s}
+.ctip.show{opacity:1}
+.rowform{display:grid;gap:8px}
+.rowform .r{display:grid;grid-template-columns:90px 110px minmax(0,1fr) auto;gap:8px;align-items:center}
+.rowform.um .r{grid-template-columns:minmax(0,1.3fr) 130px 90px minmax(0,1.3fr)}
+.rowform .hd{font-size:.8rem;color:var(--muted)}
+.rowform input,.rowform select{height:38px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:inherit;font-size:.9rem;background:var(--card);min-width:0;width:100%;box-sizing:border-box;color:var(--fg)}
+.rowform .nm{font-weight:500;font-size:.93rem}
+.rowform .x{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-content:center;border-radius:999px;color:var(--muted)}
+.rowform .x:hover{background:var(--subtle);color:var(--fg)}
+@media (max-width:640px){.rowform.um .r{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.rowform.um .r .nm{grid-column:1/-1}.rowform.um .r input[data-k$=".t"]{grid-column:1/-1}.rowform.um .hd{display:none}
+  .rowform .r{grid-template-columns:80px 90px minmax(0,1fr) auto}}
+.calc-out{display:grid;gap:0}
+.calc-out div{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:12px 0;border-top:1px solid rgb(255 255 255 / .16)}
+.calc-out b{font-family:var(--f-display);font-weight:500;font-size:1.35rem;white-space:nowrap}
+.calc-out span{font-size:.9rem}
+.legend-s{display:flex;gap:16px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
+.legend-s i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#brf-tl{overflow-x:auto}#brf-tl svg{min-width:620px}
+.tline text{font-size:12px;fill:var(--muted)}
+.tline text.lb{fill:var(--fg);font-weight:500}
+.ex-tag{background:#F7EBD3!important;color:#8A5A12!important;border-color:transparent!important}
 </style>
 
 <header id="top">
@@ -675,16 +809,31 @@ footer{border-top:1px solid var(--line)}
       <button class="chip" type="button" data-pick="Vildkaprifolen 5">Vildkaprifolen 5 <b>Full rapport</b></button>
       <button class="chip" type="button" data-pick="Linnégatan 20">Linnégatan 20</button>
       <button class="chip" type="button" data-pick="Eriksbergstorget 1">Eriksbergstorget 1</button>
-      <button class="chip" type="button" data-pick="Saltholmsgatan 20">Saltholmsgatan 20</button>
+      <button class="chip" type="button" data-pick="Saltholmsgatan 20A">Saltholmsgatan 20A</button>
       <button class="chip" type="button" data-pick="Partille:Fröjas backe 10">Fröjas backe 10 <b>Partille</b></button>
     </div>
+    <a class="cmp-entry" href="#jamfor">Eller jämför två eller tre adresser sida vid sida <span aria-hidden="true">→</span></a>
   </div>
+  <div id="bv-start" hidden></div>
   <div class="how">
     <div><span class="n">1</span><h3>Sök adressen</h3><p>Alla adresser i Göteborg och Partille går att söka, oavsett om bostaden är till salu eller inte. Fler kommuner läggs till när de har öppna data.</p></div>
     <div><span class="n">2</span><h3>Läs grundrapporten</h3><p>Fastighet och planer, buller, luft, skyfall och radon, vad översiktsplanen pekar ut i närheten och avstånd till hållplatser, skolor och butiker.</p></div>
     <div><span class="n">3</span><h3>Koppla annonsen</h3><p>Klistra in länken från Hemnet eller Booli så visas annonsen ihop med rapporten. Vi hämtar inget från annonsen, den öppnas hos annonsören.</p></div>
   </div>
-  <p class="datanote">Uppgifterna är förberäknade från kommunernas, Västtrafiks, Skolverkets och Skatteverkets öppna data, hämtade 2026-11-25 (Göteborg) och 2026-11-27 (Partille). Vad som finns per adress beror på vad kommunen publicerar. Sidan hämtar inte data i realtid. Pågående detaljplaner finns inte som öppna data och visas bara i exemplet för Vildkaprifolen 5.</p>
+  <p class="datanote">Uppgifterna är förberäknade från kommunernas, Västtrafiks, Skolverkets och Skatteverkets öppna data, hämtade 2026-11-25 (Göteborg) och 2026-11-27 (Partille). Vad som finns per adress beror på vad kommunen publicerar. Sidan hämtar inte data i realtid. Pågående planarbete och nya planer i Göteborg hämtas varje morgon och visas under Bevakning i rapporten.</p>
+</div>
+
+<div class="wrap cmpv" id="cmpv" lang="sv" hidden>
+  <nav class="crumbs small" aria-label="Du är här"><a href="#start">Start</a><span>›</span><span class="muted">Jämför adresser</span></nav>
+  <div class="cmp-top">
+    <div>
+      <h1>Jämför adresser</h1>
+      <p class="lead">Lägg två eller tre adresser sida vid sida och se vad som gäller för var och en: planer, miljö och risk, vad översiktsplanen pekar ut och avstånd till service.</p>
+    </div>
+    <div class="cmp-add" id="cmp-add"></div>
+  </div>
+  <div id="cmp-notice" hidden></div>
+  <div id="cmp-body"></div>
 </div>
 
 <div class="wrap shell">
@@ -694,7 +843,7 @@ footer{border-top:1px solid var(--line)}
       <a class="nav-top" href="#oversikt" data-tab="oversikt"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.5" y="2.5" width="5.5" height="5.5" rx="1.5"/><rect x="10" y="2.5" width="5.5" height="5.5" rx="1.5"/><rect x="2.5" y="10" width="5.5" height="5.5" rx="1.5"/><rect x="10" y="10" width="5.5" height="5.5" rx="1.5"/></svg></span>Översikt</a>
       <div class="grp" data-grp="bostaden">
         <button class="grp-h" type="button" aria-expanded="false" aria-controls="g-bostaden"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 15.5V8l6-4.5L15 8v7.5Z"/><path d="M7.2 15.5v-4.2h3.6v4.2"/></svg></span><span class="lbl">Bostaden</span><svg class="chev" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div class="grp-b" id="g-bostaden"><div><ul><li><a href="#fastighet" data-tab="fastighet">Fastighet och detaljplan</a></li><li><a href="#miljo" data-tab="miljo">Miljö och risk</a></li></ul></div></div>
+        <div class="grp-b" id="g-bostaden"><div><ul><li><a href="#fastighet" data-tab="fastighet">Fastighet och detaljplan</a></li><li><a href="#miljo" data-tab="miljo">Miljö och risk</a></li><li><a href="#forening" data-tab="forening">Föreningens ekonomi</a></li></ul></div></div>
       </div>
       <div class="grp" data-grp="omradet">
         <button class="grp-h" type="button" aria-expanded="false" aria-controls="g-omradet"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2.5 4.5 6.5 3l5 1.5 4-1.5v10.5l-4 1.5-5-1.5-4 1.5Z"/><path d="M6.5 3v10.5M11.5 4.5V15"/></svg></span><span class="lbl">Området</span><svg class="chev" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -702,8 +851,9 @@ footer{border-top:1px solid var(--line)}
       </div>
       <div class="grp" data-grp="infor">
         <button class="grp-h" type="button" aria-expanded="false" aria-controls="g-infor"><span class="nav-ico"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2.5" width="12" height="13" rx="2"/><path d="M6 7.5l1.5 1.5L10.5 6M6 12h6"/></svg></span><span class="lbl">Inför köpet</span><svg class="chev" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div class="grp-b" id="g-infor"><div><ul><li><a href="#visning" data-tab="visning">Frågor till visningen</a></li><li><a href="#kallor" data-tab="kallor">Källor</a></li></ul></div></div>
+        <div class="grp-b" id="g-infor"><div><ul><li><a href="#visning" data-tab="visning">Frågor till visningen</a></li><li><a href="#bevakning" data-tab="bevakning">Bevakning</a></li><li><a href="#kallor" data-tab="kallor">Källor</a></li></ul></div></div>
       </div>
+      <a class="nav-top" href="#jamfor" id="nav-cmp" style="margin-top:10px">Jämför adresser<span class="cnt" id="nav-cmp-n" aria-label="adresser i jämförelsen"></span></a>
     </nav>
     <div class="side-foot"><span class="proto" style="justify-self:start">Prototyp</span><span>Portalen informerar om vad som gäller och planeras. Den värderar inte bostaden eller området.</span></div>
   </aside>
@@ -732,6 +882,7 @@ footer{border-top:1px solid var(--line)}
       </div>
       <div class="prop-actions">
         <a class="btn primary" href="https://www.booli.se/bostad/3188597" target="_blank" rel="noopener">Se annonsen på Booli <span class="arr">↗</span></a>
+        <button class="btn" type="button" data-cmp-add="full">Jämför med andra adresser</button>
         <span class="src">Annonsuppgifter hämtade 2026-11-25. Bilder och beskrivning finns i annonsen.</span>
       </div>
     </div>
@@ -947,6 +1098,8 @@ footer{border-top:1px solid var(--line)}
   </div>
 </section>
 
+<section data-view="forening" hidden><div id="f-full"></div></section>
+
 <!-- INFÖR VISNINGEN -->
 <section data-view="visning" hidden>
   <div class="block">
@@ -984,6 +1137,7 @@ footer{border-top:1px solid var(--line)}
 </section>
 
 <!-- KÄLLOR -->
+<section data-view="bevakning" hidden><div id="bv-full"></div></section>
 <section data-view="kallor" hidden>
   <div class="block">
     <h2>Källor</h2>
@@ -1005,6 +1159,7 @@ footer{border-top:1px solid var(--line)}
         <tr><td>Göteborgs Stad, översiktsplanens kartlager</td><td>Inriktning för området, radon, skyfall, översvämning, förorenade områden, flygbuller</td><td class="num">2026-11-25</td></tr>
         <tr><td>Göteborgs Stad, miljöförvaltningen, trafikbuller- och luftberäkningar</td><td>Vägbuller 2021 och 2023, kvävedioxid och partiklar 2023</td><td class="num">2026-11-25</td></tr>
         <tr><td>Statens geotekniska institut (SGI), skredriskkarteringar</td><td>Om området ingår i en skredriskkartering</td><td class="num">2026-11-25</td></tr>
+        <tr><td>Bostadsrättsföreningens årsredovisning, ifylld av dig</td><td>Föreningens ekonomi: nyckeltal, avgifter och underhåll</td><td class="num">Din inmatning</td></tr>
         <tr><td>Göteborgs Stad, register över livsmedelsverksamheter</td><td>Matbutiker i närheten</td><td class="num">2026-11-25</td></tr>
       </tbody>
     </table></div>
@@ -1069,6 +1224,7 @@ footer{border-top:1px solid var(--line)}
       <tr><td>Skyfall, översvämning, radon, förorenad mark, farligt gods, flyg</td><td>Göteborgs Stad, översiktsplanen (oversiktsplan-v4)</td><td class="num">2026-11-25</td></tr>
       <tr><td>Planerat i området</td><td>Göteborgs Stad, översiktsplanen: framtida vägar, spår och förändrad markanvändning</td><td class="num">2026-11-25</td></tr>
       <tr><td>Livsmedelsbutiker och apotek</td><td>Miljöförvaltningens register över livsmedelsverksamheter</td><td class="num">2026-11-25</td></tr>
+<tr><td>Föreningens ekonomi</td><td>Uppgifter som du själv fyller i från bostadsrättsföreningens årsredovisning. Nyckeltalen följer Bokföringsnämndens allmänna råd BFNAR 2023:1</td><td class="num">Din inmatning</td></tr>
       <tr><td>Fastighetsavgift</td><td>Skatteverket, belopp och procent för inkomståret 2026</td><td class="num">2026-11-25</td></tr>
     </tbody></table></div>
     <p class="src">Allt är förberäknat och följer med sidan. Sidan hämtar inte data i realtid, så nya planbeslut syns först när underlaget uppdateras.</p>
@@ -1092,7 +1248,7 @@ footer{border-top:1px solid var(--line)}
     <p class="lead" id="b-fut-lead">Det här pekar översiktsplanen ut för framtiden inom 1,5 km från adressen: nya vägar och spår, områden där markanvändningen kan förändras och områden som ska utredas. Översiktsplanen är vägledande och visar långsiktig inriktning, inte beslutade byggprojekt.</p>
   </div>
   <div id="b-future"><p class="muted">Laddar …</p></div>
-  <div class="notice" id="b-fut-note"><b>Pågående detaljplaner</b> (samråd, granskning) finns inte som öppna kartdata från staden. De visas därför bara i exempelrapporten för <a href="#omradet">Vildkaprifolen 5</a>, där de är framtagna för hand. I en riktig tjänst kan de hämtas löpande från stadens planhandlingar.</div>
+  <div class="notice" id="b-fut-note"><b>Pågående planarbete</b> i närheten, med skede som samråd eller granskning, finns under <a href="#" data-tab-link="bevakning">Bevakning</a>. Där kan du också bevaka adressen.</div>
 </section>
 <section data-bview="visning" hidden>
   <div class="block">
@@ -1101,6 +1257,8 @@ footer{border-top:1px solid var(--line)}
   </div>
   <div id="b-q"></div>
 </section>
+<section data-bview="bevakning" hidden><div id="bv-basic"></div></section>
+<section data-bview="forening" hidden><div id="f-basic"></div></section>
 <section data-bview="na" hidden>
   <div class="na" id="b-na"></div>
 </section>
@@ -1411,6 +1569,7 @@ function go(view,opts={}){
   if(!basic&&view==="omradet"&&changed)playTimeline();
   if(!basic&&view==="oversikt")requestAnimationFrame(()=>setVB(cam));
   if(basic&&view==="oversikt")requestAnimationFrame(renderMap);
+  if(view==="forening"&&changed){if(basic){const a=D.A[curA];renderBRF($("#f-basic"),a.km?a.l+", "+KOM[a.km].namn:a.l,false);}else renderBRF($("#f-full"),FULL_LABEL,true);}
   if(opts.plan&&!basic){const el=$("#plan-"+opts.plan);setTimeout(()=>el&&el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"}),60);}
   else if(changed&&!opts.instant){scrollTo({top:0,behavior:"auto"});}
 }
@@ -1502,7 +1661,7 @@ const siteOf=u=>{const a=parseAd(u);return a?a.site:"annonsören";};
 let pendingAd=null;
 
 /* autocomplete, används av både sidhuvudets sökfält och startsidans stora fält */
-function makeAC(form,input,list){
+function makeAC(form,input,list,opts={}){
   let items=[],sel=-1,msg="";
   input.setAttribute("role","combobox");input.setAttribute("aria-autocomplete","list");input.setAttribute("aria-controls",list.id);input.setAttribute("aria-expanded","false");input.autocomplete="off";
   const open=on=>{list.classList.toggle("show",on);input.setAttribute("aria-expanded",on);};
@@ -1517,7 +1676,7 @@ function makeAC(form,input,list){
     open(true);};
   const say=t=>{msg=t;items=[];sel=-1;render();};
   const update=()=>{msg="";const v=input.value;
-    if(looksUrl(v)){say("Tryck Enter för att koppla annonslänken.");return;}
+    if(looksUrl(v)){say(opts.onPick?"Sök på adressen här. En annonslänk kopplar du i rapporten för adressen.":"Tryck Enter för att koppla annonslänken.");return;}
     if(fold(v).length<2){items=[];render();return;}
     if(!D){say("Laddar adresserna …");loadData().then(update,()=>say("Adresserna kunde inte laddas. Ladda om sidan och försök igen."));return;}
     items=searchAddr(v);sel=items.length?0:-1;
@@ -1525,6 +1684,7 @@ function makeAC(form,input,list){
     render();};
   const choose=it=>{
     if(it.st){input.value=it.st.name+" ";input.focus();update();return;}
+    if(opts.onPick){input.value="";items=[];msg="";open(false);opts.onPick(it.k);return;}
     const a=D.A[it.k];if(pendingAd){setAd(a.l,pendingAd.url);pendingAd=null;}
     input.value="";items=[];msg="";open(false);input.blur();
     const h=hashFor(it.k);if(location.hash===h)route();else location.hash=h;};
@@ -1543,7 +1703,7 @@ function makeAC(form,input,list){
   list.addEventListener("mousedown",e=>e.preventDefault());
   list.addEventListener("click",e=>{const li=e.target.closest("li[data-i]");if(li)choose(items[+li.dataset.i]);});
   form.addEventListener("submit",e=>{e.preventDefault();const v=input.value;
-    if(looksUrl(v)){takeUrl(v);return;}
+    if(looksUrl(v)){if(opts.onPick)update();else takeUrl(v);return;}
     if(!D){loadData().then(()=>{update();if(items.length)choose(items[Math.max(sel,0)]);},()=>{});return;}
     if(items.length)choose(items[Math.max(sel,0)]);else update();});
   return {say};
@@ -1668,8 +1828,8 @@ function openBasic(k){
   curA=k;const a=D.A[k],K=kom(a),S=K.S,H=K.har,pl=plansFor(a),main=pl.find(p=>p.grp==="plan"),po=D.ST[a.s].po;
   document.title="Buyers Choice – "+a.l;
   $("#b-head").innerHTML=`<nav class="crumbs small" aria-label="Du är här"><a href="#start">${esc(K.namn)}</a><span>›</span><span class="muted">${esc(a.l)}</span></nav>
-    <div class="bhead"><div class="row"><span class="eyebrow">${po!==K.namn?esc(po)+", ":""}${esc(K.namn)}</span><span class="tag">Grundrapport</span></div><h1>${esc(a.l)}</h1><div id="b-ad"></div></div>`;
-  renderAd();
+    <div class="bhead"><div class="row"><span class="eyebrow">${po!==K.namn?esc(po)+", ":""}${esc(K.namn)}</span><span class="tag">Grundrapport</span><button class="btn sm" type="button" data-cmp-add="cur" style="margin-left:auto">Jämför med andra adresser</button></div><h1>${esc(a.l)}</h1><div id="b-ad"></div></div>`;
+  renderAd();cmpInit();cmpBadges();
   const st=near(S.stops,a,6),gr=near(S.schools,a,5,r=>r[3]==="gr"),gy=near(S.schools,a,3,r=>r[3]==="gy"),pre=near(S.pre,a,5);
   const in500=st.filter(x=>x.m<=500).length;
   $("#b-brief").innerHTML=`
@@ -1690,7 +1850,7 @@ function openBasic(k){
       <span class="more">Skolor och förskolor <span>→</span></span></a>`;
   $("#b-legend").innerHTML=`${H.stops?`<span style="--c:${BC.stop}"><i style="border-radius:2px"></i>Hållplats</span>`:""}<span style="--c:${BC.school}"><i></i>Grundskola</span><span style="--c:${BC.pre}"><i></i>Förskola</span>${H.shops?`<span style="--c:${BC.shop}"><i></i>Livsmedelsbutik</span>`:""}<span style="--c:#9A6A08"><i style="background:none;border:2px dashed #9A6A08;border-radius:3px"></i>${H.op?"Planerat enligt översiktsplanen":"Samhällsbyggnadsprojekt"}</span><span style="--c:#121722"><i></i>Adressen</span>`;
   setKomTexts(K);
-  $("#b-scope").innerHTML=H.miljo?`<b>Om uppgifterna.</b> Allt på sidan är förberäknat från Göteborgs Stads, Västtrafiks och Skolverkets öppna data, hämtade 2026-11-25. Värdena gäller adresspunkten. Pågående planarbeten kommer från stadens projektdatabas.`
+  $("#b-scope").innerHTML=H.miljo?`<b>Om uppgifterna.</b> Allt på sidan är förberäknat från Göteborgs Stads, Västtrafiks och Skolverkets öppna data, hämtade 2026-11-25. Värdena gäller adresspunkten. Pågående planarbete i närheten finns under Planer i området, och nyheter om det under <a href="#" data-tab-link="bevakning">Bevakning</a>. Den uppdateras varje morgon.`
     :`<b>Om uppgifterna.</b> Allt på sidan är förberäknat från ${esc(K.org)}s och Skolverkets öppna data, hämtade ${K.hamtad}. Värdena gäller adresspunkten. ${esc(K.namn)} publicerar inte ${K.saknas} som öppna data per adress, och hållplatser och butiker saknas också i underlaget. De delarna finns därför bara för Göteborg än så länge.`;
   $("#b-plan-lead").textContent=pl.length?`${pl.length===1?"Ett planbeslut":pl.length+" planbeslut"} gäller där adresspunkten ligger. Öppna plankartan för att se bestämmelserna, till exempel hur mycket som får byggas.`:`Adresspunkten ligger inte inom någon gällande plan i ${H.miljo?"stadens":"kommunens"} planregister.`;
   const groups=Object.keys(PGROUP).map(g=>[g,pl.filter(p=>p.grp===g)]).filter(([,v])=>v.length);
@@ -1819,7 +1979,7 @@ function renderProperty(r,a,pl){
     <div><span class="muted">Adress</span><b style="font-size:1.25rem">${esc(a.l)}</b><span class="muted">${esc(kom(a).org)}s adressregister</span></div></div>
     <p class="src">Fastigheten är den yta i ${kom(a).har.miljo?"stadens":"kommunens"} fastighetskarta som adresspunkten ligger i. För en bostadsrätt är det föreningens fastighet, och arean gäller hela fastigheten. Jämför arean med tomtarean i annonsen.</p>`;
   const bf=$("#b-brief-fast");if(bf){bf.textContent=bet||"Hittades inte";if(area)$("#b-brief-fast-p").textContent=`${fmtN(area)} m² enligt fastighetsgränsen. För en bostadsrätt gäller det föreningens fastighet.`;}
-  const tag=$("#b-head .row");if(tag&&bet&&!tag.querySelector(".fb")){const s=document.createElement("span");s.className="tag fb";s.textContent=bet;tag.appendChild(s);}
+  const tag=$("#b-head .row");if(tag&&bet&&!tag.querySelector(".fb")){const s=document.createElement("span");s.className="tag fb";s.textContent=bet;tag.insertBefore(s,tag.querySelector("[data-cmp-add]"));}
 }
 function renderFuture(r,fut,K){
   if(K&&!K.har.op)return renderProjects(r,fut,K);
@@ -1858,7 +2018,7 @@ const PA_VISA=new Set([...PA_STEG,"overklagad","pausad","okand"]),PA_R=1500;
 const MANAD=["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"];
 const ymd=d=>d&&d.length>=8?new Date(+d.slice(0,4),+d.slice(4,6)-1,+d.slice(6,8)):null;
 const datumTxt=(d,ar)=>`${d.getDate()} ${MANAD[d.getMonth()]}${ar?" "+d.getFullYear():""}`;
-function loadPlanarbete(){return getJ("bevakning/planarbete.json").catch(()=>getJ("planarbete.json"));}
+function loadPlanarbete(){return getJ("bevakning/planarbete.json");}
 function planarbeteNara(a,P){if(!P)return [];const c=P.kol.reduce((o,k,i)=>(o[k]=i,o),{});
   return P.p.map(r=>({namn:r[c.namn],slag:r[c.slag],steg:r[c.steg],fas:r[c.fas],lank:r[c.lank],syn:r[c.synpunkter],ungefar:!!r[c.ungefar],
     m:Math.round(Math.hypot(r[c.x]-a.e,r[c.y]-a.n))})).filter(x=>x.m<=PA_R&&PA_VISA.has(x.fas)).sort((x,y)=>x.m-y.m);}
@@ -1936,16 +2096,307 @@ function loadBasicExtras(k,pl){
   }).catch(()=>{if(seq!==envSeq)return;$("#b-env").innerHTML='<div class="notice">Miljödata kunde inte laddas. Ladda om sidan och försök igen.</div>';});
 }
 
+/* ===== Jämför adresser: två eller tre adresser sida vid sida, samma förberäknade data som grundrapporten ===== */
+const CMP_MAX=3;let CMP=[],cmpReady=false,cmpPending=-1,cmpSeq=0,cmpDiff=false;
+function cmpInit(){if(cmpReady||!D)return;cmpReady=true;
+  let v=[];try{v=JSON.parse(localStorage.getItem("bc-cmp")||"[]");}catch(e){}
+  CMP=(Array.isArray(v)?v:[]).map(idxOf).filter((k,i,arr)=>k>=0&&arr.indexOf(k)===i).slice(0,CMP_MAX);}
+const cmpLabel=k=>{const a=D.A[k];return a.km?kom(a).namn+":"+a.l:a.l;};
+function cmpSave(){try{localStorage.setItem("bc-cmp",JSON.stringify(CMP.map(cmpLabel)));}catch(e){}}
+const cmpHash=()=>"#jamfor"+(CMP.length?"-"+CMP.join("-"):"");
+function cmpBadges(){const n=$("#nav-cmp-n");if(n)n.textContent=CMP.length||"";
+  $$("[data-cmp-add]").forEach(b=>{const k=b.dataset.cmpAdd==="full"?(D?D.full:-1):curA;b.textContent=CMP.includes(k)?"Visa i jämförelsen":"Jämför med andra adresser";});}
+function cmpCommit(){cmpSave();cmpBadges();const h=cmpHash();if(mode==="cmp"&&location.hash!==h){try{history.replaceState(null,"",h)}catch(e){}}renderCompare();}
+function cmpAdd(k){if(CMP.includes(k))return;if(CMP.length>=CMP_MAX){cmpPending=k;renderCmpNotice();return;}CMP.push(k);cmpPending=-1;cmpCommit();}
+function cmpRemove(k){CMP=CMP.filter(x=>x!==k);if(cmpPending>=0&&!CMP.includes(cmpPending)){CMP.push(cmpPending);}cmpPending=-1;cmpCommit();}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-cmp-add]");if(!b)return;e.preventDefault();
+  loadData().then(d=>{cmpInit();const k=b.dataset.cmpAdd==="full"?d.full:curA;if(k<0)return;
+    if(!CMP.includes(k)){if(CMP.length>=CMP_MAX)cmpPending=k;else{CMP.push(k);cmpSave();}}
+    location.hash=cmpHash();});});
+function showCompare(part){
+  loadData().then(()=>{cmpInit();
+    if(part){const ks=part.split("-").filter(Boolean).map(Number).filter((k,i,arr)=>Number.isInteger(k)&&D.A[k]&&arr.indexOf(k)===i).slice(0,CMP_MAX);CMP=ks;}
+    if(cmpPending>=0&&CMP.includes(cmpPending))cmpPending=-1;
+    const fresh=mode!=="cmp";setMode("cmp");setMenu(false);current=null;document.title="Buyers Choice – Jämför adresser";
+    cmpCommit();renderCmpAdd();if(fresh)scrollTo({top:0});},
+  ()=>{showStart();bigAC.say("Adresserna kunde inte laddas. Ladda om sidan och försök igen.");});
+}
+let cmpAC=null;
+function renderCmpAdd(){const box=$("#cmp-add");
+  if(CMP.length>=CMP_MAX){box.innerHTML=`<div class="full-note">Jämförelsen har tre adresser, vilket är max. Ta bort en adress för att lägga till en annan.</div>`;cmpAC=null;return;}
+  if(cmpAC&&$("#q3"))return;
+  box.innerHTML=`<form id="cmp-form" role="search" autocomplete="off"><label for="q3">${CMP.length?"Lägg till en adress":"Välj första adressen"}</label>
+    <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input id="q3" type="text" placeholder="Adress i ${esc(KN)}"><ul class="ac" id="ac3" role="listbox"></ul></form>`;
+  cmpAC=makeAC($("#cmp-form"),$("#q3"),$("#ac3"),{onPick:k=>{if(CMP.includes(k)){cmpAC.say(`${esc(D.A[k].l)} finns redan i jämförelsen.`);return;}cmpAdd(k);renderCmpAdd();
+    const q=$("#q3");if(q&&CMP.length===1)q.focus();}});
+}
+function renderCmpNotice(){const n=$("#cmp-notice");
+  if(cmpPending<0||CMP.includes(cmpPending)){n.hidden=true;n.innerHTML="";return;}
+  n.hidden=false;n.innerHTML=`<div class="cmp-one"><b style="color:var(--fg)">${esc(D.A[cmpPending].l)}</b> väntar på att läggas till. Jämförelsen har redan tre adresser. Ta bort en med krysset så läggs ${esc(D.A[cmpPending].l)} till i dess ställe. <button class="linkbtn" type="button" id="cmp-pend-x">Avbryt</button></div>`;
+  $("#cmp-pend-x").onclick=()=>{cmpPending=-1;renderCmpNotice();};}
+
+const cmpDist=(d,none)=>d===null||d===undefined?none:d===0?"Vid adressen":fmtD(d);
+function cmpFuture(r,fut){const ids=r[11]||[],seen=new Set(),out=[];
+  for(let i=0;i<ids.length;i+=2){const f=fut.f[ids[i]];if(!f)continue;const key=(f.n||f.k)+"|"+f.k;if(seen.has(key))continue;seen.add(key);out.push({f,d:ids[i+1]});}
+  return out.sort((x,y)=>x.d-y.d);}
+const cmpCell=(v,s,o={})=>({v,s,key:o.key!==undefined?o.key:String(v)+"|"+String(s||""),big:o.big,meter:o.meter,list:o.list});
+function cmpRows(cols){
+  const nearest=(arr,a,f)=>near(arr||[],a,1,f)[0];
+  const NA=c=>cmpCell("Saknas i öppna data",`${esc(c.K.namn)} publicerar inte uppgiften per adress.`,{key:"na"});
+  const svc=(key,label,f,sub,need)=>[label,"",c=>{if(need&&!c.K.har[need])return NA(c);const x=nearest(c.K.S[key],c.a,f);return x?cmpCell(esc(x.r[0]),fmtD(x.m)+(sub?sub(x):""),{key:x.r[0]}):cmpCell("–","",{key:"-"});}];
+  const env=f=>c=>c.K.har.miljo?f(c):NA(c);
+  const others=[...new Set(cols.filter(c=>c.a.km).map(c=>c.K.org))],also=others.length?` För ${others.join(" och ")}: kommunens egna öppna data.`:"";
+  return [
+    {id:"bostaden",h:"Bostaden",src:"Källa: Göteborgs Stad, stadsbyggnadskontorets planregister (planer-v3) och fastighetskarta. Arean gäller hela fastigheten. För en bostadsrätt är det föreningens fastighet."+also,rows:[
+      ["Gällande plan","där adresspunkten ligger",c=>c.main?cmpCell(esc(c.main.name||c.main.typ),`${esc(c.main.typ)} ${esc(c.main.bet)}${c.main.url&&/^https:\/\//.test(c.main.url)?` · <a href="${esc(c.main.url)}" target="_blank" rel="noopener">Plankarta ↗</a>`:""}`,{big:true,key:c.main.bet}):cmpCell("Ingen detaljplan","Översiktsplanen och plan- och bygglagens regler gäller.",{big:true})],
+      ["Planbeslut på adressen","detaljplaner och fastighetsindelning",c=>{const g=Object.keys(PGROUP).map(k=>[k,c.pl.filter(p=>p.grp===k).length]).filter(x=>x[1]);
+        return cmpCell(String(c.pl.length),g.map(([k,n])=>`${PGROUP[k]}: ${n}`).join(" · "));}],
+      ["Fastighet","enligt kommunens fastighetskarta",c=>cmpCell(c.r&&c.r[12]?esc(c.r[12]):"Hittades inte","",{key:c.a.l})],
+      ["Fastighetens area","beräknad ur fastighetsgränsen",c=>cmpCell(c.r&&c.r[13]?fmtN(c.r[13])+" m²":"–","",{key:c.a.l})]]},
+    {id:"miljo",h:"Miljö och risk",src:"Källa: Göteborgs Stad, miljöförvaltningens trafikbuller- och luftberäkningar samt översiktsplanens kartlager. Värdena är beräknade för adresspunkten, inte uppmätta. Normer och riktvärden visas som jämförelse."+also,rows:[
+      ["Trafikbuller, ekvivalent","dBA 2023, högst och lägst nära huset. Riktvärde vid fasad 60 (småhus)",env(c=>cmpCell(c.t?c.t.leq||"Ingen beräkning":"–",c.t&&c.t.leqLo&&c.t.leqLo!==c.t.leq?"Lägst: "+c.t.leqLo:""))],
+      ["Trafikbuller, maximal","dBA 2021, högst och lägst nära huset. Riktvärde vid uteplats 70",env(c=>cmpCell(c.t?c.t.max||"Ingen beräkning":"–",c.t&&c.t.maxLo&&c.t.maxLo!==c.t.max?"Lägst: "+c.t.maxLo:""))],
+      ["Kvävedioxid","årsmedel 2023. Normen är 40 µg/m³",env(c=>c.t&&c.t.no2!=null?cmpCell(c.t.no2+" µg/m³","",{meter:c.t.no2/40}):cmpCell("Utanför beräkningsområdet",""))],
+      ["Partiklar PM10","årsmedel 2023. Normen är 40 µg/m³",env(c=>c.t&&c.t.pm10!=null?cmpCell(String(c.t.pm10).replace(".",",")+" µg/m³","",{meter:c.t.pm10/40}):cmpCell("Utanför beräkningsområdet",""))],
+      ["Skyfallsled","avstånd till närmaste",env(c=>cmpCell(c.r?cmpDist(c.r[5],"Över 1 km"):"–",""))],
+      ["Översvämning och höga vattenstånd","avstånd till riskområde",env(c=>cmpCell(c.r?cmpDist(c.r[6],"Över 2 km"):"–",""))],
+      ["Förorenad mark","avstånd till riskområde",env(c=>cmpCell(c.r?cmpDist(c.r[7],"Över 1 km"):"–",""))],
+      ["Markradon","enligt översiktsplanen",env(c=>{const t=c.t&&c.t.radon;return t?cmpCell(esc(t.split(",")[0]),esc(t.split(",").slice(1).join(",").trim())):cmpCell("Ingen uppgift","");})],
+      ["Farligt gods","avstånd till transportled",env(c=>cmpCell(c.r?cmpDist(c.r[10],"Över 500 m"):"–",""))],
+      ["Civilt flyg","avstånd till område med tillstånd",env(c=>cmpCell(c.r?cmpDist(c.r[8],"Över 2 km"):"–",""))],
+      ["Geotekniska utredningar","som täcker adresspunkten",c=>{if(!c.K.har.geoteknik)return cmpCell("Ingen öppen uppgift",`${esc(c.K.org)} publicerar inte utredningarna som öppna data.`,{key:"na"});const g=c.r&&geoText(c.r[16]);return g?cmpCell(esc(g.big),esc(g.sub)):cmpCell("–","");},"geo"],
+      ["Försvarsmaktens bullerområde","avstånd till påverkansområde",env(c=>cmpCell(c.r?cmpDist(c.r[9],"Över 2 km"):"–",""))]]},
+    {id:"omradet",h:"Planerat i området",src:"Källa: Göteborgs Stad, översiktsplanen (antagen 2022): framtida vägar, spår och förändrad markanvändning. Översiktsplanen är vägledande och visar långsiktig inriktning, inte beslutade byggprojekt."+(others.length?` För ${others.join(" och ")}: kommunens samhällsbyggnadsprojekt, eftersom översiktsplanen inte finns som öppna kartdata där.`:""),rows:[
+      ["Planerat inom 1,5 km","enligt översiktsplanen eller kommunens projekt",c=>{if(!c.r)return cmpCell("–","");const l=cmpFuture(c.r,c.fut).filter(x=>x.d<=1500),op=c.K.har.op,n=l.length;
+        return cmpCell(n?`${n} ${op?(n===1?"förändring":"förändringar"):(n===1?"projekt":"projekt")}`:"Inget inom 1,5 km",op?"Utpekat i översiktsplanen":"Kommunens samhällsbyggnadsprojekt",{big:true,list:l.slice(0,3).map(x=>`${esc(x.f.n||x.f.k)}, ${x.d===0?"vid adressen":fmtD(x.d)}`),key:"n"+n});}],
+      ["Pågående detaljplaner","samråd och granskning",c=>c.k===D.full?cmpCell(`${Object.keys(PLANS).length} planer inom 1,5 km`,'Framtagna för hand i <a href="#omradet">exempelrapporten</a>.'):cmpCell("Ingen öppen uppgift",`Finns inte som öppna data från ${c.a.km?"kommunen":"staden"}.`)]]},
+    {id:"service",h:"Närservice",src:"Källa: Västtrafiks hållplatslägen, Skolverkets skolenhetsregister, Göteborgs Stads förskolelista och register över livsmedelsverksamheter. Avstånd fågelvägen från adresspunkten."+also,rows:[
+      svc("stops","Närmaste hållplats",null,null,"stops"),
+      ["Hållplatser inom 500 m","",c=>c.K.har.stops?cmpCell(String(near(c.K.S.stops,c.a,40).filter(x=>x.m<=500).length),""):NA(c)],
+      svc("schools","Närmaste grundskola",r=>r[3]==="gr",x=>x.r[4]?" · årskurs "+esc(x.r[4]):""),
+      svc("pre","Närmaste förskola"),
+      svc("schools","Närmaste gymnasieskola",r=>r[3]==="gy"),
+      svc("shops","Närmaste livsmedelsbutik",null,null,"shops"),
+      svc("pharm","Närmaste apotek",null,null,"shops")]}];
+}
+function renderCompare(){
+  if(mode!=="cmp")return;
+  renderCmpNotice();const box=$("#cmp-body"),seq=++cmpSeq;
+  if(!CMP.length){box.innerHTML=`<div class="cmp-empty"><span class="eyebrow">Ingen adress vald än</span><h2>Börja med två adresser</h2><p>Sök fram adresserna i fältet ovan, eller klicka på <i>Jämför med andra adresser</i> i en rapport. Jämförelsen visar samma uppgifter som grundrapporten, rad för rad. Den värderar inte adresserna.</p>
+    <div class="ex-row"><span>Prova:</span><button class="chip" type="button" data-cmp-ex="Linnégatan 20|Eriksbergstorget 1">Linnégatan 20 och Eriksbergstorget 1</button><button class="chip" type="button" data-cmp-ex="Vildkaprifolen 5|Linnégatan 20|Kungsportsavenyen 10">Tre adresser</button></div></div>`;
+    $$("[data-cmp-ex]").forEach(b=>b.onclick=()=>{CMP=b.dataset.cmpEx.split("|").map(idxOf).filter(k=>k>=0).slice(0,CMP_MAX);cmpCommit();renderCmpAdd();});
+    renderCmpAdd();return;}
+  if(!box.querySelector(".cmp"))box.innerHTML='<p class="muted">Laddar uppgifterna …</p>';
+  Promise.all(CMP.map(k=>Promise.all([envFor(k).catch(()=>null),getJ(kom(D.A[k]).dir+"framtid.json").catch(()=>({f:[]}))]))).then(res=>{
+    if(seq!==cmpSeq||mode!=="cmp")return;
+    const cols=CMP.map((k,i)=>{const a=D.A[k],K=kom(a),pl=plansFor(a),[e,fut]=res[i];return {k,a,K,fut,pl,main:pl.find(p=>p.grp==="plan"),r:e?e.r:null,t:e&&K.har.miljo?envText(e.m,e.r):null};});
+    const n=cols.length,secs=cmpRows(cols);
+    const X='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    const head=`<div class="cmp-row cmp-head" role="row"><div class="cmp-l" role="columnheader">${n<2?"Lägg till en adress till för att jämföra.":`${n} adresser`}</div>${cols.map((c,i)=>`<div class="cmp-card" role="columnheader">
+      <span class="no">Adress ${i+1} · ${esc(c.K.namn)}${c.k===D.full?'<span class="tag full">Full rapport</span>':""}</span><h3><a href="${hashFor(c.k)}">${esc(c.a.l)}</a></h3>
+      <span class="acts"><a href="${hashFor(c.k)}">Öppna rapporten</a>${c.r&&c.r[12]?`<span class="muted fb">${esc(c.r[12])}</span>`:""}</span>
+      <button class="cmp-rm" type="button" data-cmp-rm="${c.k}" aria-label="Ta bort ${esc(c.a.l)} från jämförelsen" title="Ta bort">${X}</button></div>`).join("")}</div>`;
+    const cell=x=>`<div class="cmp-c" role="cell"><span class="v${x.big?" big":""}">${x.v}</span>${x.s?`<span class="s">${x.s}</span>`:""}${x.meter!=null?`<span class="meter" aria-hidden="true"><i style="width:${Math.min(100,x.meter*100).toFixed(0)}%"></i></span>`:""}${x.list&&x.list.length?`<ul>${x.list.map(t=>`<li>${t}</li>`).join("")}</ul>`:""}</div>`;
+    const body=secs.map(sec=>{let all=true;
+      const rows=sec.rows.filter(([,,,only])=>only!=="geo"||cols.some(c=>c.K.har.geoteknik)).map(([lab,hint,f])=>{const cs=cols.map(c=>f(c)),same=n>1&&cs.every(x=>x.key===cs[0].key);if(!same)all=false;
+        return `<div class="cmp-row${same?" same":""}" role="row"><div class="cmp-l" role="rowheader">${lab}${hint?`<small>${hint}</small>`:""}</div>${cs.map(cell).join("")}</div>`;}).join("");
+      return `<section class="cmp-sec${all&&n>1?" same":""}" role="rowgroup" aria-labelledby="cmp-h-${sec.id}"><h2 id="cmp-h-${sec.id}">${sec.h}</h2>${rows}<p class="src">${sec.src}</p></section>`;}).join("");
+    box.innerHTML=`<div class="cmp-bar"><label class="switch"><input type="checkbox" id="cmp-diff"${cmpDiff&&n>1?" checked":""}${n<2?" disabled":""}>Visa bara det som skiljer</label>
+      <span class="src">Uppgifterna är förberäknade från kommunernas och myndigheternas öppna data, hämtade i november 2026. Jämförelsen visar vad som gäller och planeras. Den värderar inte adresserna.</span></div>
+      <div class="cmp${cmpDiff&&n>1?" diff":""}" style="--n:${n}" role="table" aria-label="Jämförelse av ${n} adresser">${head}${body}</div>`;
+    $("#cmp-diff").onchange=e=>{cmpDiff=e.target.checked;box.querySelector(".cmp").classList.toggle("diff",cmpDiff);};
+    $$("[data-cmp-rm]").forEach(b=>b.onclick=()=>{cmpRemove(+b.dataset.cmpRm);renderCmpAdd();});
+    setHdr();
+  });
+}
+function setHdr(){document.documentElement.style.setProperty("--hdr",Math.round($("#top").getBoundingClientRect().height)+"px");}
+addEventListener("resize",setHdr);
+/* ===== Föreningens ekonomi (bostadsrätt) =====
+   Föreningarnas årsredovisningar är inte öppna data. Användaren fyller i uppgifterna själv,
+   och portalen räknar fram jämförbara tal. Allt sparas bara i webbläsaren, per adress. */
+const BRF_N=[
+  ["avg","Årsavgift per kvm upplåten med bostadsrätt","kr","Årsavgifterna delat med bostadsrätternas sammanlagda yta."],
+  ["skuld","Skuldsättning per kvm","kr","Föreningens räntebärande skulder delat med all yta, både bostadsrätter och hyresrätter och lokaler."],
+  ["skuldbr","Skuldsättning per kvm upplåten med bostadsrätt","kr","Samma skulder delat med bara bostadsrätternas yta."],
+  ["spar","Sparande per kvm","kr","Vad föreningen får över till underhåll och amortering under året, per kvm."],
+  ["ranta","Räntekänslighet","%","Hur många procent årsavgifterna behöver höjas om räntan på alla lån ökar med en procentenhet."],
+  ["energi","Energikostnad per kvm","kr","Kostnad för el, värme och vatten per kvm."],
+  ["andel","Årsavgifternas andel av rörelseintäkterna","%","Hur stor del av föreningens intäkter som kommer från medlemmarnas avgifter."]
+];
+const BRF_U=[["stam","Stambyte, vatten och avlopp"],["tak","Tak"],["fasad","Fasad"],["fonster","Fönster"],["el","El och stigarledningar"],["vent","Ventilation och OVK"],["hiss","Hiss"],["balk","Balkonger"],["grund","Grund och dränering"]];
+const BRF_STATUS={"":"Inte angivet",gjort:"Gjort",pagar:"Pågår",plan:"Planerat",ej:"Finns inte"};
+const BRF_EX={ex:true,namn:"Brf Exempelgården",org:"",ar:"2025",lgh:"48",mark:"tomtratt",avgald:"412 000",uplan:"ja",uplanar:"2024",
+  y:["2022","2023","2024","2025"],
+  n:{avg:["760","790","850","905"],skuld:["6 200","6 100","6 450","6 300"],skuldbr:["6 900","6 800","7 150","7 000"],spar:["210","190","170","230"],ranta:["9,1","8,6","8,4","7,7"],energi:["205","240","215","200"],andel:["88","87","89","90"]},
+  h:[["2023","4","Höjda räntekostnader"],["2024","8","Stambyte, nya lån"],["2025","6",""]],
+  u:{stam:["gjort","2024","Badrum och kök i alla lägenheter"],tak:["gjort","2015","Nytt tak och tilläggsisolering"],fasad:["plan","2029","Puts och fönsterbleck, enligt underhållsplanen"],fonster:["gjort","2008",""],el:["gjort","2024","I samband med stambytet"],vent:["gjort","2023","OVK godkänd"],hiss:["ej","",""],balk:["plan","2031",""],grund:["","",""]},
+  kvm:"68",man:"4 300"};
+const brfKey=l=>"bc-brf:"+l;
+function brfLoad(l){let o=null;try{o=JSON.parse(localStorage.getItem(brfKey(l))||"null");}catch(e){}return brfNorm(o||{});}
+function brfNorm(o){o.y=o.y||["","","",""];o.n=o.n||{};BRF_N.forEach(([k])=>{o.n[k]=o.n[k]||["","","",""];});o.h=o.h||[["","",""]];o.u=o.u||{};BRF_U.forEach(([k])=>{o.u[k]=o.u[k]||["","",""];});return o;}
+function brfSave(l,o){try{localStorage.setItem(brfKey(l),JSON.stringify(o));}catch(e){}}
+const num=v=>{const t=String(v==null?"":v).replace(/[\s ]/g,"").replace(",",".").replace(/[^0-9.\-]/g,"");if(!t||t==="-"||t===".")return null;const n=parseFloat(t);return isFinite(n)?n:null;};
+const fmtK=(n,d=0)=>{if(n==null)return "–";const s=Math.abs(n).toFixed(d).split(".");return (n<0?"−":"")+fmtN(s[0]).replace(/ /g,"\u00a0")+(s[1]?","+s[1]:"");};
+const fmtP=n=>(n>0?"+":n<0?"−":"")+String(Math.abs(Math.round(n*10)/10)).replace(".",",")+"\u00a0%";
+let brfCur=null;
+function renderBRF(host,label,villa){
+  const st=brfLoad(label);brfCur={host,label,st};
+  const v=(k,ph,cls,attr)=>`<input data-k="${k}" value="${esc(brfGet(st,k)||"")}"${ph?` placeholder="${esc(ph)}"`:""}${cls?` class="${cls}"`:""} ${attr||'inputmode="decimal"'}>`;
+  const sel=(k,opts)=>`<select data-k="${k}">${Object.entries(opts).map(([a,b])=>`<option value="${a}"${(brfGet(st,k)||"")===a?" selected":""}>${b}</option>`).join("")}</select>`;
+  host.innerHTML=`<div class="brf">
+  <div class="block intro">
+    <div class="block-head"><div><div class="eyebrow">Bostadsrätt</div><h2 style="margin-top:6px">Föreningens ekonomi</h2></div><span class="tag ex-tag" id="brf-extag"${st.ex?"":" hidden"}>Påhittade exempelvärden</span></div>
+    ${villa?`<div class="notice"><b>${esc(label)} är en villa</b> och ingår inte i någon bostadsrättsförening. Delen gäller bostadsrätter och fungerar likadant för alla adresser. Fyll i exempelvärden för att se hur den ser ut.</div>`:""}
+    <p class="lead">När du köper en bostadsrätt blir du medlem i föreningen och delar på dess lån, avgifter och underhåll. Uppgifterna står i föreningens årsredovisning, som inte finns som öppna data. Fyll i det du hittar, så räknar portalen fram vad det betyder för lägenheten du tittar på.</p>
+    <div class="acts"><button class="btn sm" type="button" data-brf="ex">Fyll i exempelvärden</button><button class="linkbtn" type="button" data-brf="clear">Töm uppgifterna</button>
+      <span class="src">Årsredovisningen får du från mäklaren eller föreningen. Den kan också beställas från <a href="https://bolagsverket.se/" target="_blank" rel="noopener">Bolagsverket</a>. Det du fyller i sparas bara i din webbläsare.</span></div>
+  </div>
+  <div class="block"><div class="block-head"><h3>I korthet</h3><span class="src" id="brf-kyear"></span></div><div class="figs" id="brf-sum"></div></div>
+  <div class="block"><h3>Föreningen</h3>
+    <form class="fee" autocomplete="off" onsubmit="return false">
+      <label class="wide"><span>Föreningens namn</span>${v("namn","t.ex. Brf Linnégården",null,'type="text"')}</label>
+      <label><span>Organisationsnummer</span>${v("org","769600-0000",null,'type="text" inputmode="numeric"')}</label>
+      <label><span>Årsredovisning för år</span>${v("ar","t.ex. 2025",null,'inputmode="numeric" maxlength="4"')}</label>
+      <label><span>Antal lägenheter</span>${v("lgh","t.ex. 48")}</label>
+      <label><span>Marken</span>${sel("mark",{"":"Inte angivet",ager:"Föreningen äger marken",tomtratt:"Tomträtt, staden äger marken"})}</label>
+      <label id="brf-avgald"${st.mark==="tomtratt"?"":" hidden"}><span>Tomträttsavgäld, kr per år</span>${v("avgald","t.ex. 400 000")}</label>
+      <label><span>Underhållsplan</span>${sel("uplan",{"":"Inte angivet",ja:"Finns",nej:"Finns inte"})}</label>
+      <label><span>Underhållsplanen uppdaterad år</span>${v("uplanar","t.ex. 2024",null,'inputmode="numeric" maxlength="4"')}</label>
+    </form></div>
+  <div class="block"><div class="block-head"><h3>Nyckeltal ur flerårsöversikten</h3><span class="src">Skriv åren överst i kolumnerna, äldst till vänster</span></div>
+    <p class="muted" style="margin:0;max-width:72ch">Sedan räkenskapsår som börjar 2023 ska varje bostadsrättsförening redovisa samma nyckeltal i förvaltningsberättelsen. Tabellen följer den ordning de brukar stå i.</p>
+    <div class="tbl"><table class="nyck"><thead><tr><th>Nyckeltal</th>${[0,1,2,3].map(i=>`<th>${v("y."+i,"År",null,'inputmode="numeric" maxlength="4" aria-label="År, kolumn '+(i+1)+'"')}</th>`).join("")}</tr></thead><tbody>
+      ${BRF_N.map(([k,n,u,d])=>`<tr><td>${n} <span class="u">${u==="%"?"%":"kr/kvm"}</span><small>${d}</small></td>${[0,1,2,3].map(i=>`<td>${v("n."+k+"."+i,"",null,'inputmode="decimal" aria-label="'+n+', kolumn '+(i+1)+'"')}</td>`).join("")}</tr>`).join("")}
+    </tbody></table></div>
+    <p class="src">Källa: föreningens årsredovisning. Nyckeltalen och hur de räknas fram anges i Bokföringsnämndens allmänna råd BFNAR 2023:1. Portalen värderar inte nivåerna, eftersom de beror på bland annat husets ålder, läge och vad som nyss renoverats.</p>
+  </div>
+  <div class="brf-grid">
+    <div class="card"><div class="block-head"><h3>Årsavgift per kvm</h3><span class="src">kr per kvm och år</span></div><div id="brf-chart"></div><div class="ctip" id="brf-ctip"></div><p class="src" id="brf-chartsrc" style="margin:0"></p></div>
+    <div class="card dark" id="brf-apt"><h3>Din lägenhet</h3>
+      <form class="fee" autocomplete="off" onsubmit="return false" style="grid-template-columns:1fr 1fr">
+        <label><span>Boarea, kvm</span>${v("kvm","t.ex. 68")}</label><label><span>Månadsavgift, kr</span>${v("man","t.ex. 4 300")}</label></form>
+      <div class="calc-out" id="brf-calc"></div>
+      <p class="src" style="margin:0">Uppskattning utifrån boarean. Föreningen fördelar egentligen lån och avgifter efter andelstal, som kan skilja sig något från boarean.</p></div>
+  </div>
+  <div class="block"><div class="block-head"><h3>Avgiftshistorik</h3><span class="src">Står ofta i förvaltningsberättelsen eller kan fås av föreningen</span></div>
+    <div class="rowform" id="brf-h"></div>
+    <div class="acts"><button class="btn sm" type="button" data-brf="addh">Lägg till en ändring</button><span class="small muted" id="brf-hsum"></span></div>
+  </div>
+  <div class="block"><div class="block-head"><h3>Underhåll och stambyten</h3><span class="src">Ur förvaltningsberättelsen och underhållsplanen</span></div>
+    <div class="card" style="padding:18px 22px"><div id="brf-tl"></div><div class="legend-s"><span><i style="background:var(--fg)"></i>Gjort</span><span><i style="background:var(--card);box-shadow:inset 0 0 0 2px var(--accent)"></i>Planerat eller pågår</span><span><i style="background:var(--faint);width:2px;border-radius:0"></i>I dag</span></div></div>
+    <div class="rowform um"><div class="r hd"><span>Del av huset</span><span>Status</span><span>År</span><span>Kommentar</span></div>
+      ${BRF_U.map(([k,n])=>`<div class="r"><span class="nm">${n}</span>${sel("u."+k+".s",BRF_STATUS)}${v("u."+k+".y","År",null,'inputmode="numeric" maxlength="4" aria-label="'+n+', år"')}${v("u."+k+".t","Kommentar",null,'type="text" aria-label="'+n+', kommentar"')}</div>`).join("")}
+    </div>
+  </div>
+  <div class="block"><div class="block-head"><h3>Frågor till föreningen och mäklaren</h3><span class="small muted" id="brf-qc"></span></div><ul class="q" id="brf-q"></ul></div>
+  </div>`;
+  brfRenderH();brfUpdate();
+  host.oninput=host.onchange=e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;brfSet(brfCur.st,k,e.target.value);brfSave(label,brfCur.st);
+    if(k==="mark")$("#brf-avgald").hidden=e.target.value!=="tomtratt";brfUpdate();};
+  host.onclick=e=>{const b=e.target.closest("[data-brf]");if(!b)return;const a=b.dataset.brf;
+    if(a==="ex"){brfSave(label,JSON.parse(JSON.stringify(BRF_EX)));renderBRF(host,label,villa);}
+    else if(a==="clear"){try{localStorage.removeItem(brfKey(label));}catch(e){}renderBRF(host,label,villa);}
+    else if(a==="addh"){brfCur.st.h.push(["","",""]);brfSave(label,brfCur.st);brfRenderH();const ins=$$("#brf-h input");ins[ins.length-3]&&ins[ins.length-3].focus();}
+    else if(a==="rmh"){brfCur.st.h.splice(+b.dataset.i,1);if(!brfCur.st.h.length)brfCur.st.h.push(["","",""]);brfSave(label,brfCur.st);brfRenderH();brfUpdate();}};
+}
+function brfGet(o,k){const p=k.split(".");let x=o;
+  if(p[0]==="u"){const u=o.u[p[1]];return u?u[{s:0,y:1,t:2}[p[2]]]:"";}
+  for(const q of p){if(x==null)return "";x=x[q];}return x;}
+function brfSet(o,k,val){const p=k.split(".");o.ex=o.ex;
+  if(p[0]==="u"){o.u[p[1]][{s:0,y:1,t:2}[p[2]]]=val;return;}
+  let x=o;for(let i=0;i<p.length-1;i++)x=x[p[i]];x[p[p.length-1]]=val;}
+function brfRenderH(){const st=brfCur.st;
+  $("#brf-h").innerHTML=`<div class="r hd"><span>År</span><span>Ändring, %</span><span>Kommentar</span><span></span></div>`+st.h.map((r,i)=>`<div class="r">
+    <input data-k="h.${i}.0" value="${esc(r[0])}" placeholder="År" inputmode="numeric" maxlength="4" aria-label="År för ändring ${i+1}">
+    <input data-k="h.${i}.1" value="${esc(r[1])}" placeholder="t.ex. 5 eller −2" inputmode="decimal" aria-label="Ändring i procent, rad ${i+1}">
+    <input data-k="h.${i}.2" value="${esc(r[2])}" placeholder="Kommentar, valfri" type="text" aria-label="Kommentar, rad ${i+1}">
+    <button class="x" type="button" data-brf="rmh" data-i="${i}" aria-label="Ta bort rad ${i+1}"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>`).join("");}
+function brfSeries(st,k){return st.y.map((y,i)=>({y:num(y),v:num(st.n[k][i]),i})).filter(p=>p.v!=null);}
+function brfLatest(st,k){const s=brfSeries(st,k);return s.length?s[s.length-1]:null;}
+function brfUpdate(){
+  const st=brfCur.st,yl=i=>st.y[i]&&num(st.y[i])!=null?st.y[i]:"kolumn "+(i+1);
+  $("#brf-extag").hidden=!st.ex;
+  // i korthet
+  const fig=(k,lbl,unit)=>{const s=brfSeries(st,k),L=s[s.length-1],F=s[0];
+    const val=L?(unit==="%"?fmtK(L.v,1).replace(/,0$/,"")+" %":fmtK(L.v)+" kr"):null;
+    const sub=!L?"Fyll i nedan":s.length>1?`<span>${esc(yl(L.i))}. År ${esc(yl(F.i))}: <b>${unit==="%"?fmtK(F.v,1).replace(/,0$/,"")+" %":fmtK(F.v)+" kr"}</b></span>`:esc(yl(L.i));
+    return `<div><span class="eyebrow">${lbl}</span><b class="${val?"":"empty"}">${val||"–"}</b><span class="muted">${sub}</span></div>`;};
+  $("#brf-sum").innerHTML=fig("skuldbr","Skuld per kvm bostadsrätt")+fig("avg","Årsavgift per kvm")+fig("spar","Sparande per kvm")+fig("ranta","Räntekänslighet","%");
+  const yrs=st.y.filter(y=>num(y)!=null);$("#brf-kyear").textContent=yrs.length?"Senaste året i tabellen, jämfört med det äldsta":"";
+  // diagram
+  const s=brfSeries(st,"avg"),ch=$("#brf-chart");
+  if(!s.length){ch.innerHTML=`<div class="notice" style="max-width:none">Fyll i årsavgift per kvm i tabellen ovan, så visas utvecklingen här.</div>`;$("#brf-chartsrc").textContent="";}
+  else{const W=520,H=210,pl=8,pb=26,pt=26,max=Math.max(...s.map(p=>p.v))*1.12||1,bw=Math.min(72,(W-pl*2)/s.length*0.56),step=(W-pl*2)/s.length;
+    ch.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Årsavgift per kvm per år">${s.map((p,j)=>{const h=Math.max(2,(H-pb-pt)*p.v/max),x=pl+step*j+(step-bw)/2,y=H-pb-h,r=Math.min(4,h/2);
+        const lab=j===0||j===s.length-1;
+        return `<g data-tip="${esc(yl(p.i))}: ${fmtK(p.v)} kr per kvm"><rect class="hit" x="${pl+step*j}" y="${pt-20}" width="${step}" height="${H-pt}" fill="transparent"/><path class="bar" d="M${x},${H-pb} V${y+r} Q${x},${y} ${x+r},${y} H${x+bw-r} Q${x+bw},${y} ${x+bw},${y+r} V${H-pb} Z"/>${lab?`<text class="v" x="${x+bw/2}" y="${y-8}" text-anchor="middle">${fmtK(p.v)}</text>`:""}<text x="${x+bw/2}" y="${H-8}" text-anchor="middle">${esc(yl(p.i))}</text></g>`;}).join("")}<line class="ax" x1="0" x2="${W}" y1="${H-pb}" y2="${H-pb}"/></svg>`;
+    const F=s[0],L=s[s.length-1];
+    $("#brf-chartsrc").textContent=s.length>1?`Från ${yl(F.i)} till ${yl(L.i)}: ${fmtP((L.v/F.v-1)*100)}. Håll pekaren över en stapel för värdet.`:"Ett år ifyllt.";
+    const tip=$("#brf-ctip"),card=ch.parentElement;
+    ch.querySelectorAll("g[data-tip]").forEach(g=>{g.addEventListener("pointerenter",()=>{const b=g.querySelector(".bar").getBoundingClientRect(),c=card.getBoundingClientRect();tip.textContent=g.dataset.tip;tip.style.left=(b.left-c.left+b.width/2)+"px";tip.style.top=(b.top-c.top)+"px";tip.classList.add("show");});
+      g.addEventListener("pointerleave",()=>tip.classList.remove("show"));});}
+  // din lägenhet
+  const kvm=num(st.kvm),man=num(st.man),sk=brfLatest(st,"skuldbr")||brfLatest(st,"skuld"),rk=brfLatest(st,"ranta"),av=brfLatest(st,"avg");
+  const rows=[];
+  if(kvm&&sk)rows.push([`${fmtK(Math.round(kvm*sk.v/1000)*1000)} kr`,`Lägenhetens del av föreningens lån, ${fmtK(sk.v)} kr per kvm gånger ${fmtK(kvm)} kvm`]);
+  if(kvm&&man)rows.push([`${fmtK(man*12/kvm)} kr`,`Din avgift per kvm och år${av?`. Föreningens snitt för bostadsrätterna är ${fmtK(av.v)} kr`:""}`]);
+  if(man&&rk){rows.push([`+${fmtK(Math.round(man*rk.v/100))} kr`,`I månaden om räntan på föreningens lån blir 1 procentenhet högre (räntekänslighet ${fmtK(rk.v,1).replace(/,0$/,"")}\u00a0%)`]);
+    rows.push([`+${fmtK(Math.round(man*rk.v*2/100))} kr`,"I månaden vid 2 procentenheter högre ränta"]);}
+  if(man)rows.push([`${fmtK(man*12)} kr`,"Avgift per år"]);
+  $("#brf-calc").innerHTML=rows.length?rows.map(([b,t])=>`<div><span>${esc(t)}</span><b>${b}</b></div>`).join("")+(rk&&man?`<p class="src" style="margin:12px 0 0">Räntekänsligheten förutsätter att hela höjningen läggs på avgiften och att alla lån får den nya räntan samtidigt. Lån med bunden ränta påverkas först när bindningstiden går ut.</p>`:""):
+    `<p class="muted" style="margin:0">Fyll i boarea och månadsavgift, och nyckeltalen ovan, så räknas lägenhetens del av lånen och effekten av en ränteändring fram.</p>`;
+  // avgiftshistorik
+  const hs=st.h.map(r=>({y:num(r[0]),p:num(r[1])})).filter(r=>r.p!=null).sort((a,b)=>(a.y||0)-(b.y||0));
+  if(hs.length){const tot=(hs.reduce((f,r)=>f*(1+r.p/100),1)-1)*100,ys=hs.filter(r=>r.y).map(r=>r.y);
+    $("#brf-hsum").textContent=`${hs.length===1?"En ändring":hs.length+" ändringar"}${ys.length?` ${Math.min(...ys)===Math.max(...ys)?Math.min(...ys):Math.min(...ys)+"–"+Math.max(...ys)}`:""}, sammanlagt ${fmtP(tot)}`;}
+  else $("#brf-hsum").textContent="";
+  // underhåll, tidslinje
+  const ev=BRF_U.map(([k,n])=>({n,s:st.u[k][0],y:num(st.u[k][1])})).filter(e=>e.y&&e.y>1850&&e.y<2100&&["gjort","pagar","plan"].includes(e.s)).sort((a,b)=>a.y-b.y);
+  const now=2026,tl=$("#brf-tl");
+  if(!ev.length)tl.innerHTML=`<p class="muted" style="margin:0 0 10px">Ange status och år nedan, så visas åtgärderna på en tidslinje.</p>`;
+  else{const y0=Math.min(now-10,...ev.map(e=>e.y))-1,y1=Math.max(now+5,...ev.map(e=>e.y))+1,W=760,H=170,px=y=>24+(W-48)*(y-y0)/(y1-y0),mid=78;
+    const ticks=[];for(let y=Math.ceil(y0/5)*5;y<=y1;y+=5)ticks.push(y);
+    tl.innerHTML=`<svg class="chart tline" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tidslinje över underhåll">
+      <line x1="24" x2="${W-24}" y1="${mid}" y2="${mid}" stroke="var(--line)" stroke-width="2"/>
+      ${ticks.map(y=>`<text x="${px(y)}" y="${H-6}" text-anchor="middle">${y}</text><line x1="${px(y)}" x2="${px(y)}" y1="${mid-4}" y2="${mid+4}" stroke="var(--line)"/>`).join("")}
+      <line x1="${px(now)}" x2="${px(now)}" y1="18" y2="${H-24}" stroke="var(--faint)" stroke-dasharray="3 3"/><text x="${px(now)}" y="12" text-anchor="middle">I dag</text>
+      ${(()=>{const lv=[-1e9,-1e9,-1e9,-1e9],LY=[mid-20,mid+30,mid-38,mid+48];return ev.map(e=>{const x=px(e.y),done=e.s==="gjort",t=e.n.split(",")[0]+" "+e.y,w=t.length*6.6+12;
+        let L=lv.findIndex(r=>r<x-w/2);if(L<0)L=lv.indexOf(Math.min(...lv));lv[L]=x+w/2;const ly=LY[L],up=L%2===0;
+        return `<g><title>${esc(e.n)}: ${BRF_STATUS[e.s].toLowerCase()} ${e.y}</title><line x1="${x}" x2="${x}" y1="${mid}" y2="${up?ly+4:ly-12}" stroke="var(--line)"/><circle cx="${x}" cy="${mid}" r="6.5" fill="${done?"var(--fg)":"var(--card)"}" stroke="${done?"var(--card)":"var(--accent)"}" stroke-width="${done?2:2.5}"/><text class="lb" x="${Math.max(w/2,Math.min(W-w/2,x))}" y="${ly}" text-anchor="middle">${esc(t)}</text></g>`;}).join("");})()}}).join("")}</svg>`;}
+  // frågor
+  const Q=[],U=k=>st.u[k];
+  Q.push(["hojn","Planerar föreningen att höja avgiften de närmaste åren?",""]);
+  Q.push(["bind","Hur är föreningens lån bundna, och när ska de läggas om?",rk?`Räntekänslighet ${fmtK(rk.v,1).replace(/,0$/,"")} % enligt årsredovisningen.`:"Bindningstiderna står i noterna till årsredovisningen."]);
+  if(!U("stam")[0]||!U("stam")[1])Q.push(["stam","När gjordes stambytet, eller när planeras det?","Uppgiften står ofta i förvaltningsberättelsen."]);
+  BRF_U.forEach(([k,n])=>{const u=U(k);if((u[0]==="plan"||u[0]==="pagar")&&k!=="hiss")Q.push(["plan-"+k,`Hur ska ${n.split(",")[0].toLowerCase()}${u[1]?" "+u[1]:""} finansieras, och påverkar det avgiften?`,u[2]||""]);});
+  if(st.uplan!=="ja")Q.push(["uplan","Finns en underhållsplan, och när uppdaterades den senast?",""]);
+  if(st.mark==="tomtratt")Q.push(["tomt","När omförhandlas tomträttsavgälden nästa gång?",num(st.avgald)?`Avgälden är ${fmtK(num(st.avgald))} kr per år enligt det du fyllt i.`:"Avgälden betalas till staden och kan höjas vid omförhandling."]);
+  if(!st.mark)Q.push(["mark","Äger föreningen marken, eller är det tomträtt?",""]);
+  Q.push(["lokal","Har föreningen lokaler eller hyresrätter, och vilka hyresavtal löper ut snart?","Påverkar hur stor del av intäkterna som kommer från avgifterna."]);
+  Q.push(["over","Ingår något särskilt i avgiften, till exempel bredband, el eller värme?",""]);
+  Q.push(["tvist","Pågår några tvister, försäkringsskador eller större reparationer?",""]);
+  const qk=id=>"bc-brfq:"+brfCur.label+":"+id;
+  $("#brf-q").innerHTML=Q.map(([id,q,sm])=>{let on=false;try{on=localStorage.getItem(qk(id))==="1";}catch(e){}
+    return `<li><label><input type="checkbox" data-q="${id}"${on?" checked":""}><span class="qt">${esc(q)}${sm?`<small>${esc(sm)}</small>`:""}</span></label></li>`;}).join("");
+  const upd=()=>{const c=$$("#brf-q input");$("#brf-qc").textContent=`${c.filter(x=>x.checked).length} av ${c.length} besvarade`;};
+  $$("#brf-q input").forEach(cb=>cb.addEventListener("change",e=>{e.stopPropagation();try{localStorage.setItem(qk(cb.dataset.q),cb.checked?"1":"0");}catch(er){}upd();}));upd();
+}
+
 let mode="full";
 function setMode(m){mode=m;
   document.body.classList.toggle("mode-start",m==="start");document.body.classList.toggle("mode-basic",m==="basic");
-  $("#startv").hidden=m!=="start";$("#full-head").hidden=m!=="full";$("#b-head").hidden=m!=="basic";$("main").hidden=m==="start";
+  document.body.classList.toggle("mode-cmp",m==="cmp");$("#cmpv").hidden=m!=="cmp";
+  $("#startv").hidden=m!=="start";$("#full-head").hidden=m!=="full";$("#b-head").hidden=m!=="basic";$("main").hidden=m==="start"||m==="cmp";
   $$(".sidenav [data-tab]").forEach(a=>{if(m==="basic"&&NA[a.dataset.tab])a.dataset.na="1";else delete a.dataset.na;});
-  if(m==="full")document.title="Buyers Choice – Vildkaprifolen 5";}
+  if(m==="full")document.title="Buyers Choice – Vildkaprifolen 5";
+  loadData().then(()=>{cmpInit();cmpBadges();}).catch(()=>{});}
 function showStart(){setMode("start");setMenu(false);current=null;document.title="Buyers Choice – Sök adress i "+KN.replace(" eller "," och ");scrollTo({top:0});loadData().catch(()=>{});}
 function route(opts={}){
   const h=decodeURIComponent((location.hash||"").slice(1));
   if(!h||h==="start"){showStart();return;}
+  const c=h.match(/^jamfor(?:-([\d-]*))?$/);
+  if(c){showCompare(c[1]||"");return;}
   const m=h.match(/^a(\d+)(?:-([a-z]+))?$/);
   if(m){loadData().then(d=>{const k=+m[1];if(!d.A[k]){showStart();return;}
       if(k===d.full){setMode("full");go(m[2]||"oversikt",opts);return;}
@@ -1961,5 +2412,6 @@ const hdr=$("#top"),onScroll=()=>hdr.classList.toggle("scrolled",scrollY>4);addE
 
 route({instant:true});
 </script>
+<script src="bevakning.js"></script>
 
 </body></html>

@@ -1,0 +1,74 @@
+name: Bevakning
+
+# Hämtar läget för planarbete och gällande planer i Göteborg varje morgon, sparar nya
+# händelser i portalen och mejlar dem som bevakar en adress i närheten.
+on:
+  schedule:
+    - cron: "30 5 * * *"   # 06.30 svensk vintertid, 07.30 sommartid
+  workflow_dispatch:
+    inputs:
+      torrkorning:
+        description: "Skriv mejlen som filer i stället för att skicka dem"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write   # för att starta publiceringen av portalen
+
+concurrency:
+  group: bevakning
+  cancel-in-progress: false
+
+jobs:
+  bevakning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Hämta läget och hitta nya händelser
+        run: python3 scripts/bevakning/hamta.py
+
+      - name: Skicka mejl till bevakade adresser
+        env:
+          BEVAKNINGAR: ${{ secrets.BEVAKNINGAR }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          PORTAL_URL: ${{ vars.PORTAL_URL }}
+        run: |
+          if [ "${{ inputs.torrkorning }}" = "true" ]; then
+            python3 scripts/bevakning/skicka.py --torrkorning
+          else
+            python3 scripts/bevakning/skicka.py
+          fi
+
+      - name: Spara provmejl från torrkörning
+        if: ${{ inputs.torrkorning }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: provmejl
+          path: utskick/
+          if-no-files-found: ignore
+
+      - name: Spara läget i repot
+        run: |
+          git add bevakning portal/bevakning
+          if git diff --cached --quiet; then
+            echo "Inget nytt."
+            exit 0
+          fi
+          git -c user.name="Buyers Choice bevakning" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Bevakning: läget $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          # Pushar gjorda med GITHUB_TOKEN startar inga andra arbetsflöden, så publiceringen startas här.
+          gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
