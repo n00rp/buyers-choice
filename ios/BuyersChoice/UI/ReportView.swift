@@ -75,7 +75,9 @@ struct ReportView: View {
             let m = ReportModel(address: store.addresses[addressID])
             model = m
             user.visited(m.address.key)
+            Log.write("Rapport: laddar \(m.address.label)")
             await m.load(store)
+            Log.write("Rapport: laddad, miljö \(m.row != nil ? "ok" : "saknas")")
         }
         .environment(\.openURL, OpenURLAction { url in
             if url.scheme == "https" { safari = url; return .handled }
@@ -134,6 +136,7 @@ struct ReportView: View {
             .background(Theme.bg)
             .task(id: model.loading) {
                 // Skärmbildsskriptet kan be om ett visst avsnitt: -uiSection miljo
+                if !model.loading { Log.write("Rapport: visas") }
                 guard !model.loading, let s = UserDefaults.standard.string(forKey: "uiSection").flatMap(ReportSection.init(rawValue:)) else { return }
                 try? await Task.sleep(for: .milliseconds(400))
                 proxy.scrollTo(s, anchor: .top)
