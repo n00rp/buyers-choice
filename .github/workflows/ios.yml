@@ -1,0 +1,147 @@
+name: iOS-app
+
+# Bygger och testar iOS-appen på en Mac i molnet. Körs bara när något under ios/ ändras,
+# eftersom macOS-minuter kostar mer. TestFlight-uppladdning startas för hand (Run workflow).
+
+on:
+  push:
+    branches: [main]
+    paths: ["ios/**", ".github/workflows/ios.yml"]
+  pull_request:
+    paths: ["ios/**", ".github/workflows/ios.yml"]
+  workflow_dispatch:
+    inputs:
+      testflight:
+        description: "Ladda upp en ny version till TestFlight"
+        type: boolean
+        default: false
+      screenshots:
+        description: "Ta skärmbilder i simulatorn"
+        type: boolean
+        default: true
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Bygg och testa
+    runs-on: macos-15
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Välj senaste Xcode
+        run: |
+          XC=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XC"
+          xcodebuild -version
+
+      - name: Skapa Xcode-projektet
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Bygg och kör tester
+        run: |
+          SIM=$(scripts/simulator.sh)
+          echo "SIM=$SIM" >> "$GITHUB_ENV"
+          set +e
+          xcodebuild test \
+            -project BuyersChoice.xcodeproj -scheme BuyersChoice \
+            -destination "id=$SIM" -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/build.log" 2>&1
+          rc=$?
+          grep -E "error:|warning: .*/ios/BuyersChoice|Test Case .*(passed|failed)|Executed|\*\* (BUILD|TEST)" "$RUNNER_TEMP/build.log" | tail -200
+          exit $rc
+
+      - name: Byggloggens slut
+        if: failure()
+        run: tail -80 "$RUNNER_TEMP/build.log" || true
+
+      - name: Skärmbilder
+        if: success() && (github.event_name != 'workflow_dispatch' || inputs.screenshots)
+        run: scripts/screenshots.sh "$SIM" "$RUNNER_TEMP/dd/Build/Products/Debug-iphonesimulator/BuyersChoice.app" "$RUNNER_TEMP/shots"
+
+      - uses: actions/upload-artifact@v4
+        if: success() && (github.event_name != 'workflow_dispatch' || inputs.screenshots)
+        with:
+          name: skarmbilder
+          path: ${{ runner.temp }}/shots
+          retention-days: 14
+
+  testflight:
+    name: Ladda upp till TestFlight
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.testflight
+    runs-on: macos-15
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: ios
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Kontrollera hemligheter
+        run: |
+          for v in ASC_KEY_ID ASC_ISSUER_ID APPLE_TEAM_ID; do
+            if [ -z "${!v}" ]; then echo "::error::Hemligheten $v saknas. Se ios/README.md."; exit 1; fi
+          done
+
+      - name: Välj senaste Xcode
+        run: |
+          XC=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XC"
+          xcodebuild -version
+
+      - name: Lägg in API-nyckeln
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8"
+
+      - name: Skapa Xcode-projektet
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Arkivera
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project BuyersChoice.xcodeproj -scheme BuyersChoice \
+            -destination "generic/platform=iOS" \
+            -archivePath "$RUNNER_TEMP/BuyersChoice.xcarchive" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tail -40
+
+      - name: Exportera och ladda upp
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :teamID $APPLE_TEAM_ID" ExportOptions.plist
+          set -o pipefail
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/BuyersChoice.xcarchive" \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tail -40
+          echo "Version 0.1.0 (${{ github.run_number }}) är uppladdad. Den syns i TestFlight när Apple har behandlat den, oftast inom 15–30 minuter." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Ta bort nyckeln
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"
