@@ -36,6 +36,7 @@ En portal som samlar det en bostadsköpare behöver veta om platsen inför visni
 - Exempeladressen **Vildkaprifolen 5, Torslanda** har en fullständig rapport med manuellt tolkade planbestämmelser (`data/vildkaprifolen-5-detaljplan.json`). Andra adresser får en grundrapport.
 - **Jämför adresser** (`#jamfor-<nr>-<nr>`): två eller tre adresser sida vid sida, byggt på samma förberäknade data som grundrapporten. Inga markeringar av bästa värde, bara ett reglage som döljer lika rader.
 - `arkiv/vildkaprifolen-5.html` är den första prototypen för en enda adress.
+- **iOS-app (2026-11-27):** nativ SwiftUI under `ios/` (iOS 17+), läser samma JSON från GitHub Pages. Martin har ingen Mac, så allt byggs i `.github/workflows/ios.yml` på macOS: tester, skärmbilder (läggs i grenen `ios-skarmbilder`, med apploggar och kraschrapporter) och TestFlight för hand. Se `ios/README.md`. Undvik `async let` med `try?` i vyernas laddning, det kraschade i Swift-körtiden.
 
 ### Köra lokalt
 
