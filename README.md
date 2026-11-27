@@ -4,7 +4,7 @@ En portal som samlar det en bostadsköpare behöver veta om platsen innan visnin
 
 Portalen visar neutral information med källa. Den betygsätter inte bostäder eller områden.
 
-Pilotkommun är **Göteborg**, och portalen täcker både villor och bostadsrätter.
+Pilotkommun är **Göteborg**, och portalen täcker både villor och bostadsrätter. **Partille** är den andra kommunen. Där finns det som kommunen publicerar som öppna data (se [Fler kommuner](#fler-kommuner)).
 
 ## Så ser det ut
 
@@ -75,6 +75,11 @@ På mobil ersätts sidomenyn av en meny i sidhuvudet.
   <img src="docs/screenshots/12-mobil-meny.png" alt="Menyn på mobil" width="300">
 </p>
 
+### Partille
+Adresser i Partille får en grundrapport med gällande detaljplan (plankarta och planbeskrivning), fastighet, geotekniska utredningar, kommunens samhällsbyggnadsprojekt och skolor och förskolor, även på Göteborgssidan av gränsen. Det som kommunen inte publicerar, som buller och hållplatser, visas som saknat i stället för att fyllas i.
+
+![Grundrapport för Fröjas backe 10 i Partille](docs/screenshots/13-partille.png)
+
 Skärmbilderna tas med `node scripts/screenshots.js` medan portalen körs lokalt (se nedan).
 
 ## Kom igång
@@ -104,6 +109,7 @@ Arbetsflödet `.github/workflows/pages.yml` lägger ut mappen `portal/` varje g�
 | `portal/m/*.json` | Miljö- och riskvärden per adress, uppdelat i block om 5 000 adresser. Kolumnerna beskrivs i `portal/miljo-meta.json`. |
 | `portal/r/*.json` | Vägnät i rutor om 2,5 × 2,5 km, för kartritning. Beskrivs i `portal/roads-meta.json`. |
 | `portal/service.json` | Hållplatser, skolor, förskolor, livsmedelsbutiker m.m. med koordinater. |
+| `portal/k/<kommun>/` | Samma filer för övriga kommuner (nu `partille`). Vilka kommuner som finns och vilka uppgifter de har står i `KOM` i `index.html`. |
 | `data/vildkaprifolen-5-detaljplan.json` | Manuellt tolkade planbestämmelser för exempeladressen Vildkaprifolen 5, Torslanda. |
 | `scripts/` | Python-skripten som bygger JSON-filerna ovan ur stadens rådata, och `screenshots.js` som tar skärmbilderna. |
 | `docs/screenshots/` | Skärmbilder av portalens olika delar. |
@@ -136,6 +142,22 @@ Allt kommer från öppna tjänster utan nyckel. Fullständig kartläggning med v
 | Hållplatser | Trafikkontoret, `open.geodata.tkgbg.se/wfs` |
 | Skolor | Skolverkets skolenhetsregister (`api.skolverket.se/skolenhetsregistret/v2`) |
 | Förskolor | Göteborgs Stad, Hitta förskolor |
+
+## Fler kommuner
+
+Göteborg ligger först i listan så att gamla adresslänkar fungerar. Varje ny kommun får en mapp under `portal/k/` med samma filformat och en rad i `KOM` i `index.html`, där `har` anger vilka uppgifter kommunen har öppna data för. Det som saknas visas som saknat.
+
+| Kommun | Läge | Källa |
+| --- | --- | --- |
+| Göteborg | Klar | Se tabellen ovan |
+| Partille | Klar, hämtad 2026-11-27 | Partille kommuns öppna ArcGIS-tjänster (`geodata.partille.se/arcgis/rest/services`): adresser, gällande detaljplaner, fastighetsgränser, förskolor, geotekniska utredningar och samhällsbyggnadsprojekt. Skolor från Skolverket. |
+| Mölndal | Väntar på datakälla | Kommunen har en webbkarta (Spatial Suite) men ingen öppen WMS/WFS eller nedladdning för adresser och planer. |
+| Kungälv | Väntar på datakälla | Samma läge som Mölndal. |
+| Stockholm, Malmö | Inte påbörjad | |
+
+Partille saknar öppna data för buller, luft, skyfall, översvämning, radon, hållplatser och butiker. Hållplatser för hela Västtrafik finns hos Trafiklab men kräver en gratis API-nyckel. Lantmäteriets öppna data (adresser och fastigheter för hela landet) kräver också ett gratis konto. Båda skulle göra det betydligt lättare att lägga till fler kommuner.
+
+Partilles data byggs med `python3 scripts/kommun_partille.py hamta` och sedan `python3 scripts/kommun_partille.py bygg`.
 
 Inga annonser hämtas eller lagras. Portalen skrapar inte Hemnet eller Booli, och annonsbilder visas inte.
 
