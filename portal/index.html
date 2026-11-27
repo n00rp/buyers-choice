@@ -471,6 +471,8 @@ section[data-bview].enter{animation:viewIn .35s var(--ease) both}
 @media (max-width:600px){.fut summary .meta{grid-column:2/5}.fut .full{padding-left:4px}.fut .full dl{grid-template-columns:1fr;gap:2px}.fut .full dd{margin-bottom:10px}}
 .fut .dot{width:10px;height:10px;border-radius:3px;margin-top:7px;border:2px dashed var(--c-ongoing)}
 .fut .nm{font-weight:600}
+.fut.pa .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.pst{display:inline-flex;gap:3px}.pst i{width:14px;height:5px;border-radius:3px;background:var(--line)}.pst i.done{background:#B8C9C2}.pst i.now{background:var(--accent)}
 .fut .meta{grid-column:2;font-size:.88rem;color:var(--muted);max-width:70ch}
 .fut .dist{grid-row:1;grid-column:3;font-weight:600;font-variant-numeric:tabular-nums}
 .nmap .rd-m-c{fill:none;stroke:#C5CBD4;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
@@ -1211,6 +1213,8 @@ body.mode-cmp .menu-btn{display:none!important}
       <tr><td>Adresser</td><td>Göteborgs Stad, adressregistret (opengeodata.goteborg.se, adresser-v1)</td><td class="num">2026-11-25</td></tr>
       <tr><td>Gällande planer</td><td>Göteborgs Stad, stadsbyggnadskontoret (planer-v3), med länk till varje plans PDF</td><td class="num">2026-11-25</td></tr>
       <tr><td>Hållplatser</td><td>Västtrafik via Trafikkontorets öppna geodata (vt:hallplatslagen)</td><td class="num">2026-11-25</td></tr>
+      <tr><td>Linjer per hållplats</td><td>Västtrafik via Trafikkontorets öppna geodata (vt:alla_linjer), linjer vars sträckning går inom 45 m från hållplatsen</td><td class="num">2026-11-27</td></tr>
+      <tr><td>Pågående planarbeten</td><td>Göteborgs Stad, databasen för plan- och byggprojekt som visar projektsidorna på goteborg.se (planobygg)</td><td class="num" id="b-pa-date">2026-11-27</td></tr>
       <tr><td>Skolor</td><td>Skolverkets skolenhetsregister, aktiva skolenheter i Göteborg</td><td class="num">2026-11-25</td></tr>
       <tr><td>Förskolor</td><td>Göteborgs Stad, Hitta förskolor (509 förskolor)</td><td class="num">2026-11-25</td></tr>
       <tr><td>Fastighetsbeteckning och area</td><td>Göteborgs Stad, stadsbyggnadskontorets fastighetskarta (sbf-extern-fastighetsgrans-v1)</td><td class="num">2026-11-25</td></tr>
@@ -1234,8 +1238,13 @@ body.mode-cmp .menu-btn{display:none!important}
   <div id="b-env"><p class="muted">Laddar miljödata …</p></div>
 </section>
 <section data-bview="omradet" hidden>
-  <div class="block">
+  <div class="block" id="b-pa-wrap" hidden>
     <h2>Planer i området</h2>
+    <p class="lead" id="b-pa-lead">Stadens pågående planarbeten och byggprojekt inom 1,5 km från adressen: detaljplaner, planprogram och trafikprojekt. Skedet visar hur långt staden har kommit. Planer i tidigt skede kan ändras mycket innan de antas.</p>
+  </div>
+  <div id="b-pa" hidden></div>
+  <div class="block">
+    <h2 id="b-fut-h">Planer i området</h2>
     <p class="lead" id="b-fut-lead">Det här pekar översiktsplanen ut för framtiden inom 1,5 km från adressen: nya vägar och spår, områden där markanvändningen kan förändras och områden som ska utredas. Översiktsplanen är vägledande och visar långsiktig inriktning, inte beslutade byggprojekt.</p>
   </div>
   <div id="b-future"><p class="muted">Laddar …</p></div>
@@ -1590,7 +1599,7 @@ let D=null,Dp=null;
 /* Kommuner i portalen. Göteborg ligger först så att gamla adresslänkar (#a123) fortsätter att fungera.
    Övriga kommuner har sina filer under k/<id>/ i samma format. "har" säger vilka uppgifter kommunen har öppna data för. */
 const KOM=[
-  {id:"goteborg",namn:"Göteborg",dir:"",org:"Göteborgs Stad",hamtad:"2026-11-25",har:{vagar:1,miljo:1,op:1,stops:1,shops:1}},
+  {id:"goteborg",namn:"Göteborg",dir:"",org:"Göteborgs Stad",hamtad:"2026-11-25",har:{vagar:1,miljo:1,op:1,stops:1,shops:1,planarbete:1}},
   {id:"partille",namn:"Partille",dir:"k/partille/",org:"Partille kommun",hamtad:"2026-11-27",har:{geoteknik:1,projekt:1},
    karta:"https://geodata.partille.se/portal/apps/experiencebuilder/experience/?id=474d7df7acca4470aa21f7092a467c70",
    plansida:"https://www.partille.se/bygga-bo--miljo/samhallsplanering/pagaende-detaljplanering/",
@@ -1726,6 +1735,11 @@ function plansFor(a){const K=kom(a);return a.p.map(i=>{const r=K.P[i];const t=PT
   return {bet:r[0],typ:r[1],name:prettyName(r[2]),url:r[3]?(r[3].startsWith("http")?r[3]:K.PFX+r[3]):"",besk:r[4]||"",lk:r[5]||"",grp:t[0],about:t[1]};})
   .sort((x,y)=>Object.keys(PGROUP).indexOf(x.grp)-Object.keys(PGROUP).indexOf(y.grp));}
 const near=(arr,a,n,f)=>arr.filter(f||(()=>true)).map(r=>({r,m:Math.round(Math.hypot(r[1]-a.e,r[2]-a.n))})).sort((x,y)=>x.m-y.m).slice(0,n);
+/* linjer som passerar en hållplats (service.json: lines + fjärde fältet i stops) */
+function stopLines(S,r){const L=S.lines,ix=r[3];if(!L||!ix||!ix.length)return "Hållplats";
+  const ord={"Spårvagn":0,"Buss":1,"Båt":2,"Tåg":3,"Flygbuss":4},ls=ix.map(i=>L[i]).filter(Boolean)
+    .sort((a,b)=>(ord[a[1]]-ord[b[1]])||((parseInt(a[0])||999)-(parseInt(b[0])||999))||a[0].localeCompare(b[0],"sv"));
+  return `<span class="lines">${ls.map(l=>`<span title="${esc(l[1]+(l[2]?" · "+l[2]:""))}">${esc(l[0])}</span>`).join("")}</span>`;}
 const BC={stop:"#0E8C8C",school:"#7A5AF0",pre:"#C2569B",shop:"#B4691F"};
 const PH_SVG='<span class="photo-art" aria-hidden="true">Annonsbild</span>';
 const NA={};
@@ -1836,7 +1850,7 @@ function openBasic(k){
       <span class="more">Skolor och förskolor <span>→</span></span></a>`;
   $("#b-legend").innerHTML=`${H.stops?`<span style="--c:${BC.stop}"><i style="border-radius:2px"></i>Hållplats</span>`:""}<span style="--c:${BC.school}"><i></i>Grundskola</span><span style="--c:${BC.pre}"><i></i>Förskola</span>${H.shops?`<span style="--c:${BC.shop}"><i></i>Livsmedelsbutik</span>`:""}<span style="--c:#9A6A08"><i style="background:none;border:2px dashed #9A6A08;border-radius:3px"></i>${H.op?"Planerat enligt översiktsplanen":"Samhällsbyggnadsprojekt"}</span><span style="--c:#121722"><i></i>Adressen</span>`;
   setKomTexts(K);
-  $("#b-scope").innerHTML=H.miljo?`<b>Om uppgifterna.</b> Allt på sidan är förberäknat från Göteborgs Stads, Västtrafiks och Skolverkets öppna data, hämtade 2026-11-25. Värdena gäller adresspunkten. Pågående planarbete i närheten, och nyheter om det, finns under <a href="#" data-tab-link="bevakning">Bevakning</a>. Den uppdateras varje morgon.`
+  $("#b-scope").innerHTML=H.miljo?`<b>Om uppgifterna.</b> Allt på sidan är förberäknat från Göteborgs Stads, Västtrafiks och Skolverkets öppna data, hämtade 2026-11-25. Värdena gäller adresspunkten. Pågående planarbete i närheten finns under Planer i området, och nyheter om det under <a href="#" data-tab-link="bevakning">Bevakning</a>. Den uppdateras varje morgon.`
     :`<b>Om uppgifterna.</b> Allt på sidan är förberäknat från ${esc(K.org)}s och Skolverkets öppna data, hämtade ${K.hamtad}. Värdena gäller adresspunkten. ${esc(K.namn)} publicerar inte ${K.saknas} som öppna data per adress, och hållplatser och butiker saknas också i underlaget. De delarna finns därför bara för Göteborg än så länge.`;
   $("#b-plan-lead").textContent=pl.length?`${pl.length===1?"Ett planbeslut":pl.length+" planbeslut"} gäller där adresspunkten ligger. Öppna plankartan för att se bestämmelserna, till exempel hur mycket som får byggas.`:`Adresspunkten ligger inte inom någon gällande plan i ${H.miljo?"stadens":"kommunens"} planregister.`;
   const groups=Object.keys(PGROUP).map(g=>[g,pl.filter(p=>p.grp===g)]).filter(([,v])=>v.length);
@@ -1847,7 +1861,7 @@ function openBasic(k){
   const inG=(x,i)=>!H.miljo&&x.r[i]==="Göteborg"?" · Göteborg":"";
   const none=t=>`<p class="muted small">${t}</p>`;
   $("#b-svc").innerHTML=[
-    H.stops?cat("bus","Kollektivtrafik",`<ul>${st.slice(0,5).map(x=>li(x,"Hållplats")).join("")}</ul>`,"Källa: Västtrafiks hållplatslägen. Linjer per hållplats finns i exempelrapporten.")
+    H.stops?cat("bus","Kollektivtrafik",`<ul>${st.slice(0,5).map(x=>li(x,stopLines(S,x.r))).join("")}</ul>`,"Källa: Västtrafiks hållplatslägen och linjesträckningar via Trafikkontorets öppna geodata. Linjerna är de vars sträckning går förbi hållplatsen. Tidtabell och vilka turer som stannar finns hos Västtrafik.")
       :cat("bus","Kollektivtrafik",none(`Hållplatser för ${esc(K.namn)} finns inte i underlaget. Västtrafiks öppna hållplatsdata kräver en API-nyckel, och kommunen publicerar inga egna hållplatslägen.`),'Sök resor och hållplatser hos <a href="https://www.vasttrafik.se/" target="_blank" rel="noopener">Västtrafik</a>.'),
     cat("school","Grundskolor",`<ul>${gr.map(x=>li(x,esc(x.r[5])+(x.r[4]?" · årskurs "+esc(x.r[4]):"")+inG(x,8))).join("")}</ul>`,`Källa: Skolverkets skolenhetsregister. Vilken skola barnet får plats i avgörs av ${H.miljo?"staden":"kommunen"}.`),
     cat("kid","Förskolor",`<ul>${pre.map(x=>li(x,esc(x.r[3])+(x.r[5]?" · "+esc(x.r[5].toLowerCase()):"")+inG(x,6),H.miljo||x.r[6]==="Göteborg"?gbgPre+encodeURIComponent(x.r[4]):"")).join("")}</ul>`,
@@ -1998,7 +2012,43 @@ function renderProjects(r,fut,K){
     :`<div class="notice">${esc(K.org)} har inga samhällsbyggnadsprojekt i kartlagret inom 1,5 km från adressen.</div>`;
   return list.map(x=>({f:{n:x.f.n,k:x.f.k},d:x.d,proj:1}));
 }
-function renderQuestions(a,pl,m,r,fut){
+/* pågående planarbeten från stadens projektdatabas (planarbete.json, samma format som bevakningens fil) */
+const PA_STEG=["tidigt","samrad","granskning","antagande","lagakraft","bygge"],PA_KORT={tidigt:"Tidigt skede",samrad:"Samråd",granskning:"Granskning",antagande:"Antagande",lagakraft:"Laga kraft",bygge:"Byggs"};
+const PA_VISA=new Set([...PA_STEG,"overklagad","pausad","okand"]),PA_R=1500;
+const MANAD=["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"];
+const ymd=d=>d&&d.length>=8?new Date(+d.slice(0,4),+d.slice(4,6)-1,+d.slice(6,8)):null;
+const datumTxt=(d,ar)=>`${d.getDate()} ${MANAD[d.getMonth()]}${ar?" "+d.getFullYear():""}`;
+function loadPlanarbete(){return getJ("bevakning/planarbete.json");}
+function planarbeteNara(a,P){if(!P)return [];const c=P.kol.reduce((o,k,i)=>(o[k]=i,o),{});
+  return P.p.map(r=>({namn:r[c.namn],slag:r[c.slag],steg:r[c.steg],fas:r[c.fas],lank:r[c.lank],syn:r[c.synpunkter],ungefar:!!r[c.ungefar],
+    m:Math.round(Math.hypot(r[c.x]-a.e,r[c.y]-a.n))})).filter(x=>x.m<=PA_R&&PA_VISA.has(x.fas)).sort((x,y)=>x.m-y.m);}
+function synTxt(x){const f=ymd(x.syn&&x.syn[0]),t=ymd(x.syn&&x.syn[1]);if(!f||!t)return null;
+  const nu=new Date(),idag=new Date(nu.getFullYear(),nu.getMonth(),nu.getDate());
+  const span=`${datumTxt(f,f.getFullYear()!==t.getFullYear())}–${datumTxt(t,true)}`;
+  return {open:idag>=f&&idag<=t,past:idag>t,txt:idag>t?`Synpunkter kunde lämnas ${span}.`:idag>=f?`Det går att lämna synpunkter till och med ${datumTxt(t,true)}.`:`Det går att lämna synpunkter ${span}.`};}
+function paStepper(fas){const i=PA_STEG.indexOf(fas==="overklagad"?"antagande":fas);if(i<0)return "";
+  return `<span class="pst" aria-hidden="true">${PA_STEG.map((k,j)=>`<i class="${j<i?"done":j===i?"now":""}"></i>`).join("")}</span>`;}
+function renderPlanarbete(a,K,P){
+  const wrap=$("#b-pa-wrap"),box=$("#b-pa"),note=$("#b-fut-note"),fh=$("#b-fut-h");
+  const on=!!(K.har.planarbete&&P);wrap.hidden=box.hidden=!on;
+  if(fh)fh.textContent=on?"Utpekat i översiktsplanen":"Planer i området";
+  if(!on){if(note)note.hidden=false;return [];}
+  if(note)note.hidden=true;
+  const list=planarbeteNara(a,P),fn=P.faser||{};
+  const chev='<svg class="chev" viewBox="0 0 20 20" aria-hidden="true"><path d="m5 8 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ext='<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M9 3h4v4M13 3 7.5 8.5M12 9.5V13H3V4h3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const uppd=P.uppdaterad?` Uppgifterna hämtades ${esc(P.uppdaterad)}.`:"";
+  box.innerHTML=list.length?`<ul class="fut pa">${list.map(x=>{const sy=synTxt(x),fas=fn[x.fas]||x.fas;
+      const rows=[["Typ",x.slag],["Skede",x.steg||fas],["Synpunkter",sy?sy.txt:""],["Avstånd",fmtD(x.m)+" från adresspunkten"+(x.ungefar?". Läget är ungefärligt, uppskattat från en gatuadress i projektets namn":"")]].filter(q=>q[1]);
+      return `<li><details><summary><span class="dot" style="--c-ongoing:${x.fas==="bygge"||x.fas==="lagakraft"?"var(--accent)":"#9A6A08"}"></span><span class="nm">${esc(x.namn)}</span><span class="dist">${fmtD(x.m)}</span>${chev}<span class="meta">${paStepper(x.fas)}<span>${esc(x.slag)} · ${esc(fas)}${sy&&sy.open?" · synpunkter kan lämnas nu":""}</span></span></summary>
+        <div class="full"><dl>${rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+        ${x.lank&&/^https:\/\//.test(x.lank)?`<div class="lnk"><a href="${esc(x.lank)}" target="_blank" rel="noopener">Öppna projektsidan på goteborg.se ${ext}</a></div>`:""}</div></details></li>`;}).join("")}</ul>
+      <p class="src">Stapeln visar skedet: tidigt skede, samråd, granskning, antagande, laga kraft och byggande. Planer som är färdigbyggda eller avbrutna visas inte. Avstånd fågelvägen till projektets mittpunkt. Källa: Göteborgs Stad, databasen för plan- och byggprojekt.${uppd}</p>`
+    :`<div class="notice">Staden har inget pågående planarbete eller byggprojekt registrerat inom 1,5 km från adressen.${uppd}</div>`;
+  const d=$("#b-pa-date");if(d&&P.uppdaterad)d.textContent=P.uppdaterad;
+  return list;
+}
+function renderQuestions(a,pl,m,r,fut,pa){
   const Q=[],main=pl.find(p=>p.grp==="plan"),t=envText(m,r);
   if(main)Q.push(["plan",`Vad tillåter ${main.typ.toLowerCase()} ${main.bet} på tomten?`,"Till exempel byggrätt, våningar och prickmark. Det står i plankartan."]);
   else Q.push(["plan","Hur prövas bygglov här när det saknas detaljplan?",`Fråga ${kom(a).har.miljo?"stadsbyggnadskontoret":"kommunen"} vad som gäller för platsen.`]);
@@ -2009,9 +2059,14 @@ function renderQuestions(a,pl,m,r,fut){
   if(r[5]!=null&&r[5]<=150)Q.push(["sky","Har det samlats vatten på tomten eller i källaren vid kraftiga regn?",`Närmaste skyfallsled: ${r[5]===0?"vid adressen":fmtD(r[5])}.`]);
   if(r[6]!=null&&r[6]<=500)Q.push(["flood","Vad gäller för höga vattenstånd och försäkring?",`Riskområde för översvämning: ${r[6]===0?"vid adressen":fmtD(r[6])}.`]);
   if(r[7]!=null&&r[7]<=300)Q.push(["foro","Finns kända markföroreningar på eller nära fastigheten?",`Riskområde för förorenade områden: ${r[7]===0?"vid adressen":fmtD(r[7])}.`]);
+  {const K=kom(a);if(K.har.stops){const s0=near(K.S.stops,a,1)[0],L=K.S.lines,ix=s0&&s0.r[3]||[];
+    if(s0)Q.push(["kollektiv",`Hur ofta går ${ix.length?"linjerna":"bussarna"} från ${s0.r[0]}, och hur fungerar det i rusningstid?`,`Närmaste hållplats, ${fmtD(s0.m)} bort${ix.length&&L?". Linjer som passerar: "+ix.map(i=>L[i]&&L[i][0]).filter(Boolean).filter((v,i,arr)=>arr.indexOf(v)===i).join(", "):""}.`]);}}
   Q.push(["radon","Finns en radonmätning, och när gjordes den?",t.radon?`Markradon enligt översiktsplanen: ${t.radon.toLowerCase()}.`:""]);
   const gt=r[16];if(gt&&gt[0]>0)Q.push(["geo","Vad visar den geotekniska utredningen för området?",`${gt[0]===1?"En utredning":gt[0]+" utredningar"} täcker adresspunkten${gt[1]?", den senaste från "+gt[1]:""}. Kommunen lämnar ut dem.`]);
   if(r[10]!=null&&r[10]<=150)Q.push(["fg","Vad transporteras på den närliggande leden för farligt gods?",`Avstånd: ${fmtD(r[10])}.`]);
+  (pa||[]).filter(x=>x.m<=1000&&!["bygge","lagakraft"].includes(x.fas)).slice(0,2).forEach((x,i)=>{const sy=synTxt(x);
+    Q.push(["pa"+i,`Vet säljaren något om planarbetet ${x.namn.replace(/^[^–-]+\s[–-]\s/,"").replace(/^./,c=>c.toLowerCase())}?`,`${x.slag}, ${(PA_KORT[x.fas]||"okänt skede").toLowerCase()}, ${fmtD(x.m)} bort.${sy&&!sy.past?" "+sy.txt:""}`]);});
+  (pa||[]).filter(x=>x.m<=500&&["bygge","lagakraft"].includes(x.fas)).slice(0,1).forEach(x=>Q.push(["pab",`När väntas bygget av ${x.namn.replace(/^[^–-]+\s[–-]\s/,"").replace(/^./,c=>c.toLowerCase())} vara klart, och hur påverkar det trafik och utsikt?`,`${PA_KORT[x.fas]}, ${fmtD(x.m)} bort.`]));
   (fut||[]).filter(x=>x.d<=1000).slice(0,2).forEach((x,i)=>Q.push(["fut"+i,`Vet säljaren något om ${x.f.n||x.f.k.toLowerCase()}?`,`${x.proj?"Samhällsbyggnadsprojekt hos kommunen":"Utpekat i översiktsplanen"}, ${x.d===0?"vid adressen":fmtD(x.d)} bort.`]));
   const key=id=>"bc-q:"+a.l+":"+id;
   $("#b-q").innerHTML=`<ul class="q">${Q.map(([id,q,s])=>{let on=false;try{on=localStorage.getItem(key(id))==="1";}catch(e){}
@@ -2036,8 +2091,8 @@ function loadBasicExtras(k,pl){
   ["#b-env","#b-future"].forEach(s=>$(s).innerHTML='<p class="muted">Laddar …</p>');$("#b-envstrip").innerHTML="";$("#b-prop").innerHTML="";$("#b-q").innerHTML="";
   feeCalc();
   const K=kom(a);
-  Promise.all([envFor(k),getJ(K.dir+"framtid.json").catch(()=>({f:[],src:""}))]).then(([e,fut])=>{if(seq!==envSeq)return;
-    renderEnvBlocks(e.m,e.r,K);renderProperty(e.r,a,pl);const fl=renderFuture(e.r,fut,K);renderQuestions(a,pl,e.m,e.r,fl);
+  Promise.all([envFor(k),getJ(K.dir+"framtid.json").catch(()=>({f:[],src:""})),K.har.planarbete?loadPlanarbete().catch(()=>null):Promise.resolve(null)]).then(([e,fut,P])=>{if(seq!==envSeq)return;
+    renderEnvBlocks(e.m,e.r,K);renderProperty(e.r,a,pl);const fl=renderFuture(e.r,fut,K),pal=renderPlanarbete(a,K,P);renderQuestions(a,pl,e.m,e.r,fl,pal);
   }).catch(()=>{if(seq!==envSeq)return;$("#b-env").innerHTML='<div class="notice">Miljödata kunde inte laddas. Ladda om sidan och försök igen.</div>';});
 }
 

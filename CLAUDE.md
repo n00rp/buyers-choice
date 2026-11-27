@@ -61,12 +61,13 @@ Externa länkar från tidigare arbete:
 
 ## Vad som återstår
 
-- **Pågående detaljplaner** hämtas sedan 2026-11-27 dagligen ur stadens projektdatabas (planobygg.nsf) av `scripts/bevakning/hamta.py` och visas under Bevakning. Se `docs/bevakning.md`. Planbesked och startplan i nämndhandlingar ingår inte.
+- **Pågående detaljplaner** hämtas sedan 2026-11-27 dagligen ur stadens projektdatabas (planobygg.nsf) av `scripts/bevakning/hamta.py` och visas under Bevakning och i grundrapporten under Planer i området (inom 1,5 km). Se `docs/bevakning.md`. Planbesked och startplan i nämndhandlingar ingår inte.
 - **Bevakning med mejl:** GitHub Actions skickar via SMTP till bevakningar i hemligheten `BEVAKNINGAR`. Självanmälan i portalen saknas (kräver backend). Bygglov saknas som öppen källa.
-- **Skred och kvicklera** saknar öppen, frågbar källa per adress för hela staden (SGI:s kartering gäller främst längs Göta älv). Kräver också backend eller manuell tolkning av planbeskrivningar.
+- **Skred, jordart och jorddjup** finns hos SGU (maps3.sgu.se) och SGI (mapsext.sgi.se), men bara som WMS för visning (WFS avstängd). Att fråga dem per adress för 100 000 adresser är inte ett godkänt datauttag. Nästa steg är SGU:s nedladdningsbara öppna data (jordarter, jorddjupsmodell, förutsättningar för skred), som räknas mot adresserna lokalt.
 - **Badplatser** är pausade av Martin. De kräver en gratis app-nyckel från data.goteborg.se.
 - **Taxeringsvärde** är inte öppna data. Användaren fyller i det själv för att räkna fram fastighetsavgiften.
 - Planbestämmelser är bara tolkade för exempeladressen.
+- Linjer per hållplats räknas fram ur linjesträckningar (`scripts/build_linjer.py`, inom 45 m), inte tidtabeller, så en linje som kör förbi utan att stanna kan komma med.
 - Ett hämtningsskript som laddar ned rådata, så att hela datakedjan kan köras om med ett kommando.
 - Bygglov ingår inte ännu.
 - **Föreningens ekonomi** (vyn `#forening`, under Bostaden) bygger på att användaren själv fyller i uppgifter ur årsredovisningen, eftersom den inte är öppna data. Inmatningen sparas i localStorage per adress (`bc-brf:<adress>`). Knappen "Fyll i exempelvärden" ger påhittade värden som märks som exempel. Att läsa in årsredovisningen automatiskt (t.ex. uppladdad PDF eller Bolagsverkets API för digitalt inlämnade årsredovisningar) återstår och kräver troligen backend.

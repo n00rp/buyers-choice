@@ -120,7 +120,7 @@ Arbetsflödet `.github/workflows/pages.yml` lägger ut mappen `portal/` varje g�
 | `portal/framtid.json` | Utpekade förändringar i översiktsplanen (ny bebyggelse, vägar, kollektivtrafik, älvförbindelser m.m.). |
 | `portal/m/*.json` | Miljö- och riskvärden per adress, uppdelat i block om 5 000 adresser. Kolumnerna beskrivs i `portal/miljo-meta.json`. |
 | `portal/r/*.json` | Vägnät i rutor om 2,5 × 2,5 km, för kartritning. Beskrivs i `portal/roads-meta.json`. |
-| `portal/service.json` | Hållplatser, skolor, förskolor, livsmedelsbutiker m.m. med koordinater. |
+| `portal/service.json` | Hållplatser med linjer, skolor, förskolor, livsmedelsbutiker m.m. med koordinater. |
 | `portal/k/<kommun>/` | Samma filer för övriga kommuner (nu `partille`). Vilka kommuner som finns och vilka uppgifter de har står i `KOM` i `index.html`. |
 | `portal/bevakning.js` | Bevakningsvyn och knappen Bevaka adressen. |
 | `portal/bevakning/*.json` | Planarbete och händelser i Göteborg, uppdateras varje morgon av `scripts/bevakning/`. |
@@ -155,6 +155,7 @@ Allt kommer från öppna tjänster utan nyckel. Fullständig kartläggning med v
 | Översiktsplan, framtida förändringar, skyfall, översvämning, radon, förorenad mark | Göteborgs Stad, översiktsplan (`services.sbk.goteborg.se/oversiktsplan-v4`) |
 | Vägtrafikbuller, luft (NO₂, PM10) | Miljöförvaltningen, `geoserverextern.miljoforvaltningen.goteborg.se` |
 | Hållplatser | Trafikkontoret, `open.geodata.tkgbg.se/wfs` |
+| Linjer per hållplats | Trafikkontoret, `open.geodata.tkgbg.se/wfs` (vt:alla_linjer), `scripts/build_linjer.py` |
 | Skolor | Skolverkets skolenhetsregister (`api.skolverket.se/skolenhetsregistret/v2`) |
 | Förskolor | Göteborgs Stad, Hitta förskolor |
 | Planarbete (skede, läge, synpunkter) | Göteborgs Stad, databasen för plan- och byggprojekt (`www5.goteborg.se/.../planobygg.nsf`), hämtas dagligen |
