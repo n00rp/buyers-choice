@@ -19,6 +19,12 @@ await p.fill('#q2','Kungsportsavenyen 10');await p.waitForTimeout(800);
 await p.keyboard.press('ArrowDown');await p.keyboard.press('Enter');await p.waitForTimeout(2500);
 await p.evaluate(()=>window.scrollTo(0,0));await p.waitForTimeout(500);
 await p.screenshot({path:out+'10-grundrapport.png'});
+// Föreningens ekonomi för en bostadsrätt, med påhittade exempelvärden
+await p.evaluate(()=>{const a=document.querySelector('a[data-tab=forening]');a.click();});await p.waitForTimeout(1000);
+await p.click('[data-brf=ex]');await p.waitForTimeout(800);
+await scrollTo('#f-basic h2');await p.screenshot({path:out+'13-foreningens-ekonomi.png'});
+await scrollTo('.brf-grid');await p.screenshot({path:out+'14-foreningens-ekonomi-lagenhet.png'});
+await p.evaluate(()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('bc-brf')).forEach(k=>localStorage.removeItem(k))}catch(e){}});
 const m=await b.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true});
 await m.goto(base+'/#oversikt');await m.waitForTimeout(2500);await m.screenshot({path:out+'11-mobil.png'});
 await m.click('#menu-btn');await m.waitForTimeout(800);await m.screenshot({path:out+'12-mobil-meny.png'});

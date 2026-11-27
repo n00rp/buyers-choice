@@ -35,6 +35,13 @@ Trafikbuller, flygbuller, luftkvalitet, skyfall, översvämning, radon, och för
 
 ![Miljö och risk](docs/screenshots/05-miljo-och-risk.png)
 
+### Bostaden: Föreningens ekonomi
+Gäller bostadsrätter. Föreningens årsredovisning är inte öppna data, så användaren fyller i nyckeltalen från flerårsöversikten (de som ska redovisas enligt BFNAR 2023:1), avgiftsändringar och underhåll. Portalen visar utvecklingen, räknar ut lägenhetens del av föreningens lån och vad en ränteändring betyder för månadsavgiften, och föreslår frågor till föreningen. Inga betyg. Uppgifterna sparas bara i webbläsaren. Bilderna visar påhittade exempelvärden.
+
+![Föreningens ekonomi](docs/screenshots/13-foreningens-ekonomi.png)
+
+![Föreningens ekonomi, avgift och lägenhet](docs/screenshots/14-foreningens-ekonomi-lagenhet.png)
+
 ### Området: Planer i området
 Tidslinje över planer och projekt inom cirka 1,5 km, och vad varje plan innebär.
 
