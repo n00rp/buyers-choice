@@ -34,6 +34,7 @@ En portal som samlar det en bostadsköpare behöver veta om platsen inför visni
 - Övriga kommuner ligger i `portal/k/<kommun>/` med samma filformat. `KOM` i `index.html` listar kommunerna och vad de har data för (`har`). Göteborg ligger först så att adresslänkarna `#a<nummer>` inte ändras. `scripts/kommun_partille.py` hämtar och bygger Partille.
 - `scripts/screenshots.js` tar skärmbilderna i `docs/screenshots/` medan portalen körs.
 - Exempeladressen **Vildkaprifolen 5, Torslanda** har en fullständig rapport med manuellt tolkade planbestämmelser (`data/vildkaprifolen-5-detaljplan.json`). Andra adresser får en grundrapport.
+- **Jämför adresser** (`#jamfor-<nr>-<nr>`): två eller tre adresser sida vid sida, byggt på samma förberäknade data som grundrapporten. Inga markeringar av bästa värde, bara ett reglage som döljer lika rader.
 - `arkiv/vildkaprifolen-5.html` är den första prototypen för en enda adress.
 
 ### Köra lokalt

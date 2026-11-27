@@ -67,6 +67,13 @@ Alla andra adresser i Göteborg får en grundrapport ur den förberäknade datan
 
 ![Grundrapport för Kungsportsavenyen 10](docs/screenshots/10-grundrapport.png)
 
+### Jämför adresser
+Två eller tre adresser sida vid sida: planer, miljö och risk, vad översiktsplanen pekar ut och närservice, rad för rad med källa. Reglaget "Visa bara det som skiljer" döljer rader där adresserna har samma värde. Jämförelsen nås från startsidan, vänstermenyn och knappen "Jämför med andra adresser" i varje rapport. Adresserna står i länken (`#jamfor-<nr>-<nr>`) så att en jämförelse kan delas, och sparas i webbläsaren.
+
+![Jämför adresser](docs/screenshots/20-jamfor.png)
+
+<img src="docs/screenshots/21-jamfor-mobil.png" alt="Jämförelsen på mobil" width="300">
+
 ### Mobil
 På mobil ersätts sidomenyn av en meny i sidhuvudet.
 
