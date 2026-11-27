@@ -1600,7 +1600,7 @@ let D=null,Dp=null;
    Övriga kommuner har sina filer under k/<id>/ i samma format. "har" säger vilka uppgifter kommunen har öppna data för. */
 const KOM=[
   {id:"goteborg",namn:"Göteborg",dir:"",org:"Göteborgs Stad",hamtad:"2026-11-25",har:{vagar:1,miljo:1,op:1,stops:1,shops:1,planarbete:1}},
-  {id:"partille",namn:"Partille",dir:"k/partille/",org:"Partille kommun",hamtad:"2026-11-27",har:{geoteknik:1,projekt:1},
+  {id:"partille",namn:"Partille",dir:"k/partille/",org:"Partille kommun",hamtad:"2026-11-27",har:{vagar:1,geoteknik:1,projekt:1},
    karta:"https://geodata.partille.se/portal/apps/experiencebuilder/experience/?id=474d7df7acca4470aa21f7092a467c70",
    plansida:"https://www.partille.se/bygga-bo--miljo/samhallsplanering/pagaende-detaljplanering/",
    saknas:"trafikbuller, luftkvalitet, skyfall, översvämning, markradon och förorenad mark"}];
@@ -1876,7 +1876,7 @@ function openBasic(k){
 /* texter i grundrapporten som skiljer sig mellan kommuner; Göteborgs text ligger i HTML och sparas första gången */
 const KT={
   partille:{
-    "b-map-src":"Gråa prickar är andra adresser i kommunen, eftersom Partille inte publicerar något öppet vägnät. Streckade ytor är kommunens samhällsbyggnadsprojekt. Avstånd fågelvägen från adresspunkten. Håll muspekaren över en punkt för namnet.",
+    "b-map-src":"Vägar från Partille kommuns bakgrundskarta och, på andra sidan kommungränsen, Göteborgs Stads vägnät. Streckade ytor är kommunens samhällsbyggnadsprojekt. Avstånd fågelvägen från adresspunkten. Håll muspekaren över en punkt för namnet.",
     "b-plan-src":"Källa: Partille kommun, karttjänsten över gällande detaljplaner (geodata.partille.se), med länk till plankarta och planbeskrivning. Kommunen anger att gränserna är ungefärliga. Adresspunkten har jämförts med planernas gränser. En fastighet kan sträcka sig över fler planer än den som adresspunkten ligger i.",
     "b-miljo-lead":"Vatten och mark vid adresspunkten, så långt Partille kommun har öppna data. Kommunen publicerar inte buller, luftkvalitet, skyfall, översvämning eller radon som data per adress.",
     "b-fut-lead":"Kommunens planerade samhällsbyggnadsprojekt inom 1,5 km från adressen, till exempel nya gång- och cykelvägar och ledningsarbeten. Översiktsplanen finns inte som öppna kartdata från Partille och ingår därför inte.",
@@ -1898,9 +1898,10 @@ function renderNA(view){const [t,d]=NA[view];
 const JC={};
 const getJ=u=>JC[u]||(JC[u]=fetch(u).then(r=>{if(!r.ok)throw new Error(u);return r.json();}).catch(e=>{delete JC[u];throw e;}));
 function envFor(k){const a=D.A[k],K=kom(a),i=a.li;return getJ(K.dir+"miljo-meta.json").then(m=>getJ(K.dir+"m/"+Math.floor(i/m.block)+".json").then(rows=>({m,r:rows[i%m.block]})));}
-function roadsFor(a,R){return getJ("roads-meta.json").then(m=>{const T=m.T,set=new Set(m.tiles),ids=[];
+/* vägrutor från alla kommuner med vägnät, så att vägarna fortsätter över kommungränsen */
+function roadsFor(a,R){return Promise.all(KOM.filter(K=>K.har.vagar).map(K=>getJ(K.dir+"roads-meta.json").then(m=>{const T=m.T,set=new Set(m.tiles),ids=[];
   for(let i=Math.floor((a.e-R-m.X0)/T);i<=Math.floor((a.e+R-m.X0)/T);i++)for(let j=Math.floor((a.n-R-m.Y0)/T);j<=Math.floor((a.n+R-m.Y0)/T);j++)if(set.has(i+"_"+j))ids.push([i,j]);
-  return Promise.all(ids.map(([i,j])=>getJ("r/"+i+"_"+j+".json").then(d=>({d,tx:m.X0+i*T,ty:m.Y0+j*T}))));});}
+  return Promise.all(ids.map(([i,j])=>getJ(K.dir+"r/"+i+"_"+j+".json").then(d=>({d,tx:m.X0+i*T,ty:m.Y0+j*T}))));}).catch(()=>[]))).then(l=>l.flat());}
 const RADON={normal_ra_berg_jord:"Normalriskområde, berg och jord",lag_ra_i_lera_silt:"Lågriskområde, lera eller silt","hog_ra_i _berggrund":"Högriskområde, höga radiumhalter i berggrunden",normal_ra_goteborgsmoranen:"Normalriskområde, Göteborgsmoränen",hog_ra_i_pegmatit:"Högriskområde, lokala pegmatitgångar",hog_ra_i_moran:"Högriskområde, höga radiumhalter i morän"};
 const fmtN=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ");
 const band=(b,unit)=>b?(b[1]>=100?"över "+b[0]:b[0]===0?"under "+b[1]:b[0]+"–"+b[1])+(unit?" "+unit:""):null;

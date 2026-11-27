@@ -43,6 +43,8 @@ def hamta():
     arc('samhallsbyggnadsprojekt_publik', 9, 'projekt.json')
     arc('geotekniska_utredningar_publik', 1, 'geoteknik.json')
     arc('fastighetsgranser', 0, 'fast.json', fields='FASTIGHET,DETALJTYP,TOTALAREAL_FASTIGHET', page=2000)
+    # vägnätet i kommunens bakgrundskarta (lager 36, väglinjer i största skala)
+    arc('bakgrundskarta_farg_wms', 36, 'vagar.json', fields='Id,Objekttyp,Gatunamn', page=2000)
     d = json.load(urllib.request.urlopen(f'{SKV}?municipality_code={KOMMUNKOD}', timeout=60))
     for u in d['data']['attributes']:
         if u['status'] != 'AKTIV':
@@ -220,7 +222,52 @@ def bygg():
     json.dump({'stops': [], 'schools': schools, 'pre': pre, 'shops': [], 'pharm': []},
               open(OUT + 'service.json', 'w'), ensure_ascii=False, separators=(',', ':'))
     print('skolor', len(schools), 'förskolor', len(pre))
+    vagar()
+
+
+# vägtyper som ritas som huvudväg; övriga bilvägar ritas som lokalgator
+HUVUDVAG = {'Motorväg', 'Motortrafikled', 'Huvudgata', 'Landsväg', 'Landsväg liten', 'Övergripande länk', 'Infartsväg/Utfartsväg'}
+
+
+def vagar():
+    """Delar Partilles vägnät i rutor i samma rutnät som Göteborgs (portal/roads-meta.json),
+    så att kartan kan rita båda kommunernas vägar nära gränsen."""
+    from shapely.geometry import shape, box
+    gm = json.load(open(GBG + 'roads-meta.json'))
+    T, X0, Y0 = gm['T'], gm['X0'], gm['Y0']
+    tiles = collections.defaultdict(list)
+    names = collections.defaultdict(dict)
+    for x in json.load(open(RAW + 'vagar.json'))['features']:
+        if not x.get('geometry'):
+            continue
+        p = x['properties']
+        g = shape(x['geometry']).simplify(1.5)
+        c = 0 if p.get('Objekttyp') in HUVUDVAG else 1
+        nm = (p.get('Gatunamn') or '').strip()
+        b = g.bounds
+        for i in range(int((b[0] - X0) // T), int((b[2] - X0) // T) + 1):
+            for j in range(int((b[1] - Y0) // T), int((b[3] - Y0) // T) + 1):
+                tx, ty = X0 + i * T, Y0 + j * T
+                part = g.intersection(box(tx - 20, ty - 20, tx + T + 20, ty + T + 20))
+                if part.is_empty:
+                    continue
+                lines = [part] if part.geom_type == 'LineString' else [q for q in getattr(part, 'geoms', []) if q.geom_type == 'LineString']
+                nd = names[(i, j)]
+                ni = nd.setdefault(nm, len(nd)) if nm else -1
+                for L in lines:
+                    cs = [v for xy in L.coords for v in (round(xy[0] - tx), round(xy[1] - ty))]
+                    if len(cs) >= 4:
+                        tiles[(i, j)].append([c, ni] + cs)
+    os.makedirs(OUT + 'r', exist_ok=True)
+    for (i, j), ls in tiles.items():
+        nd = names[(i, j)]
+        nl = [None] * len(nd)
+        for k, v in nd.items():
+            nl[v] = k
+        json.dump({'n': nl, 'l': ls}, open(f'{OUT}r/{i}_{j}.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+    json.dump({'T': T, 'X0': X0, 'Y0': Y0, 'tiles': sorted(f'{i}_{j}' for i, j in tiles)}, open(OUT + 'roads-meta.json', 'w'))
+    print('vägrutor', len(tiles))
 
 
 if __name__ == '__main__':
-    {'hamta': hamta, 'bygg': bygg}[sys.argv[1] if len(sys.argv) > 1 else 'bygg']()
+    {'hamta': hamta, 'bygg': bygg, 'vagar': vagar}[sys.argv[1] if len(sys.argv) > 1 else 'bygg']()

@@ -174,6 +174,8 @@ Göteborg ligger först i listan så att gamla adresslänkar fungerar. Varje ny 
 
 Partille saknar öppna data för buller, luft, skyfall, översvämning, radon, hållplatser och butiker. Hållplatser för hela Västtrafik finns hos Trafiklab men kräver en gratis API-nyckel. Lantmäteriets öppna data (adresser och fastigheter för hela landet) kräver också ett gratis konto. Båda skulle göra det betydligt lättare att lägga till fler kommuner.
 
+Kartan för Partille ritar vägar från kommunens bakgrundskarta (`bakgrundskarta_farg_wms`, lager 36) i samma rutnät som Göteborgs vägrutor, så vägarna fortsätter över kommungränsen. Gång- och cykelvägar finns inte i Partilles lager.
+
 Partilles data byggs med `python3 scripts/kommun_partille.py hamta` och sedan `python3 scripts/kommun_partille.py bygg`.
 
 Inga annonser hämtas eller lagras. Portalen skrapar inte Hemnet eller Booli, och annonsbilder visas inte.
