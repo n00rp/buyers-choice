@@ -80,7 +80,11 @@ python3 -m http.server 8000
 # öppna http://localhost:8000
 ```
 
-Samma mapp kan publiceras direkt med GitHub Pages eller valfri statisk webbhotell.
+### Publicering
+
+Portalen publiceras på GitHub Pages: https://n00rp.github.io/buyers-choice/
+
+Arbetsflödet `.github/workflows/pages.yml` lägger ut mappen `portal/` varje gång något i den ändras på `main`. Det kan också startas för hand under fliken Actions ("Publicera portalen" → "Run workflow"). Första gången måste Pages slås på i repots inställningar: Settings → Pages → Source: "GitHub Actions".
 
 ## Innehåll
 
