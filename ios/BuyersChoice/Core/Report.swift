@@ -205,20 +205,47 @@ struct Question: Identifiable {
 
     @MainActor
     static func build(address a: Address, store: DataStore, plans pl: [PlanInfo], meta m: EnvMeta?, row r: EnvRow?,
-                      future: [FutureItem], work: [PlanWorkItem]) -> [Question] {
+                      future: [FutureItem], work: [PlanWorkItem], form: Boendeform? = nil) -> [Question] {
         var Q: [Question] = []
         let K = store.kommun(a)
         let main = pl.first { $0.group == .plan }
-        if let main {
-            Q.append(.init(id: "plan", text: "Vad tillåter \(main.typ.lowercased()) \(main.bet) på tomten?", detail: "Till exempel byggrätt, våningar och prickmark. Det står i plankartan."))
-        } else {
-            Q.append(.init(id: "plan", text: "Hur prövas bygglov här när det saknas detaljplan?", detail: "Fråga \(K.has(.miljo) ? "stadsbyggnadskontoret" : "kommunen") vad som gäller för platsen."))
+        let kontor = K.has(.miljo) ? "stadsbyggnadskontoret" : "kommunen"
+        switch form {
+        case .bostadsratt, .hyresratt:
+            if let main {
+                Q.append(.init(id: "plan", text: "Tillåter \(main.typ.lowercased()) \(main.bet) påbyggnad eller nya hus på gården?", detail: "Det står i plankartan. Fråga också om \(form == .bostadsratt ? "föreningen" : "hyresvärden") har planer på att bygga."))
+            } else {
+                Q.append(.init(id: "plan", text: "Hur prövas bygglov på fastigheten när det saknas detaljplan?", detail: "Fråga \(kontor) vad som gäller för platsen."))
+            }
+        default:
+            if let main {
+                Q.append(.init(id: "plan", text: "Vad tillåter \(main.typ.lowercased()) \(main.bet) på tomten?", detail: "Till exempel byggrätt, våningar och prickmark. Det står i plankartan."))
+            } else {
+                Q.append(.init(id: "plan", text: "Hur prövas bygglov här när det saknas detaljplan?", detail: "Fråga \(kontor) vad som gäller för platsen."))
+            }
         }
-        if pl.contains(where: { $0.group == .fast }) {
-            Q.append(.init(id: "fast", text: "Gäller tomtindelningen eller fastighetsplanen fortfarande?", detail: "Äldre fastighetsindelning kan påverka möjligheten att stycka av."))
+        switch form {
+        case .bostadsratt:
+            Q.append(.init(id: "brf-reno", text: "Vilka större renoveringar har gjorts, och vilka planeras?", detail: "Till exempel stambyte, fönster, tak, fasad och hiss. Står i årsredovisningen och underhållsplanen."))
+            Q.append(.init(id: "brf-avgift", text: "Hur har månadsavgiften ändrats, och är någon höjning beslutad?", detail: "Fråga också hur stor del av avgiften som går till räntor på föreningens lån."))
+            Q.append(.init(id: "brf-mark", text: "Äger föreningen marken, eller har den tomträtt?", detail: "Vid tomträtt betalar föreningen tomträttsavgäld till kommunen, och den kan höjas."))
+            Q.append(.init(id: "brf-forsakring", text: "Ingår bostadsrättstillägget i föreningens försäkring?", detail: "Annars behöver du teckna det själv."))
+        case .hyresratt:
+            Q.append(.init(id: "hr-reno", text: "Planerar hyresvärden renovering eller ombyggnad?", detail: "Större renoveringar kan höja hyran. Fråga när det senast gjordes något i huset."))
+            Q.append(.init(id: "hr-hyra", text: "Hur har hyran ändrats de senaste åren, och pågår en ny förhandling?", detail: "Hyran förhandlas ofta en gång om året mellan hyresvärden och Hyresgästföreningen."))
+        case .villa:
+            if pl.contains(where: { $0.group == .fast }) {
+                Q.append(.init(id: "fast", text: "Gäller tomtindelningen eller fastighetsplanen fortfarande?", detail: "Äldre fastighetsindelning kan påverka möjligheten att stycka av."))
+            }
+            Q.append(.init(id: "serv", text: "Finns servitut eller ledningsrätter på fastigheten?", detail: "Uppgifterna finns hos Lantmäteriet och mäklaren."))
+            Q.append(.init(id: "tax", text: "Vilket taxeringsvärde och värdeår har fastigheten?", detail: "Behövs för att räkna ut fastighetsavgiften."))
+            Q.append(.init(id: "lov", text: "Finns bygglov och slutbesked för tillbyggnader och ändringar?", detail: "\(Txt.capitalizedFirst(kontor)) kan visa vilka lov som har getts för fastigheten."))
+        case nil:
+            if pl.contains(where: { $0.group == .fast }) {
+                Q.append(.init(id: "fast", text: "Gäller tomtindelningen eller fastighetsplanen fortfarande?", detail: "Äldre fastighetsindelning kan påverka möjligheten att stycka av."))
+            }
+            Q.append(.init(id: "serv", text: "Finns servitut eller ledningsrätter på fastigheten?", detail: "Uppgifterna finns hos Lantmäteriet och mäklaren."))
         }
-        Q.append(.init(id: "serv", text: "Finns servitut eller ledningsrätter på fastigheten?", detail: "Uppgifterna finns hos Lantmäteriet och mäklaren."))
-        Q.append(.init(id: "tax", text: "Vilket taxeringsvärde och värdeår har fastigheten?", detail: "Behövs för att räkna ut fastighetsavgiften."))
         var t: EnvTexts?
         if let m, let r {
             t = EnvTexts(meta: m, row: r)
@@ -226,7 +253,7 @@ struct Question: Identifiable {
                 Q.append(.init(id: "buller", text: "Hur hörs trafiken inomhus och på uteplatsen?", detail: "Beräknad nivå nära huset: \(leq) mot gatan\(t?.leqLow.map { ", \($0) på lugnaste sidan" } ?? "")."))
             }
             if let s = r.skyfall, s <= 150 {
-                Q.append(.init(id: "sky", text: "Har det samlats vatten på tomten eller i källaren vid kraftiga regn?", detail: "Närmaste skyfallsled: \(s == 0 ? "vid adressen" : Txt.dist(s))."))
+                Q.append(.init(id: "sky", text: form == .villa || form == nil ? "Har det samlats vatten på tomten eller i källaren vid kraftiga regn?" : "Har det varit vattenskador i källare, förråd eller garage vid kraftiga regn?", detail: "Närmaste skyfallsled: \(s == 0 ? "vid adressen" : Txt.dist(s))."))
             }
             if let s = r.flood, s <= 500 {
                 Q.append(.init(id: "flood", text: "Vad gäller för höga vattenstånd och försäkring?", detail: "Riskområde för översvämning: \(s == 0 ? "vid adressen" : Txt.dist(s))."))
@@ -242,7 +269,7 @@ struct Question: Identifiable {
             Q.append(.init(id: "kollektiv", text: "Hur ofta går \(names.isEmpty ? "bussarna" : "linjerna") från \(s0.place.name), och hur fungerar det i rusningstid?",
                            detail: "Närmaste hållplats, \(Txt.dist(s0.m)) bort\(names.isEmpty ? "" : ". Linjer som passerar: " + names.joined(separator: ", "))."))
         }
-        Q.append(.init(id: "radon", text: "Finns en radonmätning, och när gjordes den?", detail: t?.radon.map { "Markradon enligt översiktsplanen: \($0.lowercased())." } ?? ""))
+        Q.append(.init(id: "radon", text: form == .villa || form == nil ? "Finns en radonmätning, och när gjordes den?" : "Har \(form == .bostadsratt ? "föreningen" : "hyresvärden") mätt radon i huset, och när?", detail: t?.radon.map { "Markradon enligt översiktsplanen: \($0.lowercased())." } ?? ""))
         if let r, case let .covered(c, latest, _)? = r.geo {
             Q.append(.init(id: "geo", text: "Vad visar den geotekniska utredningen för området?", detail: "\(c == 1 ? "En utredning" : "\(c) utredningar") täcker adresspunkten\(latest.map { ", den senaste från \($0)" } ?? ""). Kommunen lämnar ut dem."))
         }

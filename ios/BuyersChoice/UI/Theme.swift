@@ -93,11 +93,67 @@ struct SectionTitle: View {
     }
 }
 
+/// Förklaring eller källa under ett kort. Längre texter döljs bakom en liten knapp
+/// så att de inte tar plats på skärmen, och visas när man trycker på den.
 struct SourceText: View {
     let text: String
+    @State private var open = false
     init(_ text: String) { self.text = text }
+
     var body: some View {
+        if text.count <= 80 {
+            plain
+        } else {
+            VStack(alignment: .leading, spacing: 6) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { open.toggle() }
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: open ? "questionmark.circle.fill" : "questionmark.circle")
+                        Text(open ? "Dölj förklaringen" : (text.hasPrefix("Källa") ? "Källa" : "Om uppgifterna"))
+                    }
+                    .font(BCFont.medium(12, .caption))
+                    .foregroundStyle(Theme.muted)
+                    .padding(.vertical, 4)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Visar förklaringen och källan")
+                if open { plain.transition(.opacity) }
+            }
+        }
+    }
+
+    private var plain: some View {
         Text(text).font(BCFont.caption).foregroundStyle(Theme.faint).fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+/// Text som bryts mellan ord men aldrig mitt i ett ord. Om det längsta ordet inte får plats
+/// på en rad i största storleken prövas nästa, mindre storlek.
+struct FitText: View {
+    let text: String
+    let sizes: [CGFloat]
+    var font: (CGFloat) -> Font = { BCFont.serif($0) }
+    var color: Color = Theme.text
+
+    init(_ text: String, sizes: [CGFloat], color: Color = Theme.text, font: @escaping (CGFloat) -> Font = { BCFont.serif($0) }) {
+        self.text = text; self.sizes = sizes; self.color = color; self.font = font
+    }
+
+    var body: some View {
+        let longest = text.split(whereSeparator: { $0 == " " || $0 == "\n" }).max { $0.count < $1.count }.map(String.init) ?? text
+        ViewThatFits(in: .horizontal) {
+            ForEach(sizes, id: \.self) { size in
+                ZStack(alignment: .topLeading) {
+                    // Bara för mätningen: det längsta ordet på en rad.
+                    Text(longest).font(font(size)).lineLimit(1).fixedSize().hidden()
+                    Text(text).font(font(size)).foregroundStyle(color)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(minWidth: 0, idealWidth: 0, maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
     }
 }
 

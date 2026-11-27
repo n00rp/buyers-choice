@@ -21,9 +21,7 @@ struct OverviewSection: View {
             // Mörkt kort för gällande plan, som i portalen.
             Card(fill: Theme.dark) {
                 Eyebrow("Gällande plan", color: Color.white.opacity(0.65))
-                Text(main.map(\.title) ?? "Ingen detaljplan")
-                    .font(BCFont.display(26)).foregroundStyle(.white)
-                    .fixedSize(horizontal: false, vertical: true)
+                FitText(main.map(\.title) ?? "Ingen detaljplan", sizes: [26, 23, 20, 17], color: .white) { BCFont.display($0) }
                 Text(main.map { m in
                     "\(m.bet)\(m.name.isEmpty ? "" : ", " + m.typ.lowercased()). " + (plans.count > 1 ? "Totalt \(plans.count) planbeslut gäller på adressen." : "Det är det enda planbeslutet på adressen.")
                 } ?? "Adresspunkten ligger utanför gällande detaljplaner. Då gäller översiktsplanen och plan- och bygglagens regler.")
@@ -50,7 +48,7 @@ struct OverviewSection: View {
     private func smallCard(_ eyebrow: String, _ big: String, _ text: String) -> some View {
         Card(padding: 16) {
             Eyebrow(eyebrow)
-            Text(big).font(BCFont.serif(18)).foregroundStyle(Theme.text).fixedSize(horizontal: false, vertical: true)
+            FitText(big, sizes: [18, 16, 14])
             Text(text).font(BCFont.small).foregroundStyle(Theme.muted).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
@@ -90,7 +88,7 @@ struct EnvStrip: View {
     private func tile(_ k: String, _ v: String, _ s: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(k).font(BCFont.medium(13)).foregroundStyle(Theme.muted)
-            Text(v).font(BCFont.serif(20)).foregroundStyle(Theme.text).lineLimit(2).minimumScaleFactor(0.8)
+            FitText(v, sizes: [20, 18, 16, 14, 12])
             Text(s).font(BCFont.caption).foregroundStyle(Theme.faint).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
@@ -144,7 +142,7 @@ struct PropertySection: View {
     private func figure(_ k: String, _ v: String, _ s: String) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(k).font(BCFont.small).foregroundStyle(Theme.muted)
-            Text(v).font(BCFont.serif(19)).foregroundStyle(Theme.text).fixedSize(horizontal: false, vertical: true)
+            FitText(v, sizes: [19, 17, 15, 13])
             Text(s).font(BCFont.caption).foregroundStyle(Theme.faint).fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -575,11 +573,35 @@ struct QuestionsSection: View {
     var body: some View {
         let a = model.address
         let K = store.kommun(a)
+        let form = user.form(a.key)
         let qs = Question.build(address: a, store: store, plans: plans, meta: model.meta, row: model.row,
-                                future: model.futureItems(K), work: model.workItems())
+                                future: model.futureItems(K), work: model.workItems(), form: form)
         let done = qs.filter { user.isChecked(a.key, $0.id) }.count
         VStack(alignment: .leading, spacing: 14) {
             SectionTitle(title: "Frågor till visningen", lead: "En checklista att ta med, utifrån planerna, miljön och området. Bocka av när du har fått svar. Det sparas bara i telefonen.")
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Vad gäller visningen?").font(BCFont.medium(14)).foregroundStyle(Theme.muted)
+                FlowLayout(spacing: 8) {
+                    ForEach(Boendeform.allCases) { f in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) { user.setForm(form == f ? nil : f, for: a.key) }
+                        } label: {
+                            Text(f.short)
+                                .font(BCFont.medium(14))
+                                .foregroundStyle(form == f ? Color.white : Theme.text)
+                                .padding(.horizontal, 14).padding(.vertical, 8)
+                                .background(form == f ? Theme.accent : Theme.card, in: Capsule())
+                                .overlay(Capsule().strokeBorder(form == f ? Color.clear : Theme.line))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(form == f ? .isSelected : [])
+                    }
+                }
+                if form == nil {
+                    Text("Välj boendeform så anpassas frågorna. Nedan visas frågorna om platsen.")
+                        .font(BCFont.small).foregroundStyle(Theme.faint)
+                }
+            }
             Card {
                 HStack {
                     Text("\(done) av \(qs.count)").font(BCFont.semibold(15)).monospacedDigit()

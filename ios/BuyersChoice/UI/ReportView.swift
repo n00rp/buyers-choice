@@ -59,6 +59,7 @@ struct ReportView: View {
     @State private var model: ReportModel?
     @State private var showMap = false
     @State private var safari: URL?
+    @State private var reportInfo = false
 
     var body: some View {
         Group {
@@ -166,10 +167,26 @@ struct ReportView: View {
         let po = store.street(a).postort
         return VStack(alignment: .leading, spacing: 10) {
             Eyebrow((po != K.namn ? po + ", " : "") + K.namn)
-            Text(a.label).font(BCFont.display(34, .largeTitle)).foregroundStyle(Theme.text)
+            FitText(a.label, sizes: [34, 30, 26, 22]) { BCFont.display($0, .largeTitle) }
             HStack(spacing: 8) {
-                Tag(text: "Grundrapport")
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { reportInfo.toggle() }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text("Grundrapport")
+                        Image(systemName: reportInfo ? "questionmark.circle.fill" : "questionmark.circle")
+                    }
+                    .font(BCFont.medium(12, .caption)).foregroundStyle(Theme.muted)
+                    .padding(.horizontal, 10).padding(.vertical, 4)
+                    .background(Theme.subtle, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Förklarar vad en grundrapport är")
                 if let f = model.row?.fastighet { Tag(text: f, fill: Theme.accentSoft, fg: Theme.accent) }
+            }
+            if reportInfo {
+                Notice(text: "Grundrapporten finns för alla adresser och bygger på öppna data om platsen: gällande planer, miljö, planer i området och närservice. Det som saknas är en tolkning av detaljplanens bestämmelser för just din fastighet, till exempel byggrätt, högsta höjd och prickmark. Bestämmelserna står i plankartan som PDF och tolkas i dag för hand, så det finns bara för exempeladressen i portalen. Tills vidare når du plankartan under Fastighet och detaljplan.")
+                    .transition(.opacity)
             }
         }
     }
