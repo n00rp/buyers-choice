@@ -657,6 +657,7 @@ struct QuestionsSection: View {
 
 struct SourcesSection: View {
     let kommun: Kommun
+    @State private var open = false
 
     var body: some View {
         let rows: [(String, String, String)] = kommun.id == "goteborg" ? [
@@ -684,10 +685,22 @@ struct SourcesSection: View {
             ("Karta", "Apple Maps", "Löpande"),
         ]
         VStack(alignment: .leading, spacing: 14) {
-            SectionTitle(title: "Källor", lead: "Varje uppgift med källa och datum. Uppgifterna är förberäknade från öppna data och visas utan värdering.")
+            SectionTitle(title: "Källor", lead: "Uppgifterna är förberäknade från öppna data och visas utan värdering.")
             Card {
-                ForEach(Array(rows.enumerated()), id: \.offset) { i, r in
-                    if i > 0 { Hairline() }
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { open.toggle() }
+                } label: {
+                    HStack {
+                        Text(open ? "Dölj källorna" : "Visa alla \(rows.count) källor").font(BCFont.semibold(15)).foregroundStyle(Theme.text)
+                        Spacer()
+                        Image(systemName: "chevron.down").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.faint)
+                            .rotationEffect(.degrees(open ? 180 : 0))
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                if open { ForEach(Array(rows.enumerated()), id: \.offset) { i, r in
+                    Hairline()
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(alignment: .firstTextBaseline) {
                             Text(r.0).font(BCFont.semibold(14)).foregroundStyle(Theme.text)
@@ -696,7 +709,7 @@ struct SourcesSection: View {
                         }
                         Text(r.1).font(BCFont.small).foregroundStyle(Theme.muted).fixedSize(horizontal: false, vertical: true)
                     }
-                }
+                } }
             }
         }
     }

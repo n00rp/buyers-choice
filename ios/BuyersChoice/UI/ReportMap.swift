@@ -384,3 +384,31 @@ struct FullMapView: View {
         }
     }
 }
+
+/// Gatubild från Apple Look Around nära adressen. Visas bara där Apple har gatubilder.
+struct StreetView: View {
+    let coordinate: CLLocationCoordinate2D
+    let label: String
+    @State private var scene: MKLookAroundScene?
+    @State private var checked = false
+
+    var body: some View {
+        Group {
+            if let scene {
+                VStack(alignment: .leading, spacing: 8) {
+                    LookAroundPreview(initialScene: scene, allowsNavigation: true, showsRoadLabels: true, pointsOfInterest: .excludingAll)
+                        .frame(height: 220)
+                        .clipShape(RoundedRectangle(cornerRadius: Theme.radius, style: .continuous))
+                        .accessibilityLabel("Gatubild nära \(label)")
+                    SourceText("Gatubild från Apple Look Around, tagen från gatan närmast adressen. Tryck för att se i helskärm och se dig omkring. Bilden kan vara några år gammal.")
+                }
+            }
+        }
+        .task(id: "\(coordinate.latitude),\(coordinate.longitude)") {
+            let req = MKLookAroundSceneRequest(coordinate: coordinate)
+            scene = try? await req.scene
+            checked = true
+            Log.write("Gatubild: \(scene == nil ? "saknas" : "finns")")
+        }
+    }
+}

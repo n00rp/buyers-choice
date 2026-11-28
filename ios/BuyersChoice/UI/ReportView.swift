@@ -111,6 +111,7 @@ struct ReportView: View {
                         .accessibilityAddTraits(.isButton)
 
                     header(model, K)
+                    StreetView(coordinate: a.coordinate, label: a.label)
                     sectionBar(proxy)
 
                     AdCard(address: a)
