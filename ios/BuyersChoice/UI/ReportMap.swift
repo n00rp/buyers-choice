@@ -303,13 +303,21 @@ struct MapLegend: View {
 /// Visar innehållet i sin hela höjd om det får plats, annars i en rullbar ruta på högst 230 punkter.
 struct Capped<Content: View>: View {
     @ViewBuilder var content: Content
+    @State private var height: CGFloat = 0
+
     var body: some View {
-        ViewThatFits(in: .vertical) {
-            content.fixedSize(horizontal: false, vertical: true)
-            ScrollView { content }
+        ScrollView {
+            content.background(GeometryReader { g in Color.clear.preference(key: HeightKey.self, value: g.size.height) })
         }
-        .frame(maxHeight: 230)
+        .scrollBounceBehavior(.basedOnSize)
+        .frame(height: min(max(height, 1), 230))
+        .onPreferenceChange(HeightKey.self) { height = $0 }
     }
+}
+
+private struct HeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
 struct FullMapView: View {
