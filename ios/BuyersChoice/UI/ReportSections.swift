@@ -340,7 +340,13 @@ struct AreaSection: View {
 struct PlanWorkRow: View {
     let item: PlanWorkItem
     let phases: [String: String]
-    @State private var open = false
+    var compact = false
+    @State private var open: Bool
+
+    init(item: PlanWorkItem, phases: [String: String], startOpen: Bool = false, compact: Bool = false) {
+        self.item = item; self.phases = phases; self.compact = compact
+        _open = State(initialValue: startOpen)
+    }
 
     var body: some View {
         let w = item.work
@@ -373,7 +379,7 @@ struct PlanWorkRow: View {
                 .transition(.opacity)
             }
         }
-        .padding(16)
+        .padding(compact ? 0 : 16)
     }
 
     private func detail(_ k: String, _ v: String) -> some View {
@@ -402,7 +408,13 @@ struct FutureRow: View {
     let item: FutureItem
     let data: FutureData
     let kommun: Kommun
-    @State private var open = false
+    var compact = false
+    @State private var open: Bool
+
+    init(item: FutureItem, data: FutureData, kommun: Kommun, startOpen: Bool = false, compact: Bool = false) {
+        self.item = item; self.data = data; self.kommun = kommun; self.compact = compact
+        _open = State(initialValue: startOpen)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -440,7 +452,7 @@ struct FutureRow: View {
                 .transition(.opacity)
             }
         }
-        .padding(16)
+        .padding(compact ? 0 : 16)
     }
 }
 

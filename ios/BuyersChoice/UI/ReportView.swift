@@ -137,6 +137,7 @@ struct ReportView: View {
             .task(id: model.loading) {
                 // Skärmbildsskriptet kan be om ett visst avsnitt: -uiSection miljo
                 if !model.loading { Log.write("Rapport: visas") }
+                if !model.loading, UserDefaults.standard.string(forKey: "uiMap") != nil { showMap = true }
                 guard !model.loading, let s = UserDefaults.standard.string(forKey: "uiSection").flatMap(ReportSection.init(rawValue:)) else { return }
                 try? await Task.sleep(for: .milliseconds(400))
                 proxy.scrollTo(s, anchor: .top)

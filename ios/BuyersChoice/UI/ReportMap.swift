@@ -14,13 +14,32 @@ struct MapLayers {
     struct Shape: Identifiable {
         let id: String
         let title: String
+        let item: FutureItem
         let polygons: [[CLLocationCoordinate2D]]
         let lines: [[CLLocationCoordinate2D]]
         let points: [CLLocationCoordinate2D]
+
+        /// Ett ställe att sätta en tryckbar markering: mitten av ytan, linjen eller punkten.
+        var anchor: CLLocationCoordinate2D? {
+            if let p = polygons.first, !p.isEmpty {
+                let lat = p.map(\.latitude).reduce(0, +) / Double(p.count)
+                let lon = p.map(\.longitude).reduce(0, +) / Double(p.count)
+                return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            }
+            if let l = lines.max(by: { $0.count < $1.count }), !l.isEmpty { return l[l.count / 2] }
+            return points.first
+        }
+    }
+    /// Pågående planarbete (Göteborgs projektdatabas), som en punkt.
+    struct Work: Identifiable {
+        var id: String { "w:" + item.id }
+        let item: PlanWorkItem
+        let coordinate: CLLocationCoordinate2D
     }
 
     var points: [Point] = []
     var shapes: [Shape] = []
+    var works: [Work] = []
 
     @MainActor
     init(model: ReportModel, store: DataStore, compact: Bool = false) {
@@ -36,10 +55,13 @@ struct MapLayers {
         add(store.nearby(S.preschools, to: a, limit: lim, within: r)) { _ in "Förskola" }
         add(store.nearby(S.schools, to: a, limit: lim, within: r) { $0.level == "gr" }) { "Grundskola" + ($0.grades.isEmpty ? "" : " " + $0.grades) }
         if K.has(.stops) { add(store.nearby(S.stops, to: a, limit: lim, within: r)) { _ in "Hållplats" } }
+        if !compact {
+            works = model.workItems().filter { $0.m <= r }.map { Work(item: $0, coordinate: Sweref.toWGS84(e: $0.work.e, n: $0.work.n)) }
+        }
 
         guard let row = model.row, let fut = model.future else { return }
         let conv: ([Double]) -> CLLocationCoordinate2D = { Sweref.toWGS84(e: $0.first ?? 0, n: $0.count > 1 ? $0[1] : 0) }
-        for (i, (id, _)) in row.framtid.enumerated() where fut.features.indices.contains(id) {
+        for (i, (id, m)) in row.framtid.enumerated() where fut.features.indices.contains(id) {
             let f = fut.features[id]
             guard let g = f.geometry else { continue }
             var polys: [[CLLocationCoordinate2D]] = [], lines: [[CLLocationCoordinate2D]] = [], pts: [CLLocationCoordinate2D] = []
@@ -50,7 +72,8 @@ struct MapLayers {
             case .polygon(let rings): polys = rings.prefix(1).map { $0.map(conv) }
             case .multiPolygon(let ps): polys = ps.compactMap { $0.first?.map(conv) }
             }
-            shapes.append(Shape(id: "\(id)-\(i)", title: f.title, polygons: polys, lines: lines, points: pts))
+            let item = FutureItem(id: "\(id)-\(i)", feature: f, m: m, isProject: !K.has(.op))
+            shapes.append(Shape(id: "f:\(id)-\(i)", title: f.title, item: item, polygons: polys, lines: lines, points: pts))
         }
     }
 
@@ -81,26 +104,52 @@ struct ReportMapView: View {
     }
 
     var body: some View {
+        MapReader { proxy in
+            map
+                .onTapGesture(coordinateSpace: .local) { pt in
+                    guard interactive, let layers, let hit = hitShape(at: pt, layers: layers, proxy: proxy) else { return }
+                    withAnimation(.easeOut(duration: 0.2)) { selected = hit }
+                }
+        }
+    }
+
+    private var map: some View {
         Map(position: $position, interactionModes: interactive ? .all : [], selection: $selected) {
             if let layers {
                 ForEach(layers.shapes) { s in
+                    let on = selected == s.id
                     ForEach(Array(s.polygons.enumerated()), id: \.offset) { _, p in
                         MapPolygon(coordinates: p)
-                            .foregroundStyle(Theme.future.opacity(0.10))
-                            .stroke(Theme.future, style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+                            .foregroundStyle(Theme.future.opacity(on ? 0.28 : 0.10))
+                            .stroke(Theme.future, style: StrokeStyle(lineWidth: on ? 3 : 1.5, dash: on ? [] : [5, 4]))
                     }
                     ForEach(Array(s.lines.enumerated()), id: \.offset) { _, l in
                         MapPolyline(coordinates: l)
-                            .stroke(Theme.future, style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [6, 5]))
+                            .stroke(Theme.future, style: StrokeStyle(lineWidth: on ? 5 : 3, lineCap: .round, dash: on ? [] : [6, 5]))
+                    }
+                    if interactive, s.points.isEmpty, let c = s.anchor {
+                        Annotation(s.title, coordinate: c, anchor: .center) {
+                            PlanBadge(selected: on)
+                        }
+                        .annotationTitles(on ? .visible : .hidden)
+                        .tag(s.id)
                     }
                     ForEach(Array(s.points.enumerated()), id: \.offset) { _, c in
                         Annotation(s.title, coordinate: c) {
-                            Rectangle().fill(.white).frame(width: 10, height: 10)
+                            Rectangle().fill(.white).frame(width: on ? 14 : 10, height: on ? 14 : 10)
                                 .overlay(Rectangle().strokeBorder(Theme.future, lineWidth: 2))
                                 .rotationEffect(.degrees(45))
                         }
-                        .annotationTitles(.hidden)
+                        .annotationTitles(on ? .visible : .hidden)
+                        .tag(s.id)
                     }
+                }
+                ForEach(layers.works) { w in
+                    Annotation(w.item.work.namn, coordinate: w.coordinate, anchor: .center) {
+                        WorkBadge(building: w.item.isBuilding, selected: selected == w.id)
+                    }
+                    .annotationTitles(selected == w.id ? .visible : .hidden)
+                    .tag(w.id)
                 }
                 ForEach(layers.points) { p in
                     Annotation(p.name, coordinate: p.coordinate, anchor: .center) {
@@ -126,6 +175,81 @@ struct ReportMapView: View {
         .task(id: "\(model.address.id)-\(model.loading)") {
             layers = MapLayers(model: model, store: store, compact: !interactive)
         }
+    }
+
+    /// Vilken planerad yta eller linje som ligger under en tryckning, om ingen markering ligger närmare.
+    private func hitShape(at pt: CGPoint, layers: MapLayers, proxy: MapProxy) -> String? {
+        func screen(_ c: CLLocationCoordinate2D) -> CGPoint? { proxy.convert(c, to: .local) }
+        func near(_ c: CLLocationCoordinate2D, _ d: CGFloat) -> Bool {
+            guard let p = screen(c) else { return false }
+            return hypot(p.x - pt.x, p.y - pt.y) < d
+        }
+        // Tryck på en markering hanteras av kartan själv.
+        if layers.points.contains(where: { near($0.coordinate, 22) }) || layers.works.contains(where: { near($0.coordinate, 22) })
+            || layers.shapes.contains(where: { s in (s.points.first ?? (s.points.isEmpty ? s.anchor : nil)).map { near($0, 22) } ?? false }) {
+            return nil
+        }
+        // Linjer först (de ligger ofta ovanpå ytor), inom 16 punkter.
+        for s in layers.shapes {
+            for l in s.lines {
+                let ps = l.compactMap(screen)
+                for i in ps.indices.dropFirst() where segmentDistance(pt, ps[i - 1], ps[i]) < 16 { return s.id }
+            }
+        }
+        // Minsta ytan som innehåller punkten, så att en liten yta inuti en stor går att välja.
+        var best: (String, CGFloat)?
+        for s in layers.shapes {
+            for poly in s.polygons {
+                let ps = poly.compactMap(screen)
+                guard ps.count > 2 else { continue }
+                var path = Path(); path.addLines(ps); path.closeSubpath()
+                if path.contains(pt) {
+                    let b = path.boundingRect, area = b.width * b.height
+                    if best == nil || area < best!.1 { best = (s.id, area) }
+                }
+            }
+        }
+        return best?.0
+    }
+
+    private func segmentDistance(_ p: CGPoint, _ a: CGPoint, _ b: CGPoint) -> CGFloat {
+        let dx = b.x - a.x, dy = b.y - a.y
+        let len2 = dx * dx + dy * dy
+        guard len2 > 0 else { return hypot(p.x - a.x, p.y - a.y) }
+        let t = max(0, min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / len2))
+        return hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy))
+    }
+}
+
+/// Tryckbar markering mitt i en planerad yta eller linje.
+struct PlanBadge: View {
+    var selected = false
+    var body: some View {
+        Image(systemName: "square.dashed")
+            .font(.system(size: selected ? 13 : 11, weight: .bold))
+            .foregroundStyle(selected ? Color.white : Theme.future)
+            .frame(width: selected ? 28 : 22, height: selected ? 28 : 22)
+            .background(selected ? Theme.future : Color.white, in: Circle())
+            .overlay(Circle().stroke(Theme.future, lineWidth: 1.5))
+            .shadow(color: .black.opacity(0.15), radius: 2, y: 1)
+            .accessibilityLabel("Planerat område")
+    }
+}
+
+/// Markering för pågående planarbete eller bygge.
+struct WorkBadge: View {
+    let building: Bool
+    var selected = false
+    var body: some View {
+        let c = building ? Theme.accent : Theme.ongoing
+        Image(systemName: building ? "hammer.fill" : "doc.text.fill")
+            .font(.system(size: selected ? 12 : 10, weight: .semibold))
+            .foregroundStyle(.white)
+            .frame(width: selected ? 28 : 22, height: selected ? 28 : 22)
+            .background(c, in: Circle())
+            .overlay(Circle().stroke(.white, lineWidth: 1.6))
+            .shadow(color: .black.opacity(0.15), radius: 2, y: 1)
+            .accessibilityLabel(building ? "Bygge" : "Pågående planarbete")
     }
 }
 
@@ -155,6 +279,7 @@ struct MapLegend: View {
             item("Grundskola", PoiDot(kind: .school))
             item("Förskola", PoiDot(kind: .preschool))
             if kommun.has(.shops) { item("Livsmedelsbutik", PoiDot(kind: .shop)) }
+            if kommun.has(.planarbete) { item("Pågående planarbete", WorkBadge(building: false).scaleEffect(0.7).frame(width: 16, height: 16)) }
             item(kommun.has(.op) ? "Planerat enligt översiktsplanen" : "Samhällsbyggnadsprojekt",
                  RoundedRectangle(cornerRadius: 2).strokeBorder(Theme.future, style: StrokeStyle(lineWidth: 1.5, dash: [3, 2])).frame(width: 12, height: 12))
         }
@@ -162,6 +287,17 @@ struct MapLegend: View {
 
     private func item<V: View>(_ t: String, _ v: V) -> some View {
         HStack(spacing: 6) { v; Text(t).font(BCFont.small).foregroundStyle(Theme.muted) }
+    }
+}
+
+/// Visar innehållet i sin hela höjd om det får plats, annars i en rullbar ruta på högst 300 punkter.
+struct Capped<Content: View>: View {
+    @ViewBuilder var content: Content
+    var body: some View {
+        ViewThatFits(in: .vertical) {
+            content.frame(maxHeight: 300, alignment: .top)
+            ScrollView { content }.frame(height: 300)
+        }
     }
 }
 
@@ -173,7 +309,10 @@ struct FullMapView: View {
 
     var body: some View {
         let layers = MapLayers(model: model, store: store)
+        let K = store.kommun(model.address)
         let sel = layers.points.first { $0.id == selected }
+        let selShape = layers.shapes.first { $0.id == selected }
+        let selWork = layers.works.first { $0.id == selected }
         ZStack(alignment: .top) {
             ReportMapView(model: model, interactive: true, selected: $selected)
                 .ignoresSafeArea()
@@ -199,13 +338,30 @@ struct FullMapView: View {
                     }
                     Hairline()
                 }
-                MapLegend(kommun: store.kommun(model.address))
+                if let s = selShape, let data = model.future {
+                    Capped { FutureRow(item: s.item, data: data, kommun: K, startOpen: true, compact: true).id(s.id) }
+                    Hairline()
+                } else if let w = selWork {
+                    Capped { PlanWorkRow(item: w.item, phases: model.work?.phases ?? [:], startOpen: true, compact: true).id(w.id) }
+                    Hairline()
+                } else if sel == nil, !layers.shapes.isEmpty || !layers.works.isEmpty {
+                    Text("Tryck på ett planerat område eller en markering för att läsa mer.")
+                        .font(BCFont.small).foregroundStyle(Theme.muted)
+                }
+                MapLegend(kommun: K)
                 SourceText("Karta från Apple Maps. Avstånd fågelvägen från adresspunkten. Streckade ytor och linjer är ungefärliga.")
             }
             .padding(16)
             .background(Theme.card.opacity(0.96), in: RoundedRectangle(cornerRadius: Theme.radius, style: .continuous))
             .padding(.horizontal, 12)
             .padding(.bottom, 4)
+        }
+        .task {
+            // Skärmbildsskriptet kan välja en plan på kartan: -uiMap shape eller -uiMap work
+            guard let m = UserDefaults.standard.string(forKey: "uiMap") else { return }
+            try? await Task.sleep(for: .milliseconds(600))
+            let layers = MapLayers(model: model, store: store)
+            selected = m == "work" ? layers.works.first?.id : layers.shapes.first?.id
         }
     }
 }
