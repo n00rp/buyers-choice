@@ -377,6 +377,8 @@ struct PlanWorkRow: View {
                     if let u = w.lank { Link(destination: u) { Label("Projektsidan på goteborg.se", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14)) }
                 }
                 .transition(.opacity)
+            } else if compact, let u = w.lank {
+                Link(destination: u) { Label("Projektsidan på goteborg.se", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
             }
         }
         .padding(compact ? 0 : 16)
@@ -450,6 +452,15 @@ struct FutureRow: View {
                 }
                 .font(BCFont.semibold(14))
                 .transition(.opacity)
+            }
+            if compact && !open {
+                if let l = item.links.first {
+                    Link(destination: l.1) { Label(l.0, systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
+                } else if kommun.has(.op) {
+                    Link(destination: URL(string: data.url ?? "https://oversiktsplan.goteborg.se/")!) { Label("Digitala översiktsplanen", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
+                } else if let u = kommun.karta {
+                    Link(destination: u) { Label("Kommunens karta", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
+                }
             }
         }
         .padding(compact ? 0 : 16)

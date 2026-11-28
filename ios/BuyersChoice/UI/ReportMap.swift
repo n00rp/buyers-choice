@@ -175,6 +175,16 @@ struct ReportMapView: View {
         .task(id: "\(model.address.id)-\(model.loading)") {
             layers = MapLayers(model: model, store: store, compact: !interactive)
         }
+        .onChange(of: selected) { _, id in
+            // Flytta kartan så att det valda hamnar ovanför rutan med sammanfattningen.
+            guard interactive, let id, let layers else { return }
+            let c = layers.shapes.first { $0.id == id }.flatMap { $0.points.first ?? $0.anchor } ?? layers.works.first { $0.id == id }?.coordinate
+            guard let c else { return }
+            withAnimation(.easeInOut(duration: 0.35)) {
+                position = .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: c.latitude - 0.0045, longitude: c.longitude),
+                                                      latitudinalMeters: 1800, longitudinalMeters: 1800))
+            }
+        }
     }
 
     /// Vilken planerad yta eller linje som ligger under en tryckning, om ingen markering ligger närmare.
@@ -290,14 +300,15 @@ struct MapLegend: View {
     }
 }
 
-/// Visar innehållet i sin hela höjd om det får plats, annars i en rullbar ruta på högst 300 punkter.
+/// Visar innehållet i sin hela höjd om det får plats, annars i en rullbar ruta på högst 230 punkter.
 struct Capped<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
         ViewThatFits(in: .vertical) {
-            content.frame(maxHeight: 300, alignment: .top)
-            ScrollView { content }.frame(height: 300)
+            content.fixedSize(horizontal: false, vertical: true)
+            ScrollView { content }
         }
+        .frame(maxHeight: 230)
     }
 }
 
@@ -339,16 +350,16 @@ struct FullMapView: View {
                     Hairline()
                 }
                 if let s = selShape, let data = model.future {
-                    Capped { FutureRow(item: s.item, data: data, kommun: K, startOpen: true, compact: true).id(s.id) }
+                    Capped { FutureRow(item: s.item, data: data, kommun: K, compact: true).id(s.id) }
                     Hairline()
                 } else if let w = selWork {
-                    Capped { PlanWorkRow(item: w.item, phases: model.work?.phases ?? [:], startOpen: true, compact: true).id(w.id) }
+                    Capped { PlanWorkRow(item: w.item, phases: model.work?.phases ?? [:], compact: true).id(w.id) }
                     Hairline()
                 } else if sel == nil, !layers.shapes.isEmpty || !layers.works.isEmpty {
                     Text("Tryck på ett planerat område eller en markering för att läsa mer.")
                         .font(BCFont.small).foregroundStyle(Theme.muted)
                 }
-                MapLegend(kommun: K)
+                if selShape == nil && selWork == nil { MapLegend(kommun: K) }
                 SourceText("Karta från Apple Maps. Avstånd fågelvägen från adresspunkten. Streckade ytor och linjer är ungefärliga.")
             }
             .padding(16)
