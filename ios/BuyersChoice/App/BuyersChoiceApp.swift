@@ -66,7 +66,9 @@ struct RootView: View {
         }
         .onChange(of: store.isReady) { _, ready in
             // Används av skärmbildsskriptet i molnbygget: -uiOpen "Linnégatan 20" -uiSection miljo
-            guard ready, let key = UserDefaults.standard.string(forKey: "uiOpen"), let a = store.address(key: key) else { return }
+            guard ready, let key = UserDefaults.standard.string(forKey: "uiOpen") else { return }
+            guard let a = store.address(key: key) else { Log.write("uiOpen: hittade inte \(key)"); return }
+            Log.write("uiOpen: öppnar \(a.label) (\(a.id))")
             searchPath.append(AddressRoute(id: a.id))
         }
         .onOpenURL { url in

@@ -12,12 +12,14 @@ final class UserStore {
     private(set) var recent: [String] = []
     private var ads: [String: String] = [:]
     private var checked: Set<String> = []
+    private var forms: [String: String] = [:]
 
     init() {
         saved = d.stringArray(forKey: "bc-saved") ?? []
         recent = d.stringArray(forKey: "bc-recent") ?? []
         ads = d.dictionary(forKey: "bc-ads") as? [String: String] ?? [:]
         checked = Set(d.stringArray(forKey: "bc-q") ?? [])
+        forms = d.dictionary(forKey: "bc-form") as? [String: String] ?? [:]
     }
 
     // MARK: Sparade
@@ -65,5 +67,37 @@ final class UserStore {
         let k = key + "|" + q
         if checked.contains(k) { checked.remove(k) } else { checked.insert(k) }
         d.set(Array(checked), forKey: "bc-q")
+    }
+
+    // MARK: Boendeform
+
+    func form(_ key: String) -> Boendeform? {
+        // Skärmbildsskriptet kan välja boendeform: -uiForm bostadsratt
+        (forms[key] ?? d.string(forKey: "uiForm")).flatMap(Boendeform.init(rawValue:))
+    }
+
+    func setForm(_ f: Boendeform?, for key: String) {
+        forms[key] = f?.rawValue
+        d.set(forms, forKey: "bc-form")
+    }
+}
+
+/// Vilken sorts bostad det gäller. Adressdatan säger inte det, så användaren väljer.
+enum Boendeform: String, CaseIterable, Identifiable {
+    case villa, bostadsratt, hyresratt
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .villa: return "Villa eller radhus"
+        case .bostadsratt: return "Bostadsrätt"
+        case .hyresratt: return "Hyresrätt"
+        }
+    }
+    var short: String {
+        switch self {
+        case .villa: return "Villa/radhus"
+        case .bostadsratt: return "Bostadsrätt"
+        case .hyresratt: return "Hyresrätt"
+        }
     }
 }

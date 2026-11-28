@@ -128,6 +128,9 @@ jobs:
           brew install xcodegen
           xcodegen generate
 
+      # Arkivet byggs osignerat. En utvecklarprofil kräver registrerade enheter, och sådana
+      # finns inte eftersom ingen Mac används. Signeringen för App Store sker i exportsteget,
+      # där Xcode hämtar distributionscertifikat och profil med API-nyckeln (molnsignering).
       - name: Arkivera
         run: |
           set -o pipefail
@@ -135,12 +138,9 @@ jobs:
             -project BuyersChoice.xcodeproj -scheme BuyersChoice \
             -destination "generic/platform=iOS" \
             -archivePath "$RUNNER_TEMP/BuyersChoice.xcarchive" \
-            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_$ASC_KEY_ID.p8" \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tail -40
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40
 
       - name: Exportera och ladda upp
         run: |

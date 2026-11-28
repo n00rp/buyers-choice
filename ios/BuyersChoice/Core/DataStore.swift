@@ -88,7 +88,9 @@ final class DataStore {
             streetMap = ds.streetMap
             kommuner = ds.kommuner
             state = .ready
+            Log.write("Data klar: \(addresses.count) adresser")
         } catch {
+            Log.write("Data misslyckades: \(error)")
             state = .failed("Adresserna kunde inte hämtas. Kontrollera att du är ansluten till internet och försök igen.")
         }
     }
@@ -185,5 +187,12 @@ final class DataStore {
         guard let d = try? await Remote.shared.data("bevakning/planarbete.json"), let p = try? Parse.planWork(d) else { return nil }
         planWorkCache = p
         return p
+    }
+}
+
+/// Loggrader till stderr. Molnbyggets skärmbildsskript sparar dem bredvid skärmbilderna.
+enum Log {
+    static func write(_ s: String) {
+        FileHandle.standardError.write(Data(("[BC] " + s + "\n").utf8))
     }
 }

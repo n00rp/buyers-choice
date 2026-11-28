@@ -32,3 +32,7 @@ shot 05-omradet 10 -uiOpen "Linnégatan 20" -uiSection omradet
 shot 06-service 10 -uiOpen "Linnégatan 20" -uiSection service
 shot 07-fragor 10 -uiOpen "Linnégatan 20" -uiSection fragor
 shot 08-partille 12 -uiOpen "Partille:Fröjas backe 10"
+shot 09-fragor-brf 10 -uiOpen "Linnégatan 20" -uiSection fragor -uiForm bostadsratt
+shot 10-oversikt 10 -uiOpen "Skogshyddegatan 33" -uiSection oversikt
+shot 11-karta-plan 14 -uiOpen "Linnégatan 20" -uiMap shape
+shot 12-karta-planarbete 14 -uiOpen "Linnégatan 20" -uiMap work

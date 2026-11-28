@@ -21,9 +21,7 @@ struct OverviewSection: View {
             // Mörkt kort för gällande plan, som i portalen.
             Card(fill: Theme.dark) {
                 Eyebrow("Gällande plan", color: Color.white.opacity(0.65))
-                Text(main.map(\.title) ?? "Ingen detaljplan")
-                    .font(BCFont.display(26)).foregroundStyle(.white)
-                    .fixedSize(horizontal: false, vertical: true)
+                FitText(main.map(\.title) ?? "Ingen detaljplan", sizes: [26, 23, 20, 17], color: .white) { BCFont.display($0) }
                 Text(main.map { m in
                     "\(m.bet)\(m.name.isEmpty ? "" : ", " + m.typ.lowercased()). " + (plans.count > 1 ? "Totalt \(plans.count) planbeslut gäller på adressen." : "Det är det enda planbeslutet på adressen.")
                 } ?? "Adresspunkten ligger utanför gällande detaljplaner. Då gäller översiktsplanen och plan- och bygglagens regler.")
@@ -50,7 +48,7 @@ struct OverviewSection: View {
     private func smallCard(_ eyebrow: String, _ big: String, _ text: String) -> some View {
         Card(padding: 16) {
             Eyebrow(eyebrow)
-            Text(big).font(BCFont.serif(18)).foregroundStyle(Theme.text).fixedSize(horizontal: false, vertical: true)
+            FitText(big, sizes: [18, 16, 14])
             Text(text).font(BCFont.small).foregroundStyle(Theme.muted).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
@@ -90,7 +88,7 @@ struct EnvStrip: View {
     private func tile(_ k: String, _ v: String, _ s: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(k).font(BCFont.medium(13)).foregroundStyle(Theme.muted)
-            Text(v).font(BCFont.serif(20)).foregroundStyle(Theme.text).lineLimit(2).minimumScaleFactor(0.8)
+            FitText(v, sizes: [20, 18, 16, 14, 12])
             Text(s).font(BCFont.caption).foregroundStyle(Theme.faint).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 0)
         }
@@ -144,7 +142,7 @@ struct PropertySection: View {
     private func figure(_ k: String, _ v: String, _ s: String) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(k).font(BCFont.small).foregroundStyle(Theme.muted)
-            Text(v).font(BCFont.serif(19)).foregroundStyle(Theme.text).fixedSize(horizontal: false, vertical: true)
+            FitText(v, sizes: [19, 17, 15, 13])
             Text(s).font(BCFont.caption).foregroundStyle(Theme.faint).fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -342,7 +340,13 @@ struct AreaSection: View {
 struct PlanWorkRow: View {
     let item: PlanWorkItem
     let phases: [String: String]
-    @State private var open = false
+    var compact = false
+    @State private var open: Bool
+
+    init(item: PlanWorkItem, phases: [String: String], startOpen: Bool = false, compact: Bool = false) {
+        self.item = item; self.phases = phases; self.compact = compact
+        _open = State(initialValue: startOpen)
+    }
 
     var body: some View {
         let w = item.work
@@ -373,9 +377,11 @@ struct PlanWorkRow: View {
                     if let u = w.lank { Link(destination: u) { Label("Projektsidan på goteborg.se", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14)) }
                 }
                 .transition(.opacity)
+            } else if compact, let u = w.lank {
+                Link(destination: u) { Label("Projektsidan på goteborg.se", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
             }
         }
-        .padding(16)
+        .padding(compact ? 0 : 16)
     }
 
     private func detail(_ k: String, _ v: String) -> some View {
@@ -404,7 +410,13 @@ struct FutureRow: View {
     let item: FutureItem
     let data: FutureData
     let kommun: Kommun
-    @State private var open = false
+    var compact = false
+    @State private var open: Bool
+
+    init(item: FutureItem, data: FutureData, kommun: Kommun, startOpen: Bool = false, compact: Bool = false) {
+        self.item = item; self.data = data; self.kommun = kommun; self.compact = compact
+        _open = State(initialValue: startOpen)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -441,8 +453,17 @@ struct FutureRow: View {
                 .font(BCFont.semibold(14))
                 .transition(.opacity)
             }
+            if compact && !open {
+                if let l = item.links.first {
+                    Link(destination: l.1) { Label(l.0, systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
+                } else if kommun.has(.op) {
+                    Link(destination: URL(string: data.url ?? "https://oversiktsplan.goteborg.se/")!) { Label("Digitala översiktsplanen", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
+                } else if let u = kommun.karta {
+                    Link(destination: u) { Label("Kommunens karta", systemImage: "arrow.up.right.square") }.font(BCFont.semibold(14))
+                }
+            }
         }
-        .padding(16)
+        .padding(compact ? 0 : 16)
     }
 }
 
@@ -575,11 +596,35 @@ struct QuestionsSection: View {
     var body: some View {
         let a = model.address
         let K = store.kommun(a)
+        let form = user.form(a.key)
         let qs = Question.build(address: a, store: store, plans: plans, meta: model.meta, row: model.row,
-                                future: model.futureItems(K), work: model.workItems())
+                                future: model.futureItems(K), work: model.workItems(), form: form)
         let done = qs.filter { user.isChecked(a.key, $0.id) }.count
         VStack(alignment: .leading, spacing: 14) {
             SectionTitle(title: "Frågor till visningen", lead: "En checklista att ta med, utifrån planerna, miljön och området. Bocka av när du har fått svar. Det sparas bara i telefonen.")
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Vad gäller visningen?").font(BCFont.medium(14)).foregroundStyle(Theme.muted)
+                FlowLayout(spacing: 8) {
+                    ForEach(Boendeform.allCases) { f in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) { user.setForm(form == f ? nil : f, for: a.key) }
+                        } label: {
+                            Text(f.short)
+                                .font(BCFont.medium(14))
+                                .foregroundStyle(form == f ? Color.white : Theme.text)
+                                .padding(.horizontal, 14).padding(.vertical, 8)
+                                .background(form == f ? Theme.accent : Theme.card, in: Capsule())
+                                .overlay(Capsule().strokeBorder(form == f ? Color.clear : Theme.line))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(form == f ? .isSelected : [])
+                    }
+                }
+                if form == nil {
+                    Text("Välj boendeform så anpassas frågorna. Nedan visas frågorna om platsen.")
+                        .font(BCFont.small).foregroundStyle(Theme.faint)
+                }
+            }
             Card {
                 HStack {
                     Text("\(done) av \(qs.count)").font(BCFont.semibold(15)).monospacedDigit()
@@ -612,6 +657,7 @@ struct QuestionsSection: View {
 
 struct SourcesSection: View {
     let kommun: Kommun
+    @State private var open = false
 
     var body: some View {
         let rows: [(String, String, String)] = kommun.id == "goteborg" ? [
@@ -639,10 +685,22 @@ struct SourcesSection: View {
             ("Karta", "Apple Maps", "Löpande"),
         ]
         VStack(alignment: .leading, spacing: 14) {
-            SectionTitle(title: "Källor", lead: "Varje uppgift med källa och datum. Uppgifterna är förberäknade från öppna data och visas utan värdering.")
+            SectionTitle(title: "Källor", lead: "Uppgifterna är förberäknade från öppna data och visas utan värdering.")
             Card {
-                ForEach(Array(rows.enumerated()), id: \.offset) { i, r in
-                    if i > 0 { Hairline() }
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { open.toggle() }
+                } label: {
+                    HStack {
+                        Text(open ? "Dölj källorna" : "Visa alla \(rows.count) källor").font(BCFont.semibold(15)).foregroundStyle(Theme.text)
+                        Spacer()
+                        Image(systemName: "chevron.down").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.faint)
+                            .rotationEffect(.degrees(open ? 180 : 0))
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                if open { ForEach(Array(rows.enumerated()), id: \.offset) { i, r in
+                    Hairline()
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(alignment: .firstTextBaseline) {
                             Text(r.0).font(BCFont.semibold(14)).foregroundStyle(Theme.text)
@@ -651,7 +709,7 @@ struct SourcesSection: View {
                         }
                         Text(r.1).font(BCFont.small).foregroundStyle(Theme.muted).fixedSize(horizontal: false, vertical: true)
                     }
-                }
+                } }
             }
         }
     }
