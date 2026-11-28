@@ -1,0 +1,7 @@
+[BC] Data klar: 112336 adresser
+[BC] uiOpen: öppnar Linnégatan 20 (52724)
+[BC] Rapport: laddar Linnégatan 20
+[BC] Gatubild: finns
+2026-11-28 15:19:53.489 BuyersChoice[14531:46932] This NSLayoutConstraint is being configured with a constant that exceeds internal limits.  A smaller value will be substituted, but this problem should be fixed. Break on BOOL _NSLayoutConstraintNumberExceedsLimit(void) to debug.  This will be logged only once.  This may break in the future.
+[BC] Rapport: laddad, miljö ok
+[BC] Rapport: visas
