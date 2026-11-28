@@ -393,7 +393,8 @@ struct StreetView: View {
     @State private var checked = false
 
     var body: some View {
-        Group {
+        // En tom Group får ingen .task, så platshållaren måste finnas även utan bild.
+        VStack(alignment: .leading, spacing: 0) {
             if let scene {
                 VStack(alignment: .leading, spacing: 8) {
                     LookAroundPreview(initialScene: scene, allowsNavigation: true, showsRoadLabels: true, pointsOfInterest: .excludingAll)
@@ -402,6 +403,8 @@ struct StreetView: View {
                         .accessibilityLabel("Gatubild nära \(label)")
                     SourceText("Gatubild från Apple Look Around, tagen från gatan närmast adressen. Tryck för att se i helskärm och se dig omkring. Bilden kan vara några år gammal.")
                 }
+            } else {
+                Color.clear.frame(height: 0)
             }
         }
         .task(id: "\(coordinate.latitude),\(coordinate.longitude)") {
